@@ -1,0 +1,342 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { supabase } from "./lib/supabase";
+
+  export default function Home() {
+  
+  const [editingId, setEditingId] = useState(null);
+
+  const [expense, setExpense] = useState("");
+  
+  const [user, setUser] = useState(null);
+  const [properties, setProperties] = useState([]);
+
+  const [bookings, setBookings] = useState([]);
+
+  const totalProfit = properties.reduce((sum, p) => {
+  return sum + ((p.monthly_rent || 0) - (p.monthly_expense || 0));
+  }, 0);
+
+  const totalRevenue = properties.reduce((sum, p) => {
+  return sum + (Number(p.monthly_rent) || 0);
+  }, 0);
+
+  const totalExpense = properties.reduce((sum, p) => {
+  return sum + (Number(p.monthly_expense) || 0);
+  }, 0);
+
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [type, setType] = useState("airbnb");
+  const [rent, setRent] = useState("");
+  const [isAirbnb, setIsAirbnb] = useState(false);
+
+
+const [bookingStart, setBookingStart] = useState("");
+const [bookingEnd, setBookingEnd] = useState("");
+const [bookingPrice, setBookingPrice] = useState("");
+const [selectedPropertyId, setSelectedPropertyId] = useState(null);
+
+
+
+  const addProperty = async () => {
+  await supabase.from("properties").insert([
+    {
+      name,
+      address,
+      type,
+      monthly_rent: rent,
+      monthly_expense: expense,
+      is_airbnb: isAirbnb,
+    }
+  ]);
+
+  setName("");
+  setAddress("");
+  setRent("");
+  setExpense("");
+  fetchProperties();
+}; 
+
+  useEffect(() => {
+    getUser();
+    fetchProperties();
+    fetchBookings();
+  }, []);
+
+  const getUser = async () => {
+    const { data } = await supabase.auth.getUser();
+    setUser(data.user);
+  };
+
+  const fetchProperties = async () => {
+    const { data } = await supabase.from("properties").select("*");
+    setProperties(data || []);
+  };
+
+const fetchBookings = async () => {
+  const { data } = await supabase.from("bookings").select("*");
+  setBookings(data || []);
+};
+
+  const startEditing = (property) => {
+  setEditingId(property.id);
+  setName(property.name);
+  setAddress(property.address);
+  setType(property.type);
+  setRent(property.monthly_rent);
+  setIsAirbnb(property.is_airbnb || false);
+};
+
+  const deleteProperty = async (id) => {
+  const confirmed = confirm("Are you sure you want to delete this property?");
+  if (!confirmed) return;
+  await supabase.from("properties").delete().eq("id", id);
+  fetchProperties();
+};
+
+  const saveEdit = async () => {
+   await supabase
+    .from("properties")
+    .update({
+      name,
+      address,
+      type,
+      monthly_rent: rent,
+      monthly_expense: expense,
+      is_airbnb: isAirbnb,
+    })
+    .eq("id", editingId);
+
+  setEditingId(null);
+  setName("");
+  setAddress("");
+  setType("airbnb");
+  setRent("");
+  setExpense("");
+  fetchProperties(); // refresh the list
+};
+
+
+
+const addBooking = async () => {
+  if (!selectedPropertyId) return alert("No property selected");
+
+  await supabase.from("bookings").insert([
+    {
+      property_id: selectedPropertyId,
+      start_date: bookingStart,
+      end_date: bookingEnd,
+      price: bookingPrice,
+    },
+  ]);
+
+  setBookingStart("");
+  setBookingEnd("");
+  setBookingPrice("");
+  fetchBookings();
+};
+
+
+
+
+
+
+  if (!user) {
+    return <div className="p-6">Not logged in</div>;
+  }
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <p className="mb-4">Welcome: {user.email}</p>
+
+      <h2
+        className={`text-3xl font-bold mb-4 ${
+         totalProfit >= 0 ? "text-green-600" : "text-red-600"
+        }`}
+      >
+        Total Profit: ${totalProfit}
+      </h2>
+
+      <h2 className="text-xl font-semibold mb-4">
+      Total Monthly Revenue: ${totalRevenue}
+      </h2>
+
+      <h2 className="text-xl font-semibold mb-4">
+      Total Expense: ${totalExpense}
+      </h2>
+
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold">Add Property</h2>
+        <input
+          className="border p-2 mr-2"
+          placeholder="Property Name"
+          value={name}
+
+
+
+
+          onChange={(e) => {
+  const value = e.target.value;
+  setType(value);
+
+  //  sync checkbox automatically
+  if (value === "airbnb") {
+    setIsAirbnb(true);
+  } else {
+    setIsAirbnb(false);
+  }
+}}
+
+
+
+
+        />
+        <input
+          className="border p-2 mr-2"
+          placeholder="Address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+        />
+
+       <select
+       className="border p-2 mr-2"
+       value={type}
+       onChange={(e) => setType(e.target.value)}
+       >   
+       <option value="airbnb">Airbnb</option>
+       <option value="long_term">Long Term</option>
+       </select>
+
+       <label className="mr-2">
+       <input
+       type="checkbox"
+       checked={isAirbnb}
+       onChange={(e) => setIsAirbnb(e.target.checked)}
+       />
+       Airbnb (Daily Rental)
+       </label>
+
+       <input
+       className="border p-2 mr-2"
+       placeholder="Monthly Rent ($)"
+       value={rent}
+       onChange={(e) => setRent(e.target.value)}
+       />
+
+       <input
+       className="border p-2 mr-2"
+       placeholder="Monthly Expense ($)"
+       value={expense}
+       onChange={(e) => setExpense(e.target.value)}
+       />
+
+        <button
+          className="bg-black text-white px-4 py-2"
+          onClick={editingId ? saveEdit : addProperty}
+        >
+          {editingId ? "Save" : "Add"}
+        
+        </button>
+
+{editingId && (
+  <button
+   className="ml-2 bg-white border border-gray-400 hover:bg-gray-100 text-black 
+   px-4 py-2"
+    onClick={() => {
+      setEditingId(null);
+      setName("");
+      setAddress("");
+      setType("airbnb");
+      setRent("");
+      setExpense("");
+    }}
+  >
+    Cancel
+  </button>
+)}
+
+
+
+        </div>
+
+      <div>
+        <h2 className="text-lg font-semibold">Your Properties</h2>
+        {properties.map((p) => (
+          <div key={p.id} className="border p-2 mb-2">
+            <p><strong>{p.name}</strong></p>
+            <p>{p.address}</p>
+            <p>Type: {p.type}</p>
+
+            <p>Mode: {p.is_airbnb ? "Airbnb (Daily)" : "Monthly Rent"}</p>
+
+	    <p>Revenue: ${p.monthly_rent || 0}</p>
+
+            <p>Expense: ${p.monthly_expense || 0}</p>
+            <p>Profit: ${(p.monthly_rent || 0) - (p.monthly_expense || 0)}</p>
+
+            <button
+            className="bg-yellow-500 text-white px-2 py-1 mr-2"
+            onClick={() => startEditing(p)}
+            >
+            Edit
+            </button>
+
+            <button
+            className="bg-red-600 text-white px-2 py-1"
+            onClick={() => deleteProperty(p.id)}
+            >
+            Delete
+            </button>
+
+
+
+{p.is_airbnb && (
+  <div className="mt-2 border-t pt-2">
+    <p className="font-semibold">Add Booking</p>
+
+    <input
+      type="date"
+      className="border p-1 mr-2"
+      value={bookingStart}
+      onChange={(e) => setBookingStart(e.target.value)}
+    />
+
+    <input
+      type="date"
+      className="border p-1 mr-2"
+      value={bookingEnd}
+      onChange={(e) => setBookingEnd(e.target.value)}
+    />
+
+    <input
+      type="number"
+      placeholder="Total Price"
+      className="border p-1 mr-2"
+      value={bookingPrice}
+      onChange={(e) => setBookingPrice(e.target.value)}
+    />
+
+    <button
+      className="bg-blue-600 text-white px-2 py-1"
+      onClick={() => {
+        setSelectedPropertyId(p.id);
+        addBooking();
+      }}
+    >
+      Add Booking
+    </button>
+  </div>
+)}
+
+
+
+
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
