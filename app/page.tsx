@@ -415,34 +415,24 @@ const handleSignOut = async () => {
 
 if (!user) {
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50">
-      <div className="w-full max-w-md bg-white border rounded-xl shadow-md p-6">
-        
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
 
-<h1 className="text-2xl font-bold mb-1">
-  Rental Property Management
-</h1>
-<p className="text-gray-600 text-sm mb-4">
-  Manage your properties, bookings, and profits in one place
-</p>
-
-
-
-
-
-
-
-
-        <p className="text-gray-600 mb-6">
-          {authMode === "signin" ? "Sign in to your account" : "Create your account"}
+        {/* Title */}
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">
+          Rental Property Management
+        </h1>
+        <p className="text-gray-500 text-sm mb-6">
+          Manage your properties, bookings, and profits in one place
         </p>
 
-        <div className="flex gap-2 mb-4">
+        {/* Toggle */}
+        <div className="flex bg-gray-100 rounded-lg p-1 mb-6">
           <button
-            className={`px-4 py-2 rounded w-full ${
+            className={`w-full py-2 rounded-md text-sm font-medium transition ${
               authMode === "signin"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-black"
+                ? "bg-white shadow text-black"
+                : "text-gray-500"
             }`}
             onClick={() => setAuthMode("signin")}
           >
@@ -450,10 +440,10 @@ if (!user) {
           </button>
 
           <button
-            className={`px-4 py-2 rounded w-full ${
+            className={`w-full py-2 rounded-md text-sm font-medium transition ${
               authMode === "signup"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-black"
+                ? "bg-white shadow text-black"
+                : "text-gray-500"
             }`}
             onClick={() => setAuthMode("signup")}
           >
@@ -461,40 +451,46 @@ if (!user) {
           </button>
         </div>
 
-        <div className="space-y-3">
+        {/* Inputs */}
+        <div className="space-y-4">
           <input
             type="email"
-            className="border p-3 w-full rounded"
-            placeholder="Email"
+            placeholder="Email address"
             value={authEmail}
             onChange={(e) => setAuthEmail(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
           />
 
           <input
             type="password"
-            className="border p-3 w-full rounded"
             placeholder="Password"
             value={authPassword}
             onChange={(e) => setAuthPassword(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
           />
 
           <button
-            className="bg-black text-white px-4 py-3 rounded w-full"
             onClick={handleAuth}
             disabled={authLoading}
+            className="w-full bg-black hover:bg-gray-800 transition text-white py-3 rounded-lg font-medium"
           >
             {authLoading
               ? "Please wait..."
               : authMode === "signin"
-              ? "Sign In"
-              : "Create Account"}
+              ? "Continue"
+              : "Create account"}
           </button>
         </div>
+
+        {/* Footer */}
+        <p className="text-xs text-gray-400 text-center mt-6">
+          By continuing, you agree to our terms and privacy policy
+        </p>
+
       </div>
     </div>
   );
 }
-
 
 
 
