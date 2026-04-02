@@ -16,6 +16,17 @@ export default function Home() {
   const [bookingInputs, setBookingInputs] = useState<Record<string, any>>({});
   const [expandedProperties, setExpandedProperties] = useState<Record<string, boolean>>({});
 
+
+
+
+const [authEmail, setAuthEmail] = useState("");
+const [authPassword, setAuthPassword] = useState("");
+const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+const [authLoading, setAuthLoading] = useState(false);
+
+
+
+
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [type, setType] = useState("airbnb");
@@ -104,11 +115,38 @@ export default function Home() {
     fetchProperties();
   };
 
-  useEffect(() => {
-    getUser();
-    fetchProperties();
-    fetchBookings();
-  }, []);
+
+
+
+
+
+
+
+
+
+useEffect(() => {
+  getUser();
+  fetchProperties();
+  fetchBookings();
+
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange((event, session) => {
+    setUser(session?.user ?? null);
+  });
+
+  return () => subscription.unsubscribe();
+}, []);
+
+
+
+
+
+
+
+
+
+
 
   const getUser = async () => {
     const { data } = await supabase.auth.getUser();
@@ -308,14 +346,174 @@ export default function Home() {
     return summary;
   };
 
-  if (!user) {
-    return <div className="p-6">Not logged in</div>;
+ 
+
+
+
+
+
+
+
+
+if (!user) {
+  return (
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50">
+      <div className="w-full max-w-md bg-white border rounded-xl shadow-md p-6">
+        <h1 className="text-2xl font-bold mb-2">Airbnb Ops App</h1>
+        <p className="text-gray-600 mb-6">
+          {authMode === "signin" ? "Sign in to your account" : "Create your account"}
+        </p>
+
+        <div className="flex gap-2 mb-4">
+          <button
+            className={`px-4 py-2 rounded w-full ${
+              authMode === "signin"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-black"
+            }`}
+            onClick={() => setAuthMode("signin")}
+          >
+            Sign In
+          </button>
+
+          <button
+            className={`px-4 py-2 rounded w-full ${
+              authMode === "signup"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-black"
+            }`}
+            onClick={() => setAuthMode("signup")}
+          >
+            Sign Up
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          <input
+            type="email"
+            className="border p-3 w-full rounded"
+            placeholder="Email"
+            value={authEmail}
+            onChange={(e) => setAuthEmail(e.target.value)}
+          />
+
+          <input
+            type="password"
+            className="border p-3 w-full rounded"
+            placeholder="Password"
+            value={authPassword}
+            onChange={(e) => setAuthPassword(e.target.value)}
+          />
+
+          <button
+            className="bg-black text-white px-4 py-3 rounded w-full"
+            onClick={handleAuth}
+            disabled={authLoading}
+          >
+            {authLoading
+              ? "Please wait..."
+              : authMode === "signin"
+              ? "Sign In"
+              : "Create Account"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+const handleAuth = async () => {
+  if (!authEmail.trim() || !authPassword.trim()) {
+    alert("Please enter email and password");
+    return;
   }
+
+  setAuthLoading(true);
+
+  if (authMode === "signin") {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: authEmail,
+      password: authPassword,
+    });
+
+    setAuthLoading(false);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    const { data } = await supabase.auth.getUser();
+    setUser(data.user);
+    return;
+  }
+
+  const { error } = await supabase.auth.signUp({
+    email: authEmail,
+    password: authPassword,
+  });
+
+  setAuthLoading(false);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  alert("Account created. Check your email if confirmation is required.");
+};
+
+const handleSignOut = async () => {
+  await supabase.auth.signOut();
+  setUser(null);
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <div className="p-4 sm:p-6 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      <p className="mb-4">Welcome: {user.email}</p>
+  
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+        <p>Welcome: {user.email}</p>
+
+        <button
+          className="bg-gray-800 text-white px-4 py-2 rounded w-full sm:w-auto"
+          onClick={handleSignOut}
+        >
+          Sign Out
+        </button>
+     </div>
+
+
+
+
+
+
+
+
+
+
+
 
       <h2
         className={`text-3xl font-bold mb-4 ${
