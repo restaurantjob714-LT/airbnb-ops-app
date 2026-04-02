@@ -355,6 +355,64 @@ useEffect(() => {
 
 
 
+const handleAuth = async () => {
+  if (!authEmail.trim() || !authPassword.trim()) {
+    alert("Please enter email and password");
+    return;
+  }
+
+  setAuthLoading(true);
+
+  if (authMode === "signin") {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: authEmail,
+      password: authPassword,
+    });
+
+    setAuthLoading(false);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    const { data } = await supabase.auth.getUser();
+    setUser(data.user);
+    return;
+  }
+
+  const { error } = await supabase.auth.signUp({
+    email: authEmail,
+    password: authPassword,
+  });
+
+  setAuthLoading(false);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  alert("Account created. Check your email if confirmation is required.");
+};
+
+const handleSignOut = async () => {
+  await supabase.auth.signOut();
+  setUser(null);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
 if (!user) {
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50">
@@ -431,51 +489,6 @@ if (!user) {
 
 
 
-const handleAuth = async () => {
-  if (!authEmail.trim() || !authPassword.trim()) {
-    alert("Please enter email and password");
-    return;
-  }
-
-  setAuthLoading(true);
-
-  if (authMode === "signin") {
-    const { error } = await supabase.auth.signInWithPassword({
-      email: authEmail,
-      password: authPassword,
-    });
-
-    setAuthLoading(false);
-
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    const { data } = await supabase.auth.getUser();
-    setUser(data.user);
-    return;
-  }
-
-  const { error } = await supabase.auth.signUp({
-    email: authEmail,
-    password: authPassword,
-  });
-
-  setAuthLoading(false);
-
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  alert("Account created. Check your email if confirmation is required.");
-};
-
-const handleSignOut = async () => {
-  await supabase.auth.signOut();
-  setUser(null);
-};
 
 
 
