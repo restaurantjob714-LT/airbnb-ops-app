@@ -417,7 +417,25 @@ if (!user) {
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50">
       <div className="w-full max-w-md bg-white border rounded-xl shadow-md p-6">
-        <h1 className="text-2xl font-bold mb-2">Airbnb Ops App</h1>
+        
+// <h1 className="text-2xl font-bold mb-2">Rental Properties Management</h1>
+
+
+
+<h1 className="text-2xl font-bold mb-1">
+  Rental Property Management
+</h1>
+<p className="text-gray-500 text-sm mb-4">
+  Manage your properties, bookings, and profits in one place
+</p>
+
+
+
+
+
+
+
+
         <p className="text-gray-600 mb-6">
           {authMode === "signin" ? "Sign in to your account" : "Create your account"}
         </p>
