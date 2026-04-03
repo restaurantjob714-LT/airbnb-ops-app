@@ -17,14 +17,10 @@ export default function Home() {
   const [expandedProperties, setExpandedProperties] = useState<Record<string, boolean>>({});
 
 
-
-
 const [authEmail, setAuthEmail] = useState("");
 const [authPassword, setAuthPassword] = useState("");
 const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
 const [authLoading, setAuthLoading] = useState(false);
-
-
 
 
   const [name, setName] = useState("");
@@ -77,43 +73,63 @@ const [authLoading, setAuthLoading] = useState(false);
     return sum + (Number(p.monthly_expense) || 0);
   }, 0);
 
-  const addProperty = async () => {
-    if (!name.trim()) {
-      alert("Property name is required");
-      return;
-    }
+  
 
-    if (!address.trim()) {
-      alert("Address is required");
-      return;
-    }
 
-    const { error } = await supabase.from("properties").insert([
-      {
-        name: name.trim(),
-        address: address.trim(),
-        type,
-        monthly_rent: rent === "" ? 0 : Number(rent),
-        monthly_expense: expense === "" ? 0 : Number(expense),
-        is_airbnb: type === "airbnb",
-      },
-    ]);
 
-    if (error) {
-      console.log("Insert error:", error);
-      alert("Failed to add property");
-      return;
-    }
 
-    setName("");
-    setAddress("");
-    setRent("");
-    setExpense("");
-    setType("airbnb");
-    setIsAirbnb(false);
 
-    fetchProperties();
-  };
+
+
+const addProperty = async () => {
+  if (!name.trim()) {
+    alert("Property name is required");
+    return;
+  }
+
+  if (!address.trim()) {
+    alert("Address is required");
+    return;
+  }
+
+  const {
+    data: { user: currentUser },
+  } = await supabase.auth.getUser();
+
+  if (!currentUser) {
+    alert("You must be logged in");
+    return;
+  }
+
+  const { error } = await supabase.from("properties").insert([
+    {
+      name: name.trim(),
+      address: address.trim(),
+      type,
+      monthly_rent: rent === "" ? 0 : Number(rent),
+      monthly_expense: expense === "" ? 0 : Number(expense),
+      is_airbnb: type === "airbnb",
+      user_id: currentUser.id,
+    },
+  ]);
+
+  if (error) {
+    console.log("Insert error:", error);
+    alert("Failed to add property");
+    return;
+  }
+
+  setName("");
+  setAddress("");
+  setRent("");
+  setExpense("");
+  setType("airbnb");
+  setIsAirbnb(false);
+
+  fetchProperties();
+};
+
+
 
 
 
@@ -139,37 +155,76 @@ useEffect(() => {
 }, []);
 
 
-
-
-
-
-
-
-
-
-
   const getUser = async () => {
     const { data } = await supabase.auth.getUser();
     setUser(data.user);
   };
 
-  const fetchProperties = async () => {
-    const { data } = await supabase
-      .from("properties")
-      .select("*")
-      .order("created_at", { ascending: false });
+  
 
-    setProperties(data || []);
-  };
 
-  const fetchBookings = async () => {
-    const { data } = await supabase
-      .from("bookings")
-      .select("*")
-      .order("start_date", { ascending: true });
 
-    setBookings(data || []);
-  };
+
+
+
+const fetchProperties = async () => {
+  const {
+    data: { user: currentUser },
+  } = await supabase.auth.getUser();
+
+  if (!currentUser) {
+    setProperties([]);
+    return;
+  }
+
+  const { data } = await supabase
+    .from("properties")
+    .select("*")
+    .eq("user_id", currentUser.id)
+    .order("created_at", { ascending: false });
+
+  setProperties(data || []);
+};
+
+
+
+
+
+
+
+
+const fetchBookings = async () => {
+  const {
+    data: { user: currentUser },
+  } = await supabase.auth.getUser();
+
+  if (!currentUser) {
+    setBookings([]);
+    return;
+  }
+
+  const { data } = await supabase
+    .from("bookings")
+    .select("*")
+    .eq("user_id", currentUser.id)
+    .order("start_date", { ascending: true });
+
+  setBookings(data || []);
+};
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
 
   const startEditing = (property: any) => {
     setEditingId(property.id);
@@ -215,57 +270,87 @@ useEffect(() => {
     fetchProperties();
   };
 
-  const addBooking = async (propertyId: number, input: any) => {
-    if (!propertyId) return;
+ 
 
-    const { start, end, price, expense, id } = input;
 
-    if (!start || !end || !price) {
-      alert("Please fill all booking fields");
-      return;
-    }
 
-    let error: any = null;
 
-    if (id) {
-      const res = await supabase
-        .from("bookings")
-        .update({
-          start_date: start,
-          end_date: end,
-          price: Number(price),
-          expense: Number(expense || 0),
-        })
-        .eq("id", id);
 
-      error = res.error;
-    } else {
-      const res = await supabase.from("bookings").insert([
-        {
-          property_id: propertyId,
-          start_date: start,
-          end_date: end,
-          price: Number(price),
-          expense: Number(expense || 0),
-        },
-      ]);
 
-      error = res.error;
-    }
 
-    if (error) {
-      console.log("Booking error:", error);
-      alert("Failed to save booking");
-      return;
-    }
+const addBooking = async (propertyId: number, input: any) => {
+  if (!propertyId) return;
 
-    setBookingInputs((prev) => ({
-      ...prev,
-      [propertyId]: { start: "", end: "", price: "", expense: "" },
-    }));
+  const { start, end, price, expense, id } = input;
 
-    fetchBookings();
-  };
+  if (!start || !end || !price) {
+    alert("Please fill all booking fields");
+    return;
+  }
+
+  const {
+    data: { user: currentUser },
+  } = await supabase.auth.getUser();
+
+  if (!currentUser) {
+    alert("You must be logged in");
+    return;
+  }
+
+  let error: any = null;
+
+  if (id) {
+    const res = await supabase
+      .from("bookings")
+      .update({
+        start_date: start,
+        end_date: end,
+        price: Number(price),
+        expense: Number(expense || 0),
+      })
+      .eq("id", id);
+
+    error = res.error;
+  } else {
+    const res = await supabase.from("bookings").insert([
+      {
+        property_id: propertyId,
+        start_date: start,
+        end_date: end,
+        price: Number(price),
+        expense: Number(expense || 0),
+        user_id: currentUser.id,
+      },
+    ]);
+
+    error = res.error;
+  }
+
+  if (error) {
+    console.log("Booking error:", error);
+    alert("Failed to save booking");
+    return;
+  }
+
+  setBookingInputs((prev) => ({
+    ...prev,
+    [propertyId]: { start: "", end: "", price: "", expense: "" },
+  }));
+
+  fetchBookings();
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
   const deleteBooking = async (id: number) => {
     const confirmed = confirm("Delete booking?");
@@ -347,14 +432,6 @@ useEffect(() => {
   };
 
  
-
-
-
-
-
-
-
-
 const handleAuth = async () => {
   if (!authEmail.trim() || !authPassword.trim()) {
     alert("Please enter email and password");
@@ -400,17 +477,6 @@ const handleSignOut = async () => {
   await supabase.auth.signOut();
   setUser(null);
 };
-
-
-
-
-
-
-
-
-
-
-
 
 
 if (!user) {
@@ -493,26 +559,6 @@ if (!user) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   return (
     <div className="p-4 sm:p-6 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
@@ -527,17 +573,6 @@ if (!user) {
           Sign Out
         </button>
      </div>
-
-
-
-
-
-
-
-
-
-
-
 
       <h2
         className={`text-3xl font-bold mb-4 ${
