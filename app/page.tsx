@@ -414,7 +414,6 @@ if (error) {
   return;
 }
 
-// 🔥 Detect existing account
 if (!data?.user?.identities || data.user.identities.length === 0) {
   alert("This email is already registered. Please sign in instead.");
   setAuthMode("signin");
@@ -422,7 +421,7 @@ if (!data?.user?.identities || data.user.identities.length === 0) {
 }
 
 alert("Account created successfully. You can now sign in.");
-
+};
   
 
 
