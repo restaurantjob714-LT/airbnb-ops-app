@@ -609,7 +609,7 @@ if (!user) {
   <button
     type="button"
     onClick={handleForgotPassword}
-    className="w-full text-sm text-blue-600 hover:underline mt-2"
+    className="w-full text-sm text-blue-700 hover:underline mt-2"
   >
     Forgot password?
   </button>
