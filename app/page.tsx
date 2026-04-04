@@ -479,6 +479,52 @@ const handleSignOut = async () => {
 };
 
 
+
+
+
+
+
+
+
+
+
+
+
+const handleForgotPassword = async () => {
+  if (!authEmail.trim()) {
+    alert("Please enter your email first");
+    return;
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(authEmail, {
+    redirectTo: window.location.origin,
+  });
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  alert("Password reset email sent. Check your inbox.");
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 if (!user) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -546,6 +592,45 @@ if (!user) {
               ? "Continue"
               : "Create account"}
           </button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{authMode === "signin" && (
+  <button
+    type="button"
+    onClick={handleForgotPassword}
+    className="w-full text-sm text-blue-600 hover:underline mt-2"
+  >
+    Forgot password?
+  </button>
+)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </div>
 
         {/* Footer */}
