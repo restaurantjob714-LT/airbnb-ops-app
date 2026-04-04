@@ -438,127 +438,151 @@ const handleForgotPassword = async () => {
 };
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 if (!user) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+              Rental Property Management
+            </h1>
+            <p className="text-gray-500 text-sm mt-2">
+              Manage your properties, bookings, and profits in one place
+            </p>
+          </div>
 
-        {/* Title */}
-        <h1 className="text-2xl font-bold text-gray-1100 mb-1">
-          Rental Property Management
-        </h1>
-        <p className="text-gray-500 text-sm mb-6">
-          Manage your properties, bookings, and profits in one place
-        </p>
+          <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
+            <button
+              className={`w-full py-2.5 rounded-lg text-sm font-medium transition cursor-pointer ${
+                authMode === "signin"
+                  ? "bg-white shadow-sm text-black"
+                  : "text-gray-700 hover:bg-gray-200"
+              }`}
+              onClick={() => setAuthMode("signin")}
+            >
+              Sign In
+            </button>
 
+            <button
+              className={`w-full py-2.5 rounded-lg text-sm font-medium transition cursor-pointer ${
+                authMode === "signup"
+                  ? "bg-white shadow-sm text-black"
+                  : "text-gray-700 hover:bg-gray-200"
+              }`}
+              onClick={() => setAuthMode("signup")}
+            >
+              Sign Up
+            </button>
+          </div>
 
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
+              <input
+                type="email"
+                placeholder="Email address"
+                value={authEmail}
+                onChange={(e) => setAuthEmail(e.target.value)}
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+              />
+            </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Password
+              </label>
+              <input
+                type="password"
+                placeholder="Enter your password"
+                value={authPassword}
+                onChange={(e) => setAuthPassword(e.target.value)}
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+              />
+            </div>
 
+            <button
+              onClick={handleAuth}
+              disabled={authLoading}
+              className="w-full bg-black hover:bg-gray-800 disabled:bg-gray-400 transition text-white py-3 rounded-xl font-medium shadow-sm"
+            >
+              {authLoading
+                ? "Please wait..."
+                : authMode === "signin"
+                ? "Continue"
+                : "Create account"}
+            </button>
 
+            {authMode === "signin" && (
+              <button
+                type="button"
+                onClick={handleForgotPassword}
+                className="w-full text-sm text-gray-600 hover:text-black hover:underline transition"
+              >
+                Forgot password?
+              </button>
+            )}
+          </div>
 
-
-
-
-
-
-
-
-
-
-
-<div className="flex bg-gray-200 rounded-lg p-1 mb-6">
-  <button
-    className={`w-full py-2 rounded-md text-sm font-medium transition ${
-      authMode === "signin"
-        ? "bg-white shadow text-black"
-        : "text-gray-700 hover:bg-gray-300"
-    }`}
-    onClick={() => setAuthMode("signin")}
-  >
-    Sign In
-  </button>
-
-  <button
-    className={`w-full py-2 rounded-md text-sm font-medium transition ${
-      authMode === "signup"
-        ? "bg-white shadow text-black"
-        : "text-gray-700 hover:bg-gray-300"
-    }`}
-    onClick={() => setAuthMode("signup")}
-  >
-    Sign Up
-  </button>
-</div>
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        {/* Inputs */}
-        <div className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email address"
-            value={authEmail}
-            onChange={(e) => setAuthEmail(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            value={authPassword}
-            onChange={(e) => setAuthPassword(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black"
-          />
-
-          <button
-            onClick={handleAuth}
-            disabled={authLoading}
-            className="w-full bg-black hover:bg-gray-800 transition text-white py-3 rounded-lg font-medium"
-          >
-            {authLoading
-              ? "Please wait..."
-              : authMode === "signin"
-              ? "Continue"
-              : "Create account"}
-          </button>
-
-
-{authMode === "signin" && (
-  <button
-    type="button"
-    onClick={handleForgotPassword}
-    className="w-full text-sm text-blue-700 hover:underline mt-2"
-  >
-    Forgot password?
-  </button>
-)}
-
-
-
+          <div className="mt-8 pt-6 border-t border-gray-100">
+            <p className="text-xs text-gray-400 text-center leading-5">
+              Secure access for property owners and managers.
+              <br />
+              Your data stays private to your account.
+            </p>
+          </div>
         </div>
-
-        {/* Footer */}
-        <p className="text-xs text-gray-400 text-center mt-6">
-          By continuing, you agree to our terms and privacy policy
-        </p>
-
       </div>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   return (
