@@ -74,13 +74,6 @@ const [authLoading, setAuthLoading] = useState(false);
   }, 0);
 
   
-
-
-
-
-
-
-
 const addProperty = async () => {
   if (!name.trim()) {
     alert("Property name is required");
@@ -130,16 +123,6 @@ const addProperty = async () => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
 useEffect(() => {
   getUser();
   fetchProperties();
@@ -161,12 +144,6 @@ useEffect(() => {
   };
 
   
-
-
-
-
-
-
 const fetchProperties = async () => {
   const {
     data: { user: currentUser },
@@ -185,12 +162,6 @@ const fetchProperties = async () => {
 
   setProperties(data || []);
 };
-
-
-
-
-
-
 
 
 const fetchBookings = async () => {
@@ -213,19 +184,6 @@ const fetchBookings = async () => {
 };
 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
   const startEditing = (property: any) => {
     setEditingId(property.id);
     setName(property.name);
@@ -271,13 +229,6 @@ const fetchBookings = async () => {
   };
 
  
-
-
-
-
-
-
-
 const addBooking = async (propertyId: number, input: any) => {
   if (!propertyId) return;
 
@@ -339,17 +290,6 @@ const addBooking = async (propertyId: number, input: any) => {
 
   fetchBookings();
 };
-
-
-
-
-
-
-
-
-
-
-
 
 
   const deleteBooking = async (id: number) => {
@@ -479,17 +419,6 @@ const handleSignOut = async () => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
 const handleForgotPassword = async () => {
   if (!authEmail.trim()) {
     alert("Please enter your email first");
@@ -509,59 +438,72 @@ const handleForgotPassword = async () => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 if (!user) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
 
         {/* Title */}
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">
+        <h1 className="text-2xl font-bold text-gray-1100 mb-1">
           Rental Property Management
         </h1>
         <p className="text-gray-500 text-sm mb-6">
           Manage your properties, bookings, and profits in one place
         </p>
 
-        {/* Toggle */}
-        <div className="flex bg-gray-100 rounded-lg p-1 mb-6">
-          <button
-            className={`w-full py-2 rounded-md text-sm font-medium transition ${
-              authMode === "signin"
-                ? "bg-white shadow text-black"
-                : "text-gray-500"
-            }`}
-            onClick={() => setAuthMode("signin")}
-          >
-            Sign In
-          </button>
 
-          <button
-            className={`w-full py-2 rounded-md text-sm font-medium transition ${
-              authMode === "signup"
-                ? "bg-white shadow text-black"
-                : "text-gray-500"
-            }`}
-            onClick={() => setAuthMode("signup")}
-          >
-            Sign Up
-          </button>
-        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div className="flex bg-gray-200 rounded-lg p-1 mb-6">
+  <button
+    className={`w-full py-2 rounded-md text-sm font-medium transition ${
+      authMode === "signin"
+        ? "bg-white shadow text-black"
+        : "text-gray-700 hover:bg-gray-300"
+    }`}
+    onClick={() => setAuthMode("signin")}
+  >
+    Sign In
+  </button>
+
+  <button
+    className={`w-full py-2 rounded-md text-sm font-medium transition ${
+      authMode === "signup"
+        ? "bg-white shadow text-black"
+        : "text-gray-700 hover:bg-gray-300"
+    }`}
+    onClick={() => setAuthMode("signup")}
+  >
+    Sign Up
+  </button>
+</div>
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         {/* Inputs */}
         <div className="space-y-4">
@@ -594,17 +536,6 @@ if (!user) {
           </button>
 
 
-
-
-
-
-
-
-
-
-
-
-
 {authMode === "signin" && (
   <button
     type="button"
@@ -614,20 +545,6 @@ if (!user) {
     Forgot password?
   </button>
 )}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
