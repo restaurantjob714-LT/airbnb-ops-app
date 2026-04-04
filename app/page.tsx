@@ -404,15 +404,6 @@ const handleAuth = async () => {
   }
 
 
-
-
-
-
-
-
-
-
-
 if (authMode === "signup") {
   if (!firstName.trim() || !lastName.trim() || !phoneNumber.trim()) {
     alert("Please fill in first name, last name, and phone number");
@@ -436,24 +427,6 @@ const { data, error } = await supabase.auth.signUp({
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 setAuthLoading(false);
 
 if (error) {
@@ -461,25 +434,57 @@ if (error) {
   return;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 if (!data?.user?.identities || data.user.identities.length === 0) {
   alert("This email is already registered. Please sign in instead.");
+
+  // ✅ clear fields
+  setAuthEmail("");
+  setAuthPassword("");
+  setFirstName("");
+  setLastName("");
+  setPhoneNumber("");
+
+  // switch to sign in
   setAuthMode("signin");
+
   return;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 alert("Account created successfully. You can now sign in.");
 };
   
-
-
-
-
-
-
-
-
-
-
 
 const handleSignOut = async () => {
   await supabase.auth.signOut();
@@ -491,18 +496,6 @@ const handleSignOut = async () => {
   setPhoneNumber("");
   setAuthMode("signin");
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 const handleForgotPassword = async () => {
@@ -566,20 +559,6 @@ if (!user) {
           </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 {authMode === "signup" && (
   <>
     <div>
@@ -622,25 +601,6 @@ if (!user) {
     </div>
   </>
 )}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
           <div className="space-y-4">
@@ -715,13 +675,6 @@ if (!user) {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
 
 
-
-
-
-
-
-
-
 <p>
   Welcome:{" "}
   {user?.user_metadata?.first_name && user?.user_metadata?.last_name
@@ -729,14 +682,6 @@ if (!user) {
     : user.email}
 </p>
        
-
-
-
-
-
-
-
-
 
         <button
           className="bg-gray-800 text-white px-4 py-2 rounded w-full sm:w-auto"
