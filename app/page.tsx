@@ -17,6 +17,11 @@ export default function Home() {
   const [expandedProperties, setExpandedProperties] = useState<Record<string, boolean>>({});
 
 
+
+const [firstName, setFirstName] = useState("");
+const [lastName, setLastName] = useState("");
+const [phoneNumber, setPhoneNumber] = useState("");
+
 const [authEmail, setAuthEmail] = useState("");
 const [authPassword, setAuthPassword] = useState("");
 const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
@@ -402,10 +407,52 @@ const handleAuth = async () => {
 
 
 
+
+
+
+
+
+
+if (authMode === "signup") {
+  if (!firstName.trim() || !lastName.trim() || !phoneNumber.trim()) {
+    alert("Please fill in first name, last name, and phone number");
+    setAuthLoading(false);
+    return;
+  }
+}
+
+
+
 const { data, error } = await supabase.auth.signUp({
   email: authEmail,
   password: authPassword,
+  options: {
+    data: {
+      first_name: firstName.trim(),
+      last_name: lastName.trim(),
+      phone_number: phoneNumber.trim(),
+    },
+  },
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 setAuthLoading(false);
 
@@ -427,13 +474,35 @@ alert("Account created successfully. You can now sign in.");
 
 
 
+
+
+
+
+
+
+
 const handleSignOut = async () => {
   await supabase.auth.signOut();
   setUser(null);
   setAuthEmail("");
   setAuthPassword("");
+  setFirstName("");
+  setLastName("");
+  setPhoneNumber("");
   setAuthMode("signin");
 };
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 const handleForgotPassword = async () => {
@@ -495,6 +564,84 @@ if (!user) {
               Sign Up
             </button>
           </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{authMode === "signup" && (
+  <>
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        First Name
+      </label>
+      <input
+        type="text"
+        placeholder="First name"
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
+        className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        Last Name
+      </label>
+      <input
+        type="text"
+        placeholder="Last name"
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
+        className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        Phone Number
+      </label>
+      <input
+        type="text"
+        placeholder="Phone number"
+        value={phoneNumber}
+        onChange={(e) => setPhoneNumber(e.target.value)}
+        className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+      />
+    </div>
+  </>
+)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           <div className="space-y-4">
             <div>
@@ -566,7 +713,30 @@ if (!user) {
       <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
   
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <p>Welcome: {user.email}</p>
+
+
+
+
+
+
+
+
+
+<p>
+  Welcome:{" "}
+  {user?.user_metadata?.first_name && user?.user_metadata?.last_name
+    ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
+    : user.email}
+</p>
+       
+
+
+
+
+
+
+
+
 
         <button
           className="bg-gray-800 text-white px-4 py-2 rounded w-full sm:w-auto"
