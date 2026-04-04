@@ -398,24 +398,42 @@ const handleAuth = async () => {
     return;
   }
 
-  const { error } = await supabase.auth.signUp({
-    email: authEmail,
-    password: authPassword,
-  });
 
-  setAuthLoading(false);
 
-  if (error) {
-    alert(error.message);
-    return;
-  }
 
-  alert("Account created. Check your email if confirmation is required.");
-};
+
+const { data, error } = await supabase.auth.signUp({
+  email: authEmail,
+  password: authPassword,
+});
+
+setAuthLoading(false);
+
+if (error) {
+  alert(error.message);
+  return;
+}
+
+// 🔥 Detect existing account
+if (!data?.user?.identities || data.user.identities.length === 0) {
+  alert("This email is already registered. Please sign in instead.");
+  setAuthMode("signin");
+  return;
+}
+
+alert("Account created successfully. You can now sign in.");
+
+  
+
+
+
 
 const handleSignOut = async () => {
   await supabase.auth.signOut();
   setUser(null);
+  setAuthEmail("");
+  setAuthPassword("");
+  setAuthMode("signin");
 };
 
 
@@ -439,31 +457,21 @@ const handleForgotPassword = async () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 if (!user) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
-              Rental Property Management
-            </h1>
-            <p className="text-gray-500 text-sm mt-2">
-              Manage your properties, bookings, and profits in one place
-            </p>
-          </div>
+
+          
+<div className="mb-8 text-center">
+  <h1 className="text-3xl font-semibold text-gray-900 tracking-tight">
+    Rental Property Management
+  </h1>
+  <p className="text-gray-500 text-sm mt-2 max-w-xs mx-auto">
+    Manage your properties, bookings, and profits in one place
+  </p>
+</div>
 
           <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
             <button
@@ -551,37 +559,6 @@ if (!user) {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
