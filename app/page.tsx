@@ -393,10 +393,49 @@ const handleAuth = async () => {
 
     setAuthLoading(false);
 
-    if (error) {
-      alert(error.message);
-      return;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+if (error) {
+  if (error.message.toLowerCase().includes("email not confirmed")) {
+    alert("Please confirm your email before signing in. Check your inbox and click the verification link.");
+  } else {
+    alert(error.message);
+  }
+  return;
+}
+
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     const { data } = await supabase.auth.getUser();
     setUser(data.user);
@@ -414,10 +453,18 @@ if (authMode === "signup") {
 
 
 
+
+
+
+
+
+
+
 const { data, error } = await supabase.auth.signUp({
   email: authEmail,
   password: authPassword,
   options: {
+    emailRedirectTo: "https://airbnb-ops-app.vercel.app",
     data: {
       first_name: firstName.trim(),
       last_name: lastName.trim(),
@@ -427,26 +474,27 @@ const { data, error } = await supabase.auth.signUp({
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 setAuthLoading(false);
 
 if (error) {
   alert(error.message);
   return;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -466,23 +514,9 @@ if (!data?.user?.identities || data.user.identities.length === 0) {
   return;
 }
 
+alert("Account created. Please check your email and click the confirmation link before signing in.");
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-alert("Account created successfully. You can now sign in.");
 };
   
 
