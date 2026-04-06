@@ -17,6 +17,7 @@ export default function Home() {
   const [expandedProperties, setExpandedProperties] = useState<Record<string, boolean>>({});
 
 
+const [checkingAuthRedirect, setCheckingAuthRedirect] = useState(true);
 
 const [firstName, setFirstName] = useState("");
 const [lastName, setLastName] = useState("");
@@ -146,37 +147,45 @@ const addProperty = async () => {
 
 
 useEffect(() => {
-  const handleEmailConfirmationRedirect = async () => {
-    const hash = window.location.hash;
+const initializeAuth = async () => {
+  const hash = window.location.hash;
 
-    if (
-      hash.includes("access_token") &&
-      hash.includes("refresh_token") &&
-      hash.includes("type=signup")
-    ) {
-      // user just confirmed email, but we do NOT want auto-login
-      await supabase.auth.signOut();
+  if (
+    hash.includes("access_token") &&
+    hash.includes("refresh_token") &&
+    hash.includes("type=signup")
+  ) {
+    // user just confirmed email, but we do NOT want auto-login
+    await supabase.auth.signOut();
 
-      // clean the URL
-      window.history.replaceState({}, document.title, window.location.pathname);
+    // clear auth tokens from URL
+    window.history.replaceState({}, document.title, window.location.pathname);
 
-      alert("Email verified successfully. Please sign in.");
-    }
-  };
+    // force logged-out state
+    setUser(null);
 
-  handleEmailConfirmationRedirect();
+    alert("Email verified successfully. Please sign in.");
 
-  getUser();
-  fetchProperties();
-  fetchBookings();
+    setCheckingAuthRedirect(false);
+    return;
+  }
 
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange((event, session) => {
-    setUser(session?.user ?? null);
-  });
+  await getUser();
+  await fetchProperties();
+  await fetchBookings();
 
-  return () => subscription.unsubscribe();
+  setCheckingAuthRedirect(false);
+};
+
+initializeAuth();
+
+const {
+  data: { subscription },
+} = supabase.auth.onAuthStateChange((event, session) => {
+  setUser(session?.user ?? null);
+});
+
+return () => subscription.unsubscribe();
 }, []);
 
 
@@ -584,6 +593,28 @@ const handleForgotPassword = async () => {
 
   alert("Password reset email sent. Check your inbox.");
 };
+
+
+
+
+
+
+
+
+if (checkingAuthRedirect) {
+return (
+  <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="text-gray-600 text-sm">Loading...</div>
+  </div>
+);
+}
+
+
+
+
+
+
+
 
 
 
