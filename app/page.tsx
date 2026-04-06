@@ -128,7 +128,44 @@ const addProperty = async () => {
 };
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 useEffect(() => {
+  const handleEmailConfirmationRedirect = async () => {
+    const hash = window.location.hash;
+
+    if (
+      hash.includes("access_token") &&
+      hash.includes("refresh_token") &&
+      hash.includes("type=signup")
+    ) {
+      // user just confirmed email, but we do NOT want auto-login
+      await supabase.auth.signOut();
+
+      // clean the URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      alert("Email verified successfully. Please sign in.");
+    }
+  };
+
+  handleEmailConfirmationRedirect();
+
   getUser();
   fetchProperties();
   fetchBookings();
@@ -141,6 +178,23 @@ useEffect(() => {
 
   return () => subscription.unsubscribe();
 }, []);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   const getUser = async () => {
