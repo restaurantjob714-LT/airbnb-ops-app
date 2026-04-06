@@ -457,14 +457,35 @@ const handleAuth = async () => {
     setAuthLoading(false);
 
 
+
+
+
+
+
+
+
+
+
 if (error) {
   if (error.message.toLowerCase().includes("email not confirmed")) {
     alert("Please confirm your email before signing in. Check your inbox and click the verification link.");
   } else {
-    alert(error.message);
+    alert("Invalid login credentials");
   }
+
+  //Clear input fields
+  setAuthEmail("");
+  setAuthPassword("");
+
   return;
 }
+
+
+
+
+
+
+
 
 
     const { data } = await supabase.auth.getUser();
