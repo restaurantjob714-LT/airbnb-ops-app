@@ -394,17 +394,6 @@ const handleAuth = async () => {
     setAuthLoading(false);
 
 
-
-
-
-
-
-
-
-
-
-
-
 if (error) {
   if (error.message.toLowerCase().includes("email not confirmed")) {
     alert("Please confirm your email before signing in. Check your inbox and click the verification link.");
@@ -413,28 +402,6 @@ if (error) {
   }
   return;
 }
-
-
-
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     const { data } = await supabase.auth.getUser();
@@ -453,13 +420,6 @@ if (authMode === "signup") {
 
 
 
-
-
-
-
-
-
-
 const { data, error } = await supabase.auth.signUp({
   email: authEmail,
   password: authPassword,
@@ -472,21 +432,6 @@ const { data, error } = await supabase.auth.signUp({
     },
   },
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 setAuthLoading(false);
@@ -507,17 +452,45 @@ if (!data?.user?.identities || data.user.identities.length === 0) {
   setFirstName("");
   setLastName("");
   setPhoneNumber("");
-
   // switch to sign in
   setAuthMode("signin");
 
   return;
 }
 
+
+
+
+
+
+
+
+
+
 alert("Account created. Please check your email and click the confirmation link before signing in.");
+
+// ✅ CLEAR ALL FIELDS AFTER USER CLICKS OK
+setFirstName("");
+setLastName("");
+setPhoneNumber("");
+setAuthEmail("");
+setAuthPassword("");
+
+// ✅ SWITCH BACK TO SIGN IN TAB
+setAuthMode("signin");
 
 
 };
+
+
+
+
+
+
+
+
+
+
   
 
 const handleSignOut = async () => {
