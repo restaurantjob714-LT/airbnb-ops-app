@@ -145,13 +145,35 @@ const addProperty = async () => {
 
 
 
-
 useEffect(() => {
   const initializeAuth = async () => {
     const hash = window.location.hash;
-    const search = window.location.search;
+    const searchParams = new URLSearchParams(window.location.search);
+    const fromConfirmSignup = searchParams.get("from") === "confirm-signup";
 
-    // Case 1: fresh signup confirmation redirect from Supabase
+    if (fromConfirmSignup) {
+      const alreadyConfirmed = localStorage.getItem("email_confirmed_once");
+
+      await supabase.auth.signOut();
+
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      setUser(null);
+      setAuthMode("signin");
+      setAuthEmail("");
+      setAuthPassword("");
+
+      if (alreadyConfirmed) {
+        setAuthNotice("This email is already verified. Please sign in.");
+      } else {
+        localStorage.setItem("email_confirmed_once", "true");
+        setAuthNotice("Email verified successfully. Please sign in.");
+      }
+
+      setCheckingAuthRedirect(false);
+      return;
+    }
+
     if (
       hash.includes("access_token") &&
       hash.includes("refresh_token") &&
@@ -166,21 +188,8 @@ useEffect(() => {
       setAuthEmail("");
       setAuthPassword("");
       setAuthNotice("Email verified successfully. Please sign in.");
-      setCheckingAuthRedirect(false);
-      return;
-    }
+      localStorage.setItem("email_confirmed_once", "true");
 
-    // Case 2: user clicked an old / reused confirmation link
-    if (search.includes("type=signup")) {
-      await supabase.auth.signOut();
-
-      window.history.replaceState({}, document.title, window.location.pathname);
-
-      setUser(null);
-      setAuthMode("signin");
-      setAuthEmail("");
-      setAuthPassword("");
-      setAuthNotice("This email is already verified. Please sign in.");
       setCheckingAuthRedirect(false);
       return;
     }
@@ -523,7 +532,11 @@ const { data, error } = await supabase.auth.signUp({
   email: authEmail,
   password: authPassword,
   options: {
-    emailRedirectTo: "https://airbnb-ops-app.vercel.app",
+
+
+    emailRedirectTo: "https://airbnb-ops-app.vercel.app/?from=confirm-signup",
+
+
     data: {
       first_name: firstName.trim(),
       last_name: lastName.trim(),
