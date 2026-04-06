@@ -28,6 +28,7 @@ const [authPassword, setAuthPassword] = useState("");
 const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
 const [authLoading, setAuthLoading] = useState(false);
 
+const [authNotice, setAuthNotice] = useState("");
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -145,47 +146,61 @@ const addProperty = async () => {
 
 
 
-
 useEffect(() => {
-const initializeAuth = async () => {
-  const hash = window.location.hash;
+  const initializeAuth = async () => {
+    const hash = window.location.hash;
+    const search = window.location.search;
 
-  if (
-    hash.includes("access_token") &&
-    hash.includes("refresh_token") &&
-    hash.includes("type=signup")
-  ) {
-    // user just confirmed email, but we do NOT want auto-login
-    await supabase.auth.signOut();
+    // Case 1: fresh signup confirmation redirect from Supabase
+    if (
+      hash.includes("access_token") &&
+      hash.includes("refresh_token") &&
+      hash.includes("type=signup")
+    ) {
+      await supabase.auth.signOut();
 
-    // clear auth tokens from URL
-    window.history.replaceState({}, document.title, window.location.pathname);
+      window.history.replaceState({}, document.title, window.location.pathname);
 
-    // force logged-out state
-    setUser(null);
+      setUser(null);
+      setAuthMode("signin");
+      setAuthEmail("");
+      setAuthPassword("");
+      setAuthNotice("Email verified successfully. Please sign in.");
+      setCheckingAuthRedirect(false);
+      return;
+    }
 
-    alert("Email verified successfully. Please sign in.");
+    // Case 2: user clicked an old / reused confirmation link
+    if (search.includes("type=signup")) {
+      await supabase.auth.signOut();
+
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      setUser(null);
+      setAuthMode("signin");
+      setAuthEmail("");
+      setAuthPassword("");
+      setAuthNotice("This email is already verified. Please sign in.");
+      setCheckingAuthRedirect(false);
+      return;
+    }
+
+    await getUser();
+    await fetchProperties();
+    await fetchBookings();
 
     setCheckingAuthRedirect(false);
-    return;
-  }
+  };
 
-  await getUser();
-  await fetchProperties();
-  await fetchBookings();
+  initializeAuth();
 
-  setCheckingAuthRedirect(false);
-};
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange((event, session) => {
+    setUser(session?.user ?? null);
+  });
 
-initializeAuth();
-
-const {
-  data: { subscription },
-} = supabase.auth.onAuthStateChange((event, session) => {
-  setUser(session?.user ?? null);
-});
-
-return () => subscription.unsubscribe();
+  return () => subscription.unsubscribe();
 }, []);
 
 
@@ -653,6 +668,12 @@ if (!user) {
   <p className="text-gray-500 text-sm mt-2 max-w-xs mx-auto">
     Manage your properties, bookings, and profits in one place
   </p>
+
+  {authNotice && (
+   <div className="mt-4 mb-2 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+     {authNotice}
+   </div>
+  )}
 </div>
 
           <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
@@ -662,7 +683,20 @@ if (!user) {
                   ? "bg-white shadow-sm text-black"
                   : "text-gray-700 hover:bg-gray-200"
               }`}
-              onClick={() => setAuthMode("signin")}
+
+
+
+
+
+
+              onClick={() => {
+                setAuthMode("signin");
+                setAuthNotice("");
+              }}
+
+
+
+
             >
               Sign In
             </button>
@@ -673,7 +707,25 @@ if (!user) {
                   ? "bg-white shadow-sm text-black"
                   : "text-gray-700 hover:bg-gray-200"
               }`}
-              onClick={() => setAuthMode("signup")}
+
+
+
+
+
+
+              onClick={() => {
+                setAuthMode("signup");
+                setAuthNotice("");
+              }}
+
+
+
+
+
+
+
+
+
             >
               Sign Up
             </button>
@@ -733,7 +785,26 @@ if (!user) {
                 type="email"
                 placeholder="Email address"
                 value={authEmail}
-                onChange={(e) => setAuthEmail(e.target.value)}
+
+
+
+
+
+
+
+                onChange={(e) => {
+                  setAuthEmail(e.target.value);
+                  setAuthNotice("");
+                }}
+
+
+
+
+
+
+
+
+
                 className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
               />
             </div>
@@ -746,7 +817,33 @@ if (!user) {
                 type="password"
                 placeholder="Enter your password"
                 value={authPassword}
-                onChange={(e) => setAuthPassword(e.target.value)}
+
+
+
+
+
+
+
+
+
+                onChange={(e) => {
+                   setAuthPassword(e.target.value);
+                   setAuthNotice("");
+                }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
               />
             </div>
