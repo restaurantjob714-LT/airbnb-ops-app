@@ -434,6 +434,14 @@ const { data, error } = await supabase.auth.signUp({
 });
 
 
+
+
+
+
+
+
+
+
 setAuthLoading(false);
 
 if (error) {
@@ -475,10 +483,10 @@ setLastName("");
 setPhoneNumber("");
 setAuthEmail("");
 setAuthPassword("");
-
 // ✅ SWITCH BACK TO SIGN IN TAB
 setAuthMode("signin");
 
+return;
 
 };
 
