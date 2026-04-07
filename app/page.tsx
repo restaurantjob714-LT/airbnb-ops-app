@@ -131,21 +131,7 @@ const addProperty = async () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-useEffect(() => {
+  useEffect(() => {
   const initializeAuth = async () => {
     const hash = window.location.hash;
     const searchParams = new URLSearchParams(window.location.search);
@@ -219,8 +205,11 @@ useEffect(() => {
 
 
 
-
-
+useEffect(() => {
+  if (isFirstTimeUser && formRef.current) {
+    formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}, [isFirstTimeUser]);
 
 
 
@@ -481,15 +470,6 @@ const handleAuth = async () => {
     setAuthLoading(false);
 
 
-
-
-
-
-
-
-
-
-
 if (error) {
   if (error.message.toLowerCase().includes("email not confirmed")) {
     alert("Please confirm your email before signing in. Check your inbox and click the verification link.");
@@ -503,13 +483,6 @@ if (error) {
 
   return;
 }
-
-
-
-
-
-
-
 
 
     const { data } = await supabase.auth.getUser();
@@ -546,21 +519,12 @@ const { data, error } = await supabase.auth.signUp({
 });
 
 
-
-
-
-
-
-
-
-
 setAuthLoading(false);
 
 if (error) {
   alert(error.message);
   return;
 }
-
 
 
 if (!data?.user?.identities || data.user.identities.length === 0) {
@@ -579,14 +543,6 @@ if (!data?.user?.identities || data.user.identities.length === 0) {
 }
 
 
-
-
-
-
-
-
-
-
 alert("Account created. Please check your email and click the confirmation link before signing in.");
 
 // ✅ CLEAR ALL FIELDS AFTER USER CLICKS OK
@@ -602,16 +558,6 @@ return;
 
 };
 
-
-
-
-
-
-
-
-
-
-  
 
 const handleSignOut = async () => {
   await supabase.auth.signOut();
@@ -645,11 +591,6 @@ const handleForgotPassword = async () => {
 
 
 
-
-
-
-
-
 if (checkingAuthRedirect) {
 return (
   <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -657,14 +598,6 @@ return (
   </div>
 );
 }
-
-
-
-
-
-
-
-
 
 
 if (!user) {
@@ -698,16 +631,10 @@ if (!user) {
               }`}
 
 
-
-
-
-
               onClick={() => {
                 setAuthMode("signin");
                 setAuthNotice("");
               }}
-
-
 
 
             >
@@ -722,21 +649,10 @@ if (!user) {
               }`}
 
 
-
-
-
-
               onClick={() => {
                 setAuthMode("signup");
                 setAuthNotice("");
               }}
-
-
-
-
-
-
-
 
 
             >
@@ -801,21 +717,10 @@ if (!user) {
 
 
 
-
-
-
-
                 onChange={(e) => {
                   setAuthEmail(e.target.value);
                   setAuthNotice("");
                 }}
-
-
-
-
-
-
-
 
 
                 className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
@@ -832,32 +737,13 @@ if (!user) {
                 value={authPassword}
 
 
-
-
-
-
-
-
-
                 onChange={(e) => {
                    setAuthPassword(e.target.value);
                    setAuthNotice("");
                 }}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-     gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
               />
             </div>
 
@@ -899,6 +785,9 @@ if (!user) {
 
 
 
+const isFirstTimeUser = properties.length ===0;
+
+
   return (
     <div className="p-4 sm:p-6 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
@@ -913,6 +802,64 @@ if (!user) {
     : user.email}
 </p>
        
+
+
+
+
+
+
+
+
+
+
+
+
+{isFirstTimeUser && (
+  <div className="border-2 border-blue-200 bg-blue-50 rounded-2xl p-5 mb-6">
+    <h2 className="text-xl font-bold text-blue-900 mb-2">
+      Welcome to Rental Property Management
+    </h2>
+    <p className="text-blue-800 mb-4">
+      Let’s get your account set up. Start by adding your first property below.
+    </p>
+
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+      <div className="bg-white rounded-xl p-4 border border-blue-100">
+        <p className="font-semibold mb-1">1. Add a property</p>
+        <p className="text-gray-600">
+          Enter the address and choose Airbnb or Long Term.
+        </p>
+      </div>
+
+      <div className="bg-white rounded-xl p-4 border border-blue-100">
+        <p className="font-semibold mb-1">2. Add bookings or rent</p>
+        <p className="text-gray-600">
+          Track revenue and expenses for each property.
+        </p>
+      </div>
+
+      <div className="bg-white rounded-xl p-4 border border-blue-100">
+        <p className="font-semibold mb-1">3. Monitor profit</p>
+        <p className="text-gray-600">
+          View totals and monthly performance in one place.
+        </p>
+      </div>
+    </div>
+  </div>
+)}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <button
           className="bg-gray-800 text-white px-4 py-2 rounded w-full sm:w-auto"
@@ -939,12 +886,27 @@ if (!user) {
       </h2>
 
       <div
+
+
         ref={formRef}
         className={`mb-6 rounded p-3 ${
           editingId ? "border-2 border-yellow-400 bg-yellow-50" : ""
         }`}
       >
-        <h2 className="text-lg font-semibold">Add Property</h2>
+        
+
+
+
+
+
+<h2 className="text-lg font-semibold">
+  {isFirstTimeUser ? "Add Your First Property" : "Add Property"}
+</h2>
+
+
+
+
+
 
         <div className="flex flex-col sm:flex-row gap-2 mb-2">
           <input
@@ -1021,7 +983,20 @@ if (!user) {
         </div>
       </div>
 
+
+
+
+
+
+
+
+
+      
+
+
+    {properties.length > 0 && (
       <div className="space-y-8">
+
         <div>
           <h2 className="text-xl font-bold mb-3">Airbnb Properties</h2>
 
@@ -1322,5 +1297,10 @@ if (!user) {
         </div>
       </div>
     </div>
+
+   )}
+
+
   );
 }
+
