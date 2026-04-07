@@ -1296,11 +1296,12 @@ const isFirstTimeUser = properties.length ===0;
           ))}
         </div>
       </div>
+
+    )}
+
     </div>
 
-   )}
-
-
+   
   );
 }
 
