@@ -132,56 +132,45 @@ const addProperty = async () => {
 
 
 
-  useEffect(() => {
+
+
+
+
+
+
+
+
+
+useEffect(() => {
   const initializeAuth = async () => {
     const hash = window.location.hash;
     const searchParams = new URLSearchParams(window.location.search);
     const fromConfirmSignup = searchParams.get("from") === "confirm-signup";
 
-    if (fromConfirmSignup) {
-      const alreadyConfirmed = localStorage.getItem("email_confirmed_once");
-
-      await supabase.auth.signOut();
-
-      window.history.replaceState({}, document.title, window.location.pathname);
-
-      setUser(null);
-      setAuthMode("signin");
-      setAuthEmail("");
-      setAuthPassword("");
-
-      if (alreadyConfirmed) {
-        setAuthNotice("This email is already verified. Please sign in.");
-      } else {
-        localStorage.setItem("email_confirmed_once", "true");
-        setAuthNotice("Email verified successfully. Please sign in.");
-      }
-
-      setCheckingAuthRedirect(false);
-      return;
-    }
-
     if (
-      hash.includes("access_token") &&
-      hash.includes("refresh_token") &&
-      hash.includes("type=signup")
+      fromConfirmSignup ||
+      (
+        hash.includes("access_token") &&
+        hash.includes("refresh_token") &&
+        hash.includes("type=signup")
+      )
     ) {
       await supabase.auth.signOut();
 
       window.history.replaceState({}, document.title, window.location.pathname);
 
       setUser(null);
+      setProfile(null);
       setAuthMode("signin");
       setAuthEmail("");
       setAuthPassword("");
       setAuthNotice("Email verified successfully. Please sign in.");
-      localStorage.setItem("email_confirmed_once", "true");
-
       setCheckingAuthRedirect(false);
       return;
     }
 
     await getUser();
+    await fetchProfile();
     await fetchProperties();
     await fetchBookings();
 
@@ -194,10 +183,24 @@ const addProperty = async () => {
     data: { subscription },
   } = supabase.auth.onAuthStateChange((event, session) => {
     setUser(session?.user ?? null);
+
+    if (session?.user) {
+      fetchProfile();
+    } else {
+      setProfile(null);
+    }
   });
 
   return () => subscription.unsubscribe();
 }, []);
+
+
+
+
+
+
+
+
 
 
 
