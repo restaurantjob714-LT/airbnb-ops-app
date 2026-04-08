@@ -39,6 +39,7 @@ const [authNotice, setAuthNotice] = useState("");
 
   const airbnbProperties = properties.filter((p) => p.is_airbnb);
   const longTermProperties = properties.filter((p) => !p.is_airbnb);
+  const isFirstTimeUser = properties.length ===0;
 
   const totalProfit = properties.reduce((sum, p) => {
     if (p.is_airbnb) {
@@ -197,7 +198,6 @@ const addProperty = async () => {
 
   return () => subscription.unsubscribe();
 }, []);
-
 
 
 
@@ -784,8 +784,6 @@ if (!user) {
 }
 
 
-
-const isFirstTimeUser = properties.length ===0;
 
 
   return (
