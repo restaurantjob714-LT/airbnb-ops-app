@@ -11,6 +11,8 @@ export default function Home() {
 
   const [user, setUser] = useState<any>(null);
   const [properties, setProperties] = useState<any[]>([]);
+  const [profile, setProfile] = useState<any>(null);
+
   const [bookings, setBookings] = useState<any[]>([]);
 
   const [bookingInputs, setBookingInputs] = useState<Record<string, any>>({});
@@ -232,18 +234,15 @@ const fetchProperties = async () => {
   const {
     data: { user: currentUser },
   } = await supabase.auth.getUser();
-
   if (!currentUser) {
     setProperties([]);
     return;
   }
-
   const { data } = await supabase
     .from("properties")
     .select("*")
     .eq("user_id", currentUser.id)
     .order("created_at", { ascending: false });
-
   setProperties(data || []);
 };
 
@@ -252,12 +251,10 @@ const fetchBookings = async () => {
   const {
     data: { user: currentUser },
   } = await supabase.auth.getUser();
-
   if (!currentUser) {
     setBookings([]);
     return;
   }
-
   const { data } = await supabase
     .from("bookings")
     .select("*")
@@ -267,7 +264,43 @@ const fetchBookings = async () => {
   setBookings(data || []);
 };
 
-  
+
+
+
+ 
+
+
+const fetchProfile = async () => {
+  const {
+    data: { user: currentUser },
+  } = await supabase.auth.getUser();
+
+  if (!currentUser) {
+    setProfile(null);
+    return;
+  }
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", currentUser.id)
+    .single();
+
+  if (error) {
+    console.log("Profile fetch error:", error);
+    return;
+  }
+
+  setProfile(data);
+};
+
+
+
+
+
+
+ 
+
   const startEditing = (property: any) => {
     setEditingId(property.id);
     setName(property.name);
