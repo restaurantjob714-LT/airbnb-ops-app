@@ -856,9 +856,21 @@ if (!user) {
 
 {isFirstTimeUser && (
   <div className="border-2 border-blue-200 bg-blue-50 rounded-2xl p-5 mb-6">
-    <h2 className="text-xl font-bold text-blue-900 mb-2">
-      Welcome to Rental Property Management
-    </h2>
+
+    
+
+
+<h2
+  className={`text-3xl font-bold mb-4 ${
+    totalProfit >= 0 ? "text-green-600" : "text-red-600"
+  }`}
+>
+  Total Profit: ${totalProfit}
+</h2>
+
+
+
+
     <p className="text-blue-800 mb-4">
       Let’s get your account set up. Start by adding your first property below.
     </p>
