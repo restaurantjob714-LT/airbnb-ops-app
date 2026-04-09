@@ -823,28 +823,31 @@ if (!user) {
 
   return (
     <div className="p-4 sm:p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-  
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
 
-<p>
-  Welcome:{" "}
-  {user?.user_metadata?.first_name && user?.user_metadata?.last_name
-    ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
-    : user.email}
-</p>
-   
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+      <div>
+    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+      Dashboard
+    </h1>
+    <p className="mt-2 text-gray-500 text-sm sm:text-base">
+      Welcome back,{" "}
+      <span className="font-semibold text-gray-900">
+        {profile?.first_name && profile?.last_name
+          ? `${profile.first_name} ${profile.last_name}`
+          : user?.email}
+      </span>
+    </p>
+  </div>
 
-
-
-    
-
-<button
-    className="bg-gray-800 text-white px-4 py-2 rounded w-full sm:w-auto"
+  <button
+    className="bg-black hover:bg-gray-800 text-white px-5 py-3 rounded-xl font-medium shadow-sm transition w-full sm:w-auto"
     onClick={handleSignOut}
-    >
+  >
     Sign Out
-</button>
+  </button>
+</div>
+
+<div className="border-b border-gray-200 mb-8"></div>
 
 
 
