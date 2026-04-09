@@ -821,13 +821,11 @@ if (!user) {
 
 
 
-
   return (
     <div className="p-4 sm:p-6 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
   
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-
 
 <p>
   Welcome:{" "}
@@ -835,13 +833,18 @@ if (!user) {
     ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
     : user.email}
 </p>
-       
+   
 
 
 
+    
 
-
-
+<button
+    className="bg-gray-800 text-white px-4 py-2 rounded w-full sm:w-auto"
+    onClick={handleSignOut}
+    >
+    Sign Out
+</button>
 
 
 
@@ -892,15 +895,7 @@ if (!user) {
 
 
 
-
-
-
-        <button
-          className="bg-gray-800 text-white px-4 py-2 rounded w-full sm:w-auto"
-          onClick={handleSignOut}
-        >
-          Sign Out
-        </button>
+        
      </div>
 
       <h2
