@@ -1059,7 +1059,7 @@ return (
                       )
                     }
                   >
-                    {expandedProperties[p.id] ? "Hide Details" : "Show Details"}
+                    {expandedProperties[p.id] ? "Hide Details" : "Add/Show Details"}
                   </button>
                 </div>
               </div>
