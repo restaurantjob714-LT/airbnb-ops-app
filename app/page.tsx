@@ -915,20 +915,8 @@ return (
       }`}
     >
       <h2 className="text-lg font-semibold">
-        {isFirstTimeUser ? "Add Your First Property" : "Add Property"}
+        {isFirstTimeUser ? "Add Your First Property" : "Add New Property"}
       </h2>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         <div className="flex flex-col sm:flex-row gap-2 mb-2">
