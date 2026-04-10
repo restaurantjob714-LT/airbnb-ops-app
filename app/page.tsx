@@ -567,7 +567,7 @@ if (!data?.user?.identities || data.user.identities.length === 0) {
   alert("This email is already registered. Please sign in instead.");
 
   // ✅ clear fields
-  setAuthEmail("");
+  // setAuthEmail("");
   setAuthPassword("");
   setFirstName("");
   setLastName("");
@@ -585,7 +585,7 @@ alert("Account created. Please check your email and click the confirmation link 
 setFirstName("");
 setLastName("");
 setPhoneNumber("");
-setAuthEmail("");
+// setAuthEmail("");
 setAuthPassword("");
 // ✅ SWITCH BACK TO SIGN IN TAB
 setAuthMode("signin");
@@ -821,64 +821,59 @@ if (!user) {
 
 
 
- 
+
+  return (
+    <div className="p-4 sm:p-6 max-w-3xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+  
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+
+
+<p>
+  Welcome:{" "}
+  {user?.user_metadata?.first_name && user?.user_metadata?.last_name
+    ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
+    : user.email}
+</p>
+       
 
 
 
 
 
-
-
-
-return (
-  <div className="p-4 sm:p-6 max-w-3xl mx-auto">
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-      <div>
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
-          Dashboard
-        </h1>
-        <p className="mt-2 text-gray-500 text-sm sm:text-base">
-          Welcome back,{" "}
-          <span className="font-semibold text-gray-900">
-            {profile?.first_name && profile?.last_name
-              ? `${profile.first_name} ${profile.last_name}`
-              : user?.email}
-          </span>
-        </p>
-      </div>
-
-      <button
-        className="bg-black hover:bg-gray-800 text-white px-5 py-3 rounded-xl font-medium shadow-sm transition w-full sm:w-auto"
-        onClick={handleSignOut}
-      >
-        Sign Out
-      </button>
-    </div>
-
-    <div className="border-b border-gray-200 mb-8"></div>
-
-    {isFirstTimeUser && (
-      <div className="border-2 border-blue-200 bg-blue-50 rounded-2xl p-5 mb-6">
-        <h2 className="text-xl font-bold text-blue-900 mb-2">
-          Welcome to Rental Property Management
-        </h2>
-        <p className="text-blue-800 mb-4">
-          Let’s get your account set up. Start by adding your first property below.
-        </p>
-      </div>
-    )}
-
-    <h2
-      className={`text-3xl font-bold mb-4 ${
-        totalProfit >= 0 ? "text-green-600" : "text-red-600"
-      }`}
-    >
-      Total Profit: ${totalProfit}
+{isFirstTimeUser && (
+  <div className="border-2 border-blue-200 bg-blue-50 rounded-2xl p-5 mb-6">
+    <h2 className="text-xl font-bold text-blue-900 mb-2">
+      Welcome to Rental Property Management
     </h2>
+    <p className="text-blue-800 mb-4">
+      Let’s get your account set up. Start by adding your first property below.
+    </p>
 
-    {/* rest of dashboard */}
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+      <div className="bg-white rounded-xl p-4 border border-blue-100">
+        <p className="font-semibold mb-1">1. Add a property</p>
+        <p className="text-gray-600">
+          Enter the address and choose Airbnb or Long Term.
+        </p>
+      </div>
+
+      <div className="bg-white rounded-xl p-4 border border-blue-100">
+        <p className="font-semibold mb-1">2. Add bookings or rent</p>
+        <p className="text-gray-600">
+          Track revenue and expenses for each property.
+        </p>
+      </div>
+
+      <div className="bg-white rounded-xl p-4 border border-blue-100">
+        <p className="font-semibold mb-1">3. Monitor profit</p>
+        <p className="text-gray-600">
+          View totals and monthly performance in one place.
+        </p>
+      </div>
+    </div>
   </div>
-);
+)}
 
 
 
@@ -887,9 +882,21 @@ return (
 
 
 
+        <button
+          className="bg-gray-800 text-white px-4 py-2 rounded w-full sm:w-auto"
+          onClick={handleSignOut}
+        >
+          Sign Out
+        </button>
+     </div>
 
-
-
+      <h2
+        className={`text-3xl font-bold mb-4 ${
+          totalProfit >= 0 ? "text-green-600" : "text-red-600"
+        }`}
+      >
+        Total Profit: ${totalProfit}
+      </h2>
 
       <h2 className="text-xl font-semibold mb-4">
         Total Monthly Revenue: ${totalRevenue}
