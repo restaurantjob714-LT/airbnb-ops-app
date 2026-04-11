@@ -835,36 +835,50 @@ if (!user) {
 return (
   <div className="min-h-screen bg-gray-50">
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5 sm:p-6 mb-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-medium text-gray-500 mb-1">
-              Rental Property Management
-            </p>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
-              Dashboard
-            </h1>
-            <p className="mt-2 text-sm sm:text-base text-gray-600">
-              Welcome back,{" "}
-              <span className="font-semibold text-gray-900">
-                {profile?.first_name && profile?.last_name
-                  ? `${profile.first_name} ${profile.last_name}`
-                  : user?.email}
-              </span>
-            </p>
-          </div>
+      
 
-          <button
-            className="bg-gray-900 hover:bg-black text-white px-5 py-3 rounded-xl font-medium shadow-sm transition w-full sm:w-auto"
-            onClick={handleSignOut}
-          >
-            Sign Out
-          </button>
-        </div>
-      </div>
+
+
+      
+
+
+
+<div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5 mb-6">
+  <div className="flex items-center justify-between">
+    
+    <div>
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+        Dashboard
+      </h1>
+      <p className="text-sm text-gray-500 mt-1">
+        Welcome back,{" "}
+        <span className="font-semibold text-gray-900">
+          {profile?.first_name && profile?.last_name
+            ? `${profile.first_name} ${profile.last_name}`
+            : user?.email}
+        </span>
+      </p>
+    </div>
+
+    <button
+      onClick={handleSignOut}
+      className="text-sm text-gray-500 hover:text-gray-900 transition"
+    >
+      Sign out
+    </button>
+
+  </div>
+</div>
+
+
+
+
+
+
+     
 
       {isFirstTimeUser && (
-        <div className="border border-blue-200 bg-blue-50 rounded-2xl p-5 sm:p-6 mb-6">
+        <div className="border border-blue-200 bg-blue-50 rounded-2xl p-6 sm:p-7 mb-8">
           <h2 className="text-2xl font-bold text-blue-900 mb-2">
             Welcome to Rental Property Management
           </h2>
