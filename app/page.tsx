@@ -862,7 +862,7 @@ return (
 
     <button
       onClick={handleSignOut}
-      className="text-sm text-gray-500 hover:text-gray-900 transition"
+      className="text-sm text-gray-800 hover:text-gray-900 transition"
     >
       Sign out
     </button>
