@@ -831,92 +831,128 @@ if (!user) {
 
 
 
+
 return (
-  <div className="p-4 sm:p-6 max-w-5xl mx-auto">
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-      <div>
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
-          Dashboard
-        </h1>
-        <p className="mt-2 text-gray-500 text-sm sm:text-base">
-          Welcome back,{" "}
-          <span className="font-semibold text-gray-900">
-            {user?.user_metadata?.first_name && user?.user_metadata?.last_name
-              ? `${user.user_metadata.first_name} ${user.user_metadata.last_name}`
-              : user.email}
-          </span>
-        </p>
-      </div>
-
-      <button
-        className="bg-gray-900 hover:bg-black text-white px-5 py-3 rounded-xl font-medium shadow-sm transition w-full sm:w-auto"
-        onClick={handleSignOut}
-      >
-        Sign Out
-      </button>
-    </div>
-
-    <div className="border-b border-gray-200 mb-8"></div>
-
-    {isFirstTimeUser && (
-      <div className="border-2 border-blue-200 bg-blue-50 rounded-2xl p-5 mb-6">
-        <h2 className="text-xl font-bold text-blue-900 mb-2">
-          Welcome to Rental Property Management
-        </h2>
-        <p className="text-blue-800 mb-4">
-          Let’s get your account set up. Start by adding your first property below.
-        </p>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-          <div className="bg-white rounded-xl p-4 border border-blue-100">
-            <p className="font-semibold mb-1">1. Add a property</p>
-            <p className="text-gray-600">
-              Enter the address and choose Airbnb or Long Term.
+  <div className="min-h-screen bg-gray-50">
+    <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5 sm:p-6 mb-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-500 mb-1">
+              Rental Property Management
+            </p>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+              Dashboard
+            </h1>
+            <p className="mt-2 text-sm sm:text-base text-gray-600">
+              Welcome back,{" "}
+              <span className="font-semibold text-gray-900">
+                {profile?.first_name && profile?.last_name
+                  ? `${profile.first_name} ${profile.last_name}`
+                  : user?.email}
+              </span>
             </p>
           </div>
 
-          <div className="bg-white rounded-xl p-4 border border-blue-100">
-            <p className="font-semibold mb-1">2. Add bookings or rent</p>
-            <p className="text-gray-600">
-              Track revenue and expenses for each property.
-            </p>
-          </div>
-
-          <div className="bg-white rounded-xl p-4 border border-blue-100">
-            <p className="font-semibold mb-1">3. Monitor profit</p>
-            <p className="text-gray-600">
-              View totals and monthly performance in one place.
-            </p>
-          </div>
+          <button
+            className="bg-gray-900 hover:bg-black text-white px-5 py-3 rounded-xl font-medium shadow-sm transition w-full sm:w-auto"
+            onClick={handleSignOut}
+          >
+            Sign Out
+          </button>
         </div>
       </div>
-    )}
 
-    <h2
-      className={`text-3xl font-bold mb-4 ${
-        totalProfit >= 0 ? "text-green-600" : "text-red-600"
-      }`}
-    >
-      Total Profit: ${totalProfit}
-    </h2>
+      {isFirstTimeUser && (
+        <div className="border border-blue-200 bg-blue-50 rounded-2xl p-5 sm:p-6 mb-6">
+          <h2 className="text-2xl font-bold text-blue-900 mb-2">
+            Welcome to Rental Property Management
+          </h2>
+          <p className="text-blue-800 mb-5">
+            Let’s get your account set up. Start by adding your first property below.
+          </p>
 
-    <h2 className="text-xl font-semibold mb-4">
-      Total Monthly Revenue: ${totalRevenue}
-    </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white rounded-2xl p-5 border border-blue-100 shadow-sm">
+              <p className="text-lg font-semibold text-gray-900 mb-2">
+                1. Add a property
+              </p>
+              <p className="text-gray-600">
+                Enter the address and choose Airbnb or Long Term.
+              </p>
+            </div>
 
-    <h2 className="text-xl font-semibold mb-4">
-      Total Expense: ${totalExpense}
-    </h2>
+            <div className="bg-white rounded-2xl p-5 border border-blue-100 shadow-sm">
+              <p className="text-lg font-semibold text-gray-900 mb-2">
+                2. Add bookings or rent
+              </p>
+              <p className="text-gray-600">
+                Track revenue and expenses for each property.
+              </p>
+            </div>
 
-    <div
-      ref={formRef}
-      className={`mb-6 rounded p-3 ${
-        editingId ? "border-2 border-yellow-400 bg-yellow-50" : ""
-      }`}
-    >
-      <h2 className="text-lg font-semibold">
-        {isFirstTimeUser ? "Add Your First Property" : "Add New Property"}
-      </h2>
+            <div className="bg-white rounded-2xl p-5 border border-blue-100 shadow-sm">
+              <p className="text-lg font-semibold text-gray-900 mb-2">
+                3. Monitor profit
+              </p>
+              <p className="text-gray-600">
+                View totals and monthly performance in one place.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
+          <p className="text-sm font-medium text-gray-500 mb-2">Total Profit</p>
+          <p
+            className={`text-3xl font-bold ${
+              totalProfit >= 0 ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            ${totalProfit}
+          </p>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
+          <p className="text-sm font-medium text-gray-500 mb-2">
+            Total Monthly Revenue
+          </p>
+          <p className="text-3xl font-bold text-gray-900">${totalRevenue}</p>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
+          <p className="text-sm font-medium text-gray-500 mb-2">Total Expense</p>
+          <p className="text-3xl font-bold text-gray-900">${totalExpense}</p>
+        </div>
+      </div>
+
+      <div
+        ref={formRef}
+        className={`bg-white border border-gray-200 rounded-2xl shadow-sm p-5 sm:p-6 mb-6 ${
+          editingId ? "border-2 border-yellow-400 bg-yellow-50" : ""
+        }`}
+      >
+        <h2 className="text-xl font-bold text-gray-900 mb-4">
+          {isFirstTimeUser ? "Add Your First Property" : "Add New Property"}
+        </h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         <div className="flex flex-col sm:flex-row gap-2 mb-2">
