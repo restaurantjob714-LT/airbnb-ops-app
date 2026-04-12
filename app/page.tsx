@@ -24,6 +24,7 @@ const [checkingAuthRedirect, setCheckingAuthRedirect] = useState(true);
 const [firstName, setFirstName] = useState("");
 const [lastName, setLastName] = useState("");
 const [phoneNumber, setPhoneNumber] = useState("");
+const [phoneError, setPhoneError] = useState("");
 
 const [authEmail, setAuthEmail] = useState("");
 const [authPassword, setAuthPassword] = useState("");
@@ -133,16 +134,6 @@ const addProperty = async () => {
 };
 
 
-
-
-
-
-
-
-
-
-
-
 useEffect(() => {
   const initializeAuth = async () => {
     const hash = window.location.hash;
@@ -197,30 +188,11 @@ useEffect(() => {
 }, []);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 useEffect(() => {
   if (isFirstTimeUser && formRef.current) {
     formRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }, [isFirstTimeUser]);
-
-
-
-
-
-
 
 
 
@@ -266,10 +238,6 @@ const fetchBookings = async () => {
 
 
 
-
- 
-
-
 const fetchProfile = async () => {
   const {
     data: { user: currentUser },
@@ -293,12 +261,6 @@ const fetchProfile = async () => {
 
   setProfile(data);
 };
-
-
-
-
-
-
  
 
   const startEditing = (property: any) => {
@@ -537,6 +499,42 @@ if (authMode === "signup") {
 
 
 
+
+
+
+
+
+
+
+
+
+
+// 🔍 Check duplicate phone number
+const { data: existingPhone } = await supabase
+  .from("profiles")
+  .select("id")
+  .eq("phone_number", phoneNumber.trim())
+  .maybeSingle();
+
+if (existingPhone) {
+     setPhoneError("This phone number is already registered.");
+     return;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const { data, error } = await supabase.auth.signUp({
   email: authEmail,
   password: authPassword,
@@ -729,13 +727,55 @@ if (!user) {
       <label className="block text-sm font-medium text-gray-700 mb-1">
         Phone Number
       </label>
-      <input
-        type="text"
-        placeholder="Phone number"
-        value={phoneNumber}
-        onChange={(e) => setPhoneNumber(e.target.value)}
-        className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
-      />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<input
+  type="text"
+  value={phoneNumber}
+  onChange={(e) => {
+    setPhoneNumber(e.target.value);
+    setPhoneError(""); // 🔥 clears error when typing
+  }}
+  className={`border p-2 rounded w-full ${
+    phoneError ? "border-red-500" : "border-gray-300"
+  }`}
+/>
+
+      
+{phoneError && (
+  <p className="text-red-500 text-sm mt-1">{phoneError}</p>
+)}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </div>
   </>
 )}
@@ -821,26 +861,10 @@ if (!user) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 return (
   <div className="min-h-screen bg-gray-50">
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
       
-
-
-
-      
-
 
 
 <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5 mb-6">
@@ -869,12 +893,6 @@ return (
 
   </div>
 </div>
-
-
-
-
-
-
      
 
       {isFirstTimeUser && (
@@ -954,21 +972,6 @@ return (
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <div className="flex flex-col sm:flex-row gap-2 mb-2">
           <input
             className="border p-2 w-full sm:w-auto"
@@ -1044,15 +1047,6 @@ return (
         </div>
       </div>
 
-
-
-
-
-
-
-
-
-      
 
 
     {properties.length > 0 && (
