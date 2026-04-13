@@ -502,34 +502,6 @@ if (authMode === "signup") {
 
 
 
-
-
-
-
-
-
-
-// 🔍 Check duplicate phone number
-const { data: existingPhone } = await supabase
-  .from("profiles")
-  .select("id")
-  .eq("phone_number", phoneNumber.trim())
-  .maybeSingle();
-
-if (existingPhone) {
-     setPhoneError("This phone number is already registered.");
-     return;
-}
-
-
-
-
-
-
-
-
-
-
 // 🔍 Check duplicate phone number
 const { data: existingPhone } = await supabase
   .from("profiles")
@@ -542,7 +514,6 @@ if (existingPhone) {
   setAuthLoading(false);
   return;
 }
-
 
 
 const { data, error } = await supabase.auth.signUp({
@@ -790,26 +761,20 @@ if (!user) {
   )}
 </div>
 
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   </>
 )}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
           <div className="space-y-4">
