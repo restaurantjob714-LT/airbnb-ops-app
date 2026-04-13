@@ -530,8 +530,18 @@ if (existingPhone) {
 
 
 
+// 🔍 Check duplicate phone number
+const { data: existingPhone } = await supabase
+  .from("profiles")
+  .select("id")
+  .eq("phone_number", phoneNumber.trim())
+  .maybeSingle();
 
-
+if (existingPhone) {
+  setPhoneError("This phone number is already registered.");
+  setAuthLoading(false);
+  return;
+}
 
 
 
@@ -561,36 +571,55 @@ if (error) {
 }
 
 
+
+
+
+
+
+
+
 if (!data?.user?.identities || data.user.identities.length === 0) {
   alert("This email is already registered. Please sign in instead.");
 
-  // ✅ clear fields
-  // setAuthEmail("");
+  setPhoneError("");
   setAuthPassword("");
   setFirstName("");
   setLastName("");
   setPhoneNumber("");
-  // switch to sign in
   setAuthMode("signin");
 
   return;
 }
 
 
+
+
+
+
+
+
+
+
 alert("Account created. Please check your email and click the confirmation link before signing in.");
 
-// ✅ CLEAR ALL FIELDS AFTER USER CLICKS OK
+setPhoneError("");
 setFirstName("");
 setLastName("");
 setPhoneNumber("");
-// setAuthEmail("");
 setAuthPassword("");
-// ✅ SWITCH BACK TO SIGN IN TAB
 setAuthMode("signin");
 
 return;
 
 };
+
+
+
+
+
+
+
+
 
 
 const handleSignOut = async () => {
@@ -601,6 +630,7 @@ const handleSignOut = async () => {
   setFirstName("");
   setLastName("");
   setPhoneNumber("");
+  setPhoneError("");
   setAuthMode("signin");
 };
 
@@ -664,10 +694,11 @@ if (!user) {
                   : "text-gray-700 hover:bg-gray-200"
               }`}
 
-
               onClick={() => {
                 setAuthMode("signin");
                 setAuthNotice("");
+                setPhoneError("");
+              
               }}
 
 
@@ -682,10 +713,11 @@ if (!user) {
                   : "text-gray-700 hover:bg-gray-200"
               }`}
 
-
               onClick={() => {
                 setAuthMode("signup");
                 setAuthNotice("");
+                setPhoneError("");
+
               }}
 
 
@@ -723,10 +755,42 @@ if (!user) {
       />
     </div>
 
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        Phone Number
-      </label>
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">
+    Phone Number
+  </label>
+
+  <input
+    type="text"
+    placeholder="Phone number"
+    value={phoneNumber}
+    onChange={(e) => {
+      setPhoneNumber(e.target.value);
+      setPhoneError("");
+    }}
+    className={`w-full rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition ${
+      phoneError ? "border border-red-500" : "border border-gray-300"
+    }`}
+  />
+
+  {phoneError && (
+    <p className="text-red-500 text-sm mt-1">{phoneError}</p>
+  )}
+</div>
+
+   
 
 
 
@@ -743,40 +807,7 @@ if (!user) {
 
 
 
-<input
-  type="text"
-  value={phoneNumber}
-  onChange={(e) => {
-    setPhoneNumber(e.target.value);
-    setPhoneError(""); // 🔥 clears error when typing
-  }}
-  className={`border p-2 rounded w-full ${
-    phoneError ? "border-red-500" : "border-gray-300"
-  }`}
-/>
 
-      
-{phoneError && (
-  <p className="text-red-500 text-sm mt-1">{phoneError}</p>
-)}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </div>
   </>
 )}
 
