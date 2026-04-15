@@ -895,7 +895,7 @@ return (
   <span className="font-semibold text-gray-900">
     {profile?.first_name && profile?.last_name
       ? `${profile.first_name} ${profile.last_name}`
-      : user?.email}
+      : "No profile loaded"}
   </span>
 </p>
 
@@ -909,7 +909,7 @@ return (
 
     <button
       onClick={handleSignOut}
-      className="text-sm text-gray-800 hover:text-gray-900 transition"
+      className="text-sm text-gray-1000 hover:text-gray-1000 transition"
     >
       Sign out
     </button>
