@@ -256,6 +256,7 @@ const fetchProfile = async () => {
 
   if (error) {
     console.log("Profile fetch error:", error);
+    setProfile(null);
     return;
   }
 
@@ -895,7 +896,7 @@ return (
   <span className="font-semibold text-gray-900">
     {profile?.first_name && profile?.last_name
       ? `${profile.first_name} ${profile.last_name}`
-      : "No profile loaded"}
+      : user?.email}
   </span>
 </p>
 
@@ -909,7 +910,7 @@ return (
 
     <button
       onClick={handleSignOut}
-      className="text-sm text-gray-1000 hover:text-gray-1000 transition"
+      className="text-sm text-gray-1200 hover:text-gray-1200 transition"
     >
       Sign out
     </button>
