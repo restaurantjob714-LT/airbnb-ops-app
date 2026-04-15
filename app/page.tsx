@@ -498,10 +498,6 @@ if (authMode === "signup") {
 }
 
 
-
-
-
-
 // 🔍 Check duplicate phone number
 const { data: existingPhone } = await supabase
   .from("profiles")
@@ -534,13 +530,30 @@ const { data, error } = await supabase.auth.signUp({
 });
 
 
+
+
+
+
+
+
 setAuthLoading(false);
 
 if (error) {
+  const msg = error.message.toLowerCase();
+
+  if (
+    msg.includes("database error saving new user") ||
+    msg.includes("duplicate key") ||
+    msg.includes("unique")
+  ) {
+    setPhoneError("This phone number has already been registered.");
+    setAuthLoading(false);
+    return;
+  }
+
   alert(error.message);
   return;
 }
-
 
 
 
