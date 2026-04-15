@@ -883,14 +883,28 @@ return (
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
         Dashboard
       </h1>
-      <p className="text-sm text-gray-500 mt-1">
-        Welcome back,{" "}
-        <span className="font-semibold text-gray-900">
-          {profile?.first_name && profile?.last_name
-            ? `${profile.first_name} ${profile.last_name}`
-            : user?.email}
-        </span>
-      </p>
+
+
+
+
+
+
+      
+<p className="text-sm text-gray-500 mt-1">
+  {isFirstTimeUser ? "Welcome," : "Welcome back,"}{" "}
+  <span className="font-semibold text-gray-900">
+    {profile?.first_name && profile?.last_name
+      ? `${profile.first_name} ${profile.last_name}`
+      : user?.email}
+  </span>
+</p>
+
+
+
+
+
+
+
     </div>
 
     <button
