@@ -653,7 +653,10 @@ if (!user) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8">
+        <div 
+
+
+              className="bg-white rounded-2xl shadow-1g border border-gray-100 p-6 sm:p-8">
 
           
 <div className="mb-8 text-center">
@@ -671,45 +674,55 @@ if (!user) {
   )}
 </div>
 
-          <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
-            <button
-              className={`w-full py-2.5 rounded-lg text-sm font-medium transition cursor-pointer ${
-                authMode === "signin"
-                  ? "bg-white shadow-sm text-black"
-                  : "text-gray-700 hover:bg-gray-200"
-              }`}
-
-              onClick={() => {
-                setAuthMode("signin");
-                setAuthNotice("");
-                setPhoneError("");
-              
-              }}
 
 
-            >
-              Sign In
-            </button>
-
-            <button
-              className={`w-full py-2.5 rounded-lg text-sm font-medium transition cursor-pointer ${
-                authMode === "signup"
-                  ? "bg-white shadow-sm text-black"
-                  : "text-gray-700 hover:bg-gray-200"
-              }`}
-
-              onClick={() => {
-                setAuthMode("signup");
-                setAuthNotice("");
-                setPhoneError("");
-
-              }}
 
 
-            >
-              Sign Up
-            </button>
-          </div>
+
+
+
+
+
+
+
+
+<div className="flex bg-gray-100 rounded-xl p-1 mb-6">
+  <button
+    className={`w-full py-2.5 rounded-lg text-sm font-medium transition ${
+      authMode === "signin"
+        ? "bg-white shadow-sm text-black"
+        : "text-gray-500"
+    }`}
+    onClick={() => setAuthMode("signin")}
+  >
+    Sign In
+  </button>
+
+  <button
+    className={`w-full py-2.5 rounded-lg text-sm font-medium transition ${
+      authMode === "signup"
+        ? "bg-white shadow-sm text-black"
+        : "text-gray-500"
+    }`}
+    onClick={() => setAuthMode("signup")}
+  >
+    Sign Up
+  </button>
+</div>
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 {authMode === "signup" && (
@@ -836,7 +849,10 @@ if (!user) {
             <button
               onClick={handleAuth}
               disabled={authLoading}
-              className="w-full bg-black hover:bg-gray-800 disabled:bg-gray-400 transition text-white py-3 rounded-xl font-medium shadow-sm"
+
+
+             className="w-full bg-black hover:bg-gray-800 active:scale-[0.99] text-white py-3 rounded-xl font-medium shadow-sm transition"
+              
             >
               {authLoading
                 ? "Please wait..."
