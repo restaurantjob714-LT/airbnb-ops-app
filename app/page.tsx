@@ -12,6 +12,7 @@ export default function Home() {
   const [user, setUser] = useState<any>(null);
   const [properties, setProperties] = useState<any[]>([]);
   const [profile, setProfile] = useState<any>(null);
+  const [profileLoading, setProfileLoading] = useState(true);
 
   const [bookings, setBookings] = useState<any[]>([]);
 
@@ -239,12 +240,14 @@ const fetchBookings = async () => {
 
 
 const fetchProfile = async () => {
+  setProfileLoading(true);
   const {
     data: { user: currentUser },
   } = await supabase.auth.getUser();
 
   if (!currentUser) {
     setProfile(null);
+    setProfileLoading(false);
     return;
   }
 
@@ -257,10 +260,12 @@ const fetchProfile = async () => {
   if (error) {
     console.log("Profile fetch error:", error);
     setProfile(null);
+    setProfileLoading(false);
     return;
   }
 
   setProfile(data);
+  setProfileLoading(false);
 };
  
 
@@ -910,9 +915,15 @@ return (
 <p className="text-sm text-gray-500 mt-1">
   {isFirstTimeUser ? "Welcome," : "Welcome back,"}{" "}
   <span className="font-semibold text-gray-900">
-    {profile?.first_name && profile?.last_name
-      ? `${profile.first_name} ${profile.last_name}`
-      : user?.email}
+  {profileLoading ? (
+  <span className="text-gray-400">Loading...</span>
+  ) : profile?.first_name && profile?.last_name ? (
+  `${profile.first_name} ${profile.last_name}`
+  ) : (
+  user?.email
+  )}
+
+
   </span>
 </p>
 
