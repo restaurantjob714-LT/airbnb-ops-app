@@ -1023,23 +1023,23 @@ return (
 
 
 
-        <div className="flex flex-col sm:flex-row gap-2 mb-2">
+        <div className="flex flex-col sm:flex-row gap-3 mb-3">
           <input
-            className="border p-2 w-full sm:w-auto"
+            className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"            
             placeholder="Property Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
 
           <input
-            className="border p-2 w-full sm:w-auto"
+            className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
             placeholder="Address"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
 
           <select
-            className="border p-2 w-full sm:w-auto"
+            className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
             value={type}
             onChange={(e) => setType(e.target.value)}
           >
@@ -1074,7 +1074,7 @@ return (
           )}
 
           <button
-            className="bg-blue-600 text-white px-3 py-2 w-full sm:w-auto"
+            className="w-full sm:w-auto bg-black hover:bg-gray-800 active:scale-[0.99] text-white px-5 py-3 rounded-xl font-medium shadow-sm transition"
             onClick={editingId ? saveEdit : addProperty}
           >
             {editingId ? "Save" : "Add"}
@@ -1082,7 +1082,7 @@ return (
 
           {editingId && (
             <button
-              className="bg-gray-300 hover:bg-gray-400 px-4 py-2 w-full sm:w-auto"
+              className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 active:scale-[0.99] text-gray-800 px-5 py-3 rounded-xl font-medium transition"
               onClick={() => {
                 setEditingId(null);
                 setName("");
