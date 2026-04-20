@@ -41,6 +41,8 @@ const [authNotice, setAuthNotice] = useState("");
   const [expense, setExpense] = useState("");
   const [isAirbnb, setIsAirbnb] = useState(false);
 
+  const [showExpenseDetails, setShowExpenseDetails] = useState<{ [key: number]: boolean }>({});
+
   const airbnbProperties = properties.filter((p) => p.is_airbnb);
   const longTermProperties = properties.filter((p) => !p.is_airbnb);
   const isFirstTimeUser = properties.length ===0;
@@ -1057,12 +1059,6 @@ return (
 
 
 
-
-
-
-
-
-
     {properties.length > 0 && (
       <div className="space-y-8">
 
@@ -1072,33 +1068,37 @@ return (
           {airbnbProperties.map((p) => (
             <div
               key={p.id}
-              className="border-2 border-gray-600 p-4 mb-4 rounded-xl shadow-md bg-white"
+              className="border border-gray-200 p-5 mb-5 rounded-2xl shadow-sm bg-white hover:shadow-md transition"
             >
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
                 <div>
-                  <p className="text-lg font-bold">{p.name}</p>
-                  <p>{p.address}</p>
-                  <p>Type: {p.type}</p>
-                  <p>Mode: Airbnb (Daily)</p>
+                  <p className="text-xl font-bold text-gray-900">{p.name}</p>
+                  <p className="text-gray-600">{p.address}</p>
+                  <p className="text-sm text-gray-500 mt-1">Type: {p.type}</p>
+                  <p className="text-sm text-indigo-600 font-medium mt-1">Mode: Airbnb (Daily)</p>
+
                 </div>
 
-                <div className="flex gap-2 flex-wrap">
+                  <div className="flex flex-col sm:flex-row gap-2">
                   <button
-                    className="bg-yellow-500 text-white px-3 py-2 rounded"
+                    
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-xl font-medium transition"
                     onClick={() => startEditing(p)}
                   >
                     Edit
                   </button>
 
                   <button
-                    className="bg-red-600 text-white px-3 py-2 rounded"
+                    
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-medium transition"
                     onClick={() => deleteProperty(p.id)}
                   >
                     Delete
                   </button>
 
                   <button
-                    className="bg-blue-600 text-white px-3 py-2 rounded"
+                    
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-medium transition"
                     onClick={() =>
                       setExpandedProperties((prev) =>
                         prev[p.id] ? {} : { [p.id]: true }
@@ -1118,12 +1118,70 @@ return (
                   </p>
                 </div>
 
-                <div className="border rounded p-3">
-                  <p className="text-sm text-gray-500">Expense</p>
-                  <p className="text-lg font-semibold">
-                    ${getAirbnbExpense(p.id)}
-                  </p>
-                </div>
+                
+
+
+
+
+
+
+
+{showExpenseDetails[p.id] && (
+  <div className="mb-4 border border-gray-200 rounded-2xl p-4 bg-gray-50">
+    <p className="font-semibold text-gray-900 mb-3">Expense Details</p>
+
+    <div className="space-y-2 text-sm text-gray-700">
+      {bookings.filter((b) => b.property_id === p.id && Number(b.expense || 0) > 0).length > 0 ? (
+        bookings
+          .filter((b) => b.property_id === p.id && Number(b.expense || 0) > 0)
+          .map((b) => (
+            <div
+              key={b.id}
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-gray-200 pb-2"
+            >
+              <p>
+                {b.start_date} → {b.end_date}
+              </p>
+              <p className="font-medium text-gray-900">
+                ${b.expense || 0}
+              </p>
+            </div>
+          ))
+      ) : (
+        <p className="text-gray-500">No expense details available.</p>
+      )}
+    </div>
+  </div>
+)}
+
+
+
+
+
+
+
+
+
+
+
+<div
+  className="border rounded-2xl p-4 cursor-pointer hover:bg-gray-50 transition"
+  onClick={() =>
+    setShowExpenseDetails((prev) => ({
+      ...prev,
+      [p.id]: !prev[p.id],
+    }))
+  }
+>
+  <p className="text-sm text-gray-500">Expense</p>
+  <p className="text-lg font-semibold text-gray-900">
+    ${getAirbnbExpense(p.id)}
+  </p>
+  <p className="text-xs text-gray-400 mt-1">
+    {showExpenseDetails[p.id] ? "Hide details" : "Tap to view details"}
+  </p>
+</div>
+
 
                 <div className="border rounded p-3">
                   <p className="text-sm text-gray-500">Profit</p>
@@ -1312,14 +1370,17 @@ return (
           {longTermProperties.map((p) => (
             <div
               key={p.id}
-              className="border-2 border-gray-600 p-4 mb-4 rounded-xl shadow-md bg-white"
+              
+              className="border border-gray-200 p-5 mb-5 rounded-2xl shadow-sm bg-white hover:shadow-md transition"
             >
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
                 <div>
-                  <p className="text-lg font-bold">{p.name}</p>
-                  <p>{p.address}</p>
-                  <p>Type: {p.type}</p>
-                  <p>Mode: Monthly Rent</p>
+                  
+                <p className="text-xl font-bold text-gray-900">{p.name}</p>
+                <p className="text-gray-600">{p.address}</p>
+                <p className="text-sm text-gray-500 mt-1">Type: {p.type}</p>
+                <p className="text-sm text-indigo-600 font-medium mt-1">Mode: Monthly Rent</p>
+
                 </div>
 
                 <div className="flex gap-2">
