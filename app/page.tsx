@@ -680,23 +680,12 @@ if (!user) {
 </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
 <div className="flex bg-gray-100 rounded-xl p-1 mb-6">
   <button
     className={`w-full py-2.5 rounded-lg text-sm font-medium transition ${
       authMode === "signin"
-        ? "bg-white shadow-sm text-black"
-        : "text-gray-500"
+        ? "bg-indigo-600 text-white"
+      : "text-gray-700 hover:bg-gray-200"
     }`}
     onClick={() => setAuthMode("signin")}
   >
@@ -706,8 +695,8 @@ if (!user) {
   <button
     className={`w-full py-2.5 rounded-lg text-sm font-medium transition ${
       authMode === "signup"
-        ? "bg-white shadow-sm text-black"
-        : "text-gray-500"
+        ? "bg-indigo-600 text-white"
+      : "text-gray-700 hover:bg-gray-200"
     }`}
     onClick={() => setAuthMode("signup")}
   >
@@ -715,19 +704,6 @@ if (!user) {
   </button>
 </div>
           
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 {authMode === "signup" && (
@@ -741,7 +717,7 @@ if (!user) {
         placeholder="First name"
         value={firstName}
         onChange={(e) => setFirstName(e.target.value)}
-        className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+        className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
       />
     </div>
 
@@ -754,19 +730,9 @@ if (!user) {
         placeholder="Last name"
         value={lastName}
         onChange={(e) => setLastName(e.target.value)}
-        className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+        className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
       />
     </div>
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -783,7 +749,7 @@ if (!user) {
       setPhoneNumber(e.target.value);
       setPhoneError("");
     }}
-    className={`w-full rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition ${
+    className={`w-full rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition ${
       phoneError ? "border border-red-500" : "border border-gray-300"
     }`}
   />
@@ -795,17 +761,6 @@ if (!user) {
 
   </>
 )}
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -827,7 +782,7 @@ if (!user) {
                 }}
 
 
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
               />
             </div>
 
@@ -847,7 +802,7 @@ if (!user) {
                 }}
 
 
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-     gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+                className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
               />
             </div>
 
@@ -856,7 +811,7 @@ if (!user) {
               disabled={authLoading}
 
 
-             className="w-full bg-black hover:bg-gray-800 active:scale-[0.99] text-white py-3 rounded-xl font-medium shadow-sm transition"
+             className="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white py-3 rounded-xl font-medium shadow-sm transition"
               
             >
               {authLoading
@@ -906,11 +861,6 @@ return (
         Dashboard
       </h1>
 
-
-
-
-
-
       
 <p className="text-sm text-gray-500 mt-1">
   {isFirstTimeUser ? "Welcome," : "Welcome back,"}{" "}
@@ -929,10 +879,6 @@ return (
 
 
 
-
-
-
-
     </div>
 
     <button
@@ -947,8 +893,10 @@ return (
      
 
       {isFirstTimeUser && (
-        <div className="border border-blue-200 bg-blue-50 rounded-2xl p-6 sm:p-7 mb-8">
-          <h2 className="text-2xl font-bold text-blue-900 mb-2">
+        
+        <div className="border border-indigo-100 bg-indigo-50 rounded-2xl p-6 sm:p-7 mb-8">
+          <h2 className="text-xl sm:text-2xl font-semibold text-indigo-900 mb-2">
+
             Welcome to Rental Property Management
           </h2>
           <p className="text-blue-800 mb-5">
@@ -1033,21 +981,21 @@ return (
 <div className="space-y-4">
   <div className="flex flex-col sm:flex-row gap-3">
     <input
-      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
       placeholder="Property Name"
       value={name}
       onChange={(e) => setName(e.target.value)}
     />
 
     <input
-      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
       placeholder="Address"
       value={address}
       onChange={(e) => setAddress(e.target.value)}
     />
 
     <select
-      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
       value={type}
       onChange={(e) => setType(e.target.value)}
     >
@@ -1065,14 +1013,14 @@ return (
   {type === "long_term" && (
     <div className="flex flex-col sm:flex-row gap-3">
       <input
-        className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+        className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
         placeholder="Monthly Rent ($)"
         value={rent}
         onChange={(e) => setRent(e.target.value)}
       />
 
       <input
-        className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+        className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
         placeholder="Monthly Expense ($)"
         value={expense}
         onChange={(e) => setExpense(e.target.value)}
@@ -1082,7 +1030,7 @@ return (
 
   <div className="flex flex-col sm:flex-row gap-3">
     <button
-      className="w-full sm:w-auto bg-black hover:bg-gray-800 active:scale-[0.99] text-white px-5 py-3 rounded-xl font-medium shadow-sm transition"
+      className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-5 py-3 rounded-xl font-medium shadow-sm transition"
       onClick={editingId ? saveEdit : addProperty}
     >
       {editingId ? "Save" : "Add"}
@@ -1090,7 +1038,7 @@ return (
 
     {editingId && (
       <button
-        className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 active:scale-[0.99] text-gray-800 px-5 py-3 rounded-xl font-medium transition"
+        className="w-full sm:w-auto bg-gray-100 hover:bg-gray-200 active:scale-[0.99] text-gray-700 px-5 py-3 rounded-xl font-medium transition"
         onClick={() => {
           setEditingId(null);
           setName("");
