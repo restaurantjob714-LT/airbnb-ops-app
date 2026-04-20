@@ -1023,80 +1023,95 @@ return (
 
 
 
-        <div className="flex flex-col sm:flex-row gap-3 mb-3">
-          <input
-            className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"            
-            placeholder="Property Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
 
-          <input
-            className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
-            placeholder="Address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
 
-          <select
-            className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-          >
-            <option value="airbnb">Airbnb</option>
-            <option value="long_term">Long Term</option>
-          </select>
-        </div>
 
-        {type === "airbnb" && (
-          <p className="text-sm text-gray-600 mb-2">
-            Revenue will be calculated from bookings
-          </p>
-        )}
 
-        <div className="flex flex-col sm:flex-row gap-2">
-          {type === "long_term" && (
-            <input
-              className="border p-2 w-full sm:w-auto"
-              placeholder="Monthly Rent ($)"
-              value={rent}
-              onChange={(e) => setRent(e.target.value)}
-            />
-          )}
 
-          {type === "long_term" && (
-            <input
-              className="border p-2 w-full sm:w-auto"
-              placeholder="Monthly Expense ($)"
-              value={expense}
-              onChange={(e) => setExpense(e.target.value)}
-            />
-          )}
 
-          <button
-            className="w-full sm:w-auto bg-black hover:bg-gray-800 active:scale-[0.99] text-white px-5 py-3 rounded-xl font-medium shadow-sm transition"
-            onClick={editingId ? saveEdit : addProperty}
-          >
-            {editingId ? "Save" : "Add"}
-          </button>
+        
+<div className="space-y-4">
+  <div className="flex flex-col sm:flex-row gap-3">
+    <input
+      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+      placeholder="Property Name"
+      value={name}
+      onChange={(e) => setName(e.target.value)}
+    />
 
-          {editingId && (
-            <button
-              className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 active:scale-[0.99] text-gray-800 px-5 py-3 rounded-xl font-medium transition"
-              onClick={() => {
-                setEditingId(null);
-                setName("");
-                setAddress("");
-                setType("airbnb");
-                setRent("");
-                setExpense("");
-              }}
-            >
-              Cancel
-            </button>
-          )}
-        </div>
-      </div>
+    <input
+      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+      placeholder="Address"
+      value={address}
+      onChange={(e) => setAddress(e.target.value)}
+    />
+
+    <select
+      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+      value={type}
+      onChange={(e) => setType(e.target.value)}
+    >
+      <option value="airbnb">Airbnb</option>
+      <option value="long_term">Long Term</option>
+    </select>
+  </div>
+
+  {type === "airbnb" && (
+    <p className="text-sm text-gray-600">
+      Revenue will be calculated from bookings
+    </p>
+  )}
+
+  {type === "long_term" && (
+    <div className="flex flex-col sm:flex-row gap-3">
+      <input
+        className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+        placeholder="Monthly Rent ($)"
+        value={rent}
+        onChange={(e) => setRent(e.target.value)}
+      />
+
+      <input
+        className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
+        placeholder="Monthly Expense ($)"
+        value={expense}
+        onChange={(e) => setExpense(e.target.value)}
+      />
+    </div>
+  )}
+
+  <div className="flex flex-col sm:flex-row gap-3">
+    <button
+      className="w-full sm:w-auto bg-black hover:bg-gray-800 active:scale-[0.99] text-white px-5 py-3 rounded-xl font-medium shadow-sm transition"
+      onClick={editingId ? saveEdit : addProperty}
+    >
+      {editingId ? "Save" : "Add"}
+    </button>
+
+    {editingId && (
+      <button
+        className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 active:scale-[0.99] text-gray-800 px-5 py-3 rounded-xl font-medium transition"
+        onClick={() => {
+          setEditingId(null);
+          setName("");
+          setAddress("");
+          setType("airbnb");
+          setRent("");
+          setExpense("");
+        }}
+      >
+        Cancel
+      </button>
+    )}
+  </div>
+</div>
+
+
+
+
+
+
+
 
 
 
@@ -1104,14 +1119,14 @@ return (
       <div className="space-y-8">
 
         <div>
-          <h2 className="text-xl font-bold mb-3">Airbnb Properties</h2>
+          <h2 className="text-xl font-bold mb-4">Airbnb Properties</h2>
 
           {airbnbProperties.map((p) => (
             <div
               key={p.id}
               className="border-2 border-gray-600 p-4 mb-4 rounded-xl shadow-md bg-white"
             >
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
                 <div>
                   <p className="text-lg font-bold">{p.name}</p>
                   <p>{p.address}</p>
@@ -1344,14 +1359,14 @@ return (
         </div>
 
         <div>
-          <h2 className="text-xl font-bold mb-3">Long-Term Properties</h2>
+          <h2 className="text-xl font-bold mb-4">Long-Term Properties</h2>
 
           {longTermProperties.map((p) => (
             <div
               key={p.id}
               className="border-2 border-gray-600 p-4 mb-4 rounded-xl shadow-md bg-white"
             >
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
                 <div>
                   <p className="text-lg font-bold">{p.name}</p>
                   <p>{p.address}</p>
