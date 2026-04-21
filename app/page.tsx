@@ -1099,8 +1099,8 @@ return (
     </button>
 
       {isLimitReached && (
-       <p className="text-sm text-indigo-600 mt-2">
-       Free plan allows 1 property. Upgrade to unlock unlimited properties.
+       <p className="text-sm text-red-600 mt-2">
+       Free plan allows 1 property. Upgrade to add more properties.
        </p>
       )}
 
