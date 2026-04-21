@@ -1082,8 +1082,10 @@ return (
                   <div className="flex flex-col sm:flex-row gap-2">
                   <button
                     
-                  //className="bg-green-100 hover:bg-green-200 text-white-800 px-4 py-2 rounded-xl font-medium transition"
-                    className="bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-xl font-medium transition"
+                  
+                  //className="bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-xl font-medium transition"
+                    className="bg-green-200 hover:bg-green-300 text-green-900 px-4 py-2 rounded-xl font-medium transition"
+
                     onClick={() => startEditing(p)}
                   >
                     Edit
@@ -1386,7 +1388,8 @@ return (
 
                 <div className="flex gap-2">
                   <button
-                    className="bg-yellow-500 text-white px-3 py-2 rounded"
+                    //className="bg-yellow-500 text-white px-3 py-2 rounded"
+                    className="bg-green-200 hover:bg-green-300 text-white-900 px-4 py-2 rounded-xl font-medium transition"
                     onClick={() => startEditing(p)}
                   >
                     Edit
