@@ -861,7 +861,7 @@ if (!user) {
               />
             </div>
 
-            <
+            
 
               onClick={handleAuth}
               disabled={authLoading}
