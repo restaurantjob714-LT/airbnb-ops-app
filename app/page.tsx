@@ -134,8 +134,13 @@ const addProperty = async () => {
     .eq("user_id", currentUser.id);
 
 
+  if (countError) {
+     alert("Could not verify property limit.");
+     return;
+  }  
 
-  if (count >= 1) {
+
+  if ((count ?? 0) >= 1) {
     setIsLimitReached(true);
     return;
   }
