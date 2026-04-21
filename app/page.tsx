@@ -14,6 +14,8 @@ export default function Home() {
   const [profile, setProfile] = useState<any>(null);
   const [profileLoading, setProfileLoading] = useState(true);
 
+  const [isLimitReached, setIsLimitReached] = useState(false);
+
   const [bookings, setBookings] = useState<any[]>([]);
 
   const [bookingInputs, setBookingInputs] = useState<Record<string, any>>({});
@@ -88,6 +90,13 @@ const [authNotice, setAuthNotice] = useState("");
   }, 0);
 
   
+
+
+
+
+
+
+
 const addProperty = async () => {
   if (!name.trim()) {
     alert("Property name is required");
@@ -108,6 +117,42 @@ const addProperty = async () => {
     return;
   }
 
+  const { data: profileData, error: profileError } = await supabase
+    .from("profiles")
+    .select("plan")
+    .eq("id", currentUser.id)
+    .single();
+
+  if (profileError || !profileData) {
+    alert("Could not verify your account plan.");
+    return;
+  }
+
+  const { count, error: countError } = await supabase
+    .from("properties")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", currentUser.id);
+
+
+
+  if (count >= 1) {
+    setIsLimitReached(true);
+    return;
+  }
+
+
+
+
+  if (countError) {
+    alert("Could not verify property limit.");
+    return;
+  }
+
+  if (profileData.plan === "free" && (count || 0) >= 1) {
+    alert("Free plan allows 1 property only. Upgrade to add unlimited properties.");
+    return;
+  }
+
   const { error } = await supabase.from("properties").insert([
     {
       name: name.trim(),
@@ -121,7 +166,6 @@ const addProperty = async () => {
   ]);
 
   if (error) {
-    console.log("Insert error:", error);
     alert("Failed to add property");
     return;
   }
@@ -131,10 +175,19 @@ const addProperty = async () => {
   setRent("");
   setExpense("");
   setType("airbnb");
-  setIsAirbnb(false);
-
   fetchProperties();
 };
+
+
+
+
+
+
+
+
+
+
+
 
 
 useEffect(() => {
@@ -808,7 +861,8 @@ if (!user) {
               />
             </div>
 
-            <button
+            <
+
               onClick={handleAuth}
               disabled={authLoading}
 
@@ -1032,11 +1086,18 @@ return (
 
   <div className="flex flex-col sm:flex-row gap-3">
     <button
-      className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-5 py-3 rounded-xl font-medium shadow-sm transition"
+      className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-xl font-medium shadow-sm transition"
+
       onClick={editingId ? saveEdit : addProperty}
     >
       {editingId ? "Save" : "Add"}
     </button>
+
+      {isLimitReached && (
+       <p className="text-sm text-indigo-600 mt-2">
+       Free plan allows 1 property. Upgrade to unlock unlimited properties.
+       </p>
+      )}
 
     {editingId && (
       <button
@@ -1081,11 +1142,10 @@ return (
 
                   <div className="flex flex-col sm:flex-row gap-2">
                   <button
-                    
+                                     
                   
-                  //className="bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-xl font-medium transition"
-                    className="bg-green-200 hover:bg-green-300 text-green-900 px-4 py-2 rounded-xl font-medium transition"
-
+className="bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800 px-4 py-2 rounded-xl font-medium transition"  
+                   
                     onClick={() => startEditing(p)}
                   >
                     Edit
@@ -1388,7 +1448,7 @@ return (
 
                 <div className="flex gap-2">
                   <button
-                    //className="bg-yellow-500 text-white px-3 py-2 rounded"
+                    
                     className="bg-green-200 hover:bg-green-300 text-white-900 px-4 py-2 rounded-xl font-medium transition"
                     onClick={() => startEditing(p)}
                   >
