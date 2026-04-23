@@ -237,6 +237,57 @@ useEffect(() => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+useEffect(() => {
+  if (!user) return;
+
+  let timeout: ReturnType<typeof setTimeout>;
+
+  const resetTimer = () => {
+    clearTimeout(timeout);
+
+    timeout = setTimeout(async () => {
+      alert("You have been signed out due to 30 minutes of inactivity.");
+      await handleSignOut();
+    }, 30 * 60 * 1000); // 30 minutes
+  };
+
+  const events = ["mousemove", "keydown", "click", "scroll", "touchstart"];
+
+  events.forEach((event) => window.addEventListener(event, resetTimer));
+
+  resetTimer();
+
+  return () => {
+    clearTimeout(timeout);
+    events.forEach((event) => window.removeEventListener(event, resetTimer));
+  };
+}, [user]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const getUser = async () => {
     const { data } = await supabase.auth.getUser();
     setUser(data.user);
@@ -576,12 +627,6 @@ const { data, error } = await supabase.auth.signUp({
 });
 
 
-
-
-
-
-
-
 setAuthLoading(false);
 
 if (error) {
@@ -600,12 +645,6 @@ if (error) {
   alert(error.message);
   return;
 }
-
-
-
-
-
-
 
 
 if (!data?.user?.identities || data.user.identities.length === 0) {
@@ -677,49 +716,6 @@ return (
   </div>
 );
 }
-
-
-
-
-
-
-
-
-
-
-useEffect(() => {
-  if (!user) return;
-
-  let timeout: ReturnType<typeof setTimeout>;
-
-  const resetTimer = () => {
-    clearTimeout(timeout);
-
-    timeout = setTimeout(async () => {
-      alert("You have been signed out due to 30 minutes of inactivity.");
-      await handleSignOut();
-    }, 30 * 60 * 1000); // 30 minutes
-  };
-
-  const events = ["mousemove", "keydown", "click", "scroll", "touchstart"];
-
-  events.forEach((event) => window.addEventListener(event, resetTimer));
-
-  resetTimer();
-
-  return () => {
-    clearTimeout(timeout);
-    events.forEach((event) => window.removeEventListener(event, resetTimer));
-  };
-}, [user]);
-
-
-
-
-
-
-
-
 
 
 
@@ -914,6 +910,18 @@ if (!user) {
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
