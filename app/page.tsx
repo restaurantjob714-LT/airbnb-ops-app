@@ -89,13 +89,6 @@ const [authNotice, setAuthNotice] = useState("");
     return sum + (Number(p.monthly_expense) || 0);
   }, 0);
 
-  
-
-
-
-
-
-
 
 const addProperty = async () => {
   if (!name.trim()) {
@@ -146,8 +139,6 @@ const addProperty = async () => {
   }
 
 
-
-
   if (countError) {
     alert("Could not verify property limit.");
     return;
@@ -182,17 +173,6 @@ const addProperty = async () => {
   setType("airbnb");
   fetchProperties();
 };
-
-
-
-
-
-
-
-
-
-
-
 
 
 useEffect(() => {
@@ -642,14 +622,6 @@ if (!data?.user?.identities || data.user.identities.length === 0) {
 }
 
 
-
-
-
-
-
-
-
-
 alert("Account created. Please check your email and click the confirmation link before signing in.");
 
 setPhoneError("");
@@ -662,13 +634,6 @@ setAuthMode("signin");
 return;
 
 };
-
-
-
-
-
-
-
 
 
 
@@ -712,6 +677,50 @@ return (
   </div>
 );
 }
+
+
+
+
+
+
+
+
+
+
+useEffect(() => {
+  if (!user) return;
+
+  let timeout: ReturnType<typeof setTimeout>;
+
+  const resetTimer = () => {
+    clearTimeout(timeout);
+
+    timeout = setTimeout(async () => {
+      alert("You have been signed out due to 30 minutes of inactivity.");
+      await handleSignOut();
+    }, 30 * 60 * 1000); // 30 minutes
+  };
+
+  const events = ["mousemove", "keydown", "click", "scroll", "touchstart"];
+
+  events.forEach((event) => window.addEventListener(event, resetTimer));
+
+  resetTimer();
+
+  return () => {
+    clearTimeout(timeout);
+    events.forEach((event) => window.removeEventListener(event, resetTimer));
+  };
+}, [user]);
+
+
+
+
+
+
+
+
+
 
 
 if (!user) {
@@ -1100,7 +1109,7 @@ return (
 
       {isLimitReached && (
        <p className="text-sm text-red-600 mt-2">
-       Free plan allows 1 property. Upgrade to add more properties.
+       Free plan allows 1 property. Upgrade to add more.
        </p>
       )}
 
