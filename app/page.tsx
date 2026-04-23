@@ -122,6 +122,15 @@ const addProperty = async () => {
   }
 
 
+
+if (!user) {
+  alert("User not found");
+  return;
+}
+
+
+
+
 const { count, error: countError } = await supabase
   .from("properties")
   .select("*", { count: "exact", head: true })
