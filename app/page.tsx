@@ -141,6 +141,19 @@ if (countError) {
   return;
 }
 
+
+const { data: accessProfile, error: accessProfileError } = await supabase
+  .from("profiles")
+  .select("plan, trial_ends, subscription_status")
+  .eq("id", user.id)
+  .single();
+
+if (accessProfileError || !accessProfile) {
+  alert("Could not verify account access.");
+  return;
+}
+
+
 const now = new Date();
 const isTrialExpired = profileData.trial_ends
   ? new Date(profileData.trial_ends) < now
@@ -149,17 +162,6 @@ const isTrialExpired = profileData.trial_ends
 const isPaid =
   profileData.plan === "paid" ||
   profileData.subscription_status === "active";
-
-
-
-
-
-
-
-
-
-
-
 
 
 if (isTrialExpired && !isPaid && (count ?? 0) >= 1) {
