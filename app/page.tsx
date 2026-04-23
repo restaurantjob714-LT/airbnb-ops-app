@@ -117,25 +117,41 @@ const addProperty = async () => {
 
 
 
-const { data: accessProfile, error: accessProfileError } = await supabase
-  .from("profiles")
-  .select("plan, trial_ends, subscription_status")
-  .eq("id", user.id)
-  .single();
 
-if (accessProfileError || !accessProfile) {
-  alert("Could not verify account access.");
+
+const { data: profileData, error: profileError } = await supabase
+    .from("profiles")
+    .select("plan")
+    .eq("id", currentUser.id)
+    .single();
+
+  if (profileError || !profileData) {
+    alert("Could not verify your account plan.");
+    return;
+  }
+
+
+const { count, error: countError } = await supabase
+  .from("properties")
+  .select("*", { count: "exact", head: true })
+  .eq("user_id", user.id);
+
+if (countError) {
+  alert("Could not verify property limit.");
   return;
 }
 
 const now = new Date();
-const isTrialExpired = accessProfile.trial_ends
-  ? new Date(accessProfile.trial_ends) < now
+const isTrialExpired = profileData.trial_ends
+  ? new Date(profileData.trial_ends) < now
   : false;
 
 const isPaid =
-  accessProfile.plan === "paid" ||
-  accessProfile.subscription_status === "active";
+  profileData.plan === "paid" ||
+  profileData.subscription_status === "active";
+
+
+
 
 
 
