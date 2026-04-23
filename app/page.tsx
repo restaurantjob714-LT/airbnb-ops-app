@@ -121,31 +121,70 @@ const addProperty = async () => {
     return;
   }
 
-  const { count, error: countError } = await supabase
-    .from("properties")
-    .select("*", { count: "exact", head: true })
-    .eq("user_id", currentUser.id);
 
 
-  if (countError) {
-     alert("Could not verify property limit.");
-     return;
-  }  
 
 
-  if ((count ?? 0) >= 1) {
-    setIsLimitReached(true);
-    return;
-  }
 
 
-  if (countError) {
-    alert("Could not verify property limit.");
-    return;
-  }
+
+
+
+
+
+const { count, error: countError } = await supabase
+  .from("properties")
+  .select("*", { count: "exact", head: true })
+  .eq("user_id", user.id);
+
+if (countError) {
+  alert("Could not verify property limit.");
+  return;
+}
+
+const { data: profileData, error: profileError } = await supabase
+  .from("profiles")
+  .select("plan, trial_ends, subscription_status")
+  .eq("id", user.id)
+  .single();
+
+if (profileError || !profileData) {
+  alert("Could not verify account access.");
+  return;
+}
+
+const now = new Date();
+const isTrialExpired = profileData.trial_ends
+  ? new Date(profileData.trial_ends) < now
+  : false;
+
+const isPaid =
+  profileData.plan === "paid" ||
+  profileData.subscription_status === "active";
+
+if (isTrialExpired && !isPaid && (count ?? 0) >= 1) {
+  setIsLimitReached(true);
+  return;
+}
+
+setIsLimitReached(false);
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   if (profileData.plan === "free" && (count || 0) >= 1) {
-    alert("Free plan allows 1 property only. Upgrade to add unlimited properties.");
+    alert("Free plan allows 1 property only. Upgrade to add more properties.");
     return;
   }
 
@@ -236,17 +275,6 @@ useEffect(() => {
 }, [isFirstTimeUser]);
 
 
-
-
-
-
-
-
-
-
-
-
-
 useEffect(() => {
   if (!user) return;
 
@@ -256,9 +284,9 @@ useEffect(() => {
     clearTimeout(timeout);
 
     timeout = setTimeout(async () => {
-      alert("You have been signed out due to 30 minutes of inactivity.");
+      alert("You have been signed out due to 15 minutes of inactivity.");
       await handleSignOut();
-    }, 30 * 60 * 1000); // 30 minutes
+    }, 15 * 60 * 1000); // 30 minutes
   };
 
   const events = ["mousemove", "keydown", "click", "scroll", "touchstart"];
@@ -272,20 +300,6 @@ useEffect(() => {
     events.forEach((event) => window.removeEventListener(event, resetTimer));
   };
 }, [user]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   const getUser = async () => {
@@ -912,19 +926,6 @@ if (!user) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 return (
   <div className="min-h-screen bg-gray-50">
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
@@ -1046,14 +1047,6 @@ return (
         <h2 className="text-xl font-bold text-gray-900 mb-4">
           {isFirstTimeUser ? "Add Your First Property" : "Add New Property"}
         </h2>
-
-
-
-
-
-
-
-
 
         
 <div className="space-y-4">
@@ -1205,12 +1198,6 @@ className="bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800 px
 
                 
 
-
-
-
-
-
-
 {showExpenseDetails[p.id] && (
   <div className="mb-4 border border-gray-200 rounded-2xl p-4 bg-gray-50">
     <p className="font-semibold text-gray-900 mb-3">Expense Details</p>
@@ -1238,15 +1225,6 @@ className="bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800 px
     </div>
   </div>
 )}
-
-
-
-
-
-
-
-
-
 
 
 <div
