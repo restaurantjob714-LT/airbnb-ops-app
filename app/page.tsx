@@ -122,16 +122,6 @@ const addProperty = async () => {
   }
 
 
-
-
-
-
-
-
-
-
-
-
 const { count, error: countError } = await supabase
   .from("properties")
   .select("*", { count: "exact", head: true })
@@ -286,7 +276,7 @@ useEffect(() => {
     timeout = setTimeout(async () => {
       alert("You have been signed out due to 15 minutes of inactivity.");
       await handleSignOut();
-    }, 15 * 60 * 1000); // 30 minutes
+    }, 15 * 60 * 1000); // 15 minutes
   };
 
   const events = ["mousemove", "keydown", "click", "scroll", "touchstart"];
