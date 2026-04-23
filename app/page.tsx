@@ -110,6 +110,9 @@ const addProperty = async () => {
     return;
   }
 
+
+
+
   const { data: profileData, error: profileError } = await supabase
     .from("profiles")
     .select("plan")
@@ -122,15 +125,6 @@ const addProperty = async () => {
   }
 
 
-
-if (!user) {
-  alert("User not found");
-  return;
-}
-
-
-
-
 const { count, error: countError } = await supabase
   .from("properties")
   .select("*", { count: "exact", head: true })
@@ -141,16 +135,15 @@ if (countError) {
   return;
 }
 
-const { data: profileData, error: profileError } = await supabase
-  .from("profiles")
-  .select("plan, trial_ends, subscription_status")
-  .eq("id", user.id)
-  .single();
 
-if (profileError || !profileData) {
-  alert("Could not verify account access.");
-  return;
-}
+
+
+
+
+
+
+
+
 
 const now = new Date();
 const isTrialExpired = profileData.trial_ends
