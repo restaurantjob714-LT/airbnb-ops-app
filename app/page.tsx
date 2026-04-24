@@ -157,10 +157,10 @@ setIsLimitReached(false);
   
 
 
-  if (accessProfile.plan === "free" && (count || 0) >= 1) {
-    alert("Free plan allows 1 property only. Upgrade to add more properties.");
-    return;
-  }
+  // if (accessProfile.plan === "free" && (count || 0) >= 1) {
+   // alert("Free plan allows 1 property only. Upgrade to add more properties.");
+   // return;
+ // }
 
   const { error } = await supabase.from("properties").insert([
     {
