@@ -113,24 +113,6 @@ const addProperty = async () => {
 
 
 
-  
-
-
-
-
-
-const { data: accessProfile, error: accessProfileError } = await supabase
-    .from("profiles")
-    .select("plan")
-    .eq("id", currentUser.id)
-    .single();
-
-  if (accessProfileError || !accessProfile) {
-    alert("Could not verify your account plan.");
-    return;
-  }
-
-
 const { count, error: countError } = await supabase
   .from("properties")
   .select("*", { count: "exact", head: true })
