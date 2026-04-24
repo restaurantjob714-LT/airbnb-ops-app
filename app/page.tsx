@@ -137,6 +137,7 @@ if (accessProfileError || !accessProfile) {
 
 
 const now = new Date();
+
 const isTrialExpired = accessProfile.trial_ends
   ? new Date(accessProfile.trial_ends) < now
   : false;
