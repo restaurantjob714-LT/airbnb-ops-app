@@ -119,13 +119,13 @@ const addProperty = async () => {
 
 
 
-const { data: profileData, error: profileError } = await supabase
+const { data: accessProfile, error: accessProfileError } = await supabase
     .from("profiles")
     .select("plan")
     .eq("id", currentUser.id)
     .single();
 
-  if (profileError || !profileData) {
+  if (accessProfileError || !accessProfile) {
     alert("Could not verify your account plan.");
     return;
   }
@@ -155,13 +155,14 @@ if (accessProfileError || !accessProfile) {
 
 
 const now = new Date();
-const isTrialExpired = profileData.trial_ends
-  ? new Date(profileData.trial_ends) < now
+const isTrialExpired = accessProfile.trial_ends
+  ? new Date(accessProfile.trial_ends) < now
   : false;
 
+
 const isPaid =
-  profileData.plan === "paid" ||
-  profileData.subscription_status === "active";
+  accessProfile.plan === "paid" ||
+  accessProfile.subscription_status === "active";
 
 
 if (isTrialExpired && !isPaid && (count ?? 0) >= 1) {
@@ -176,16 +177,7 @@ setIsLimitReached(false);
 
 
 
-
-
-
-
-
-
-
-
-
-  if (profileData.plan === "free" && (count || 0) >= 1) {
+  if (acessProfile.plan === "free" && (count || 0) >= 1) {
     alert("Free plan allows 1 property only. Upgrade to add more properties.");
     return;
   }
