@@ -157,10 +157,7 @@ setIsLimitReached(false);
   
 
 
-
-
-
-  if (acessProfile.plan === "free" && (count || 0) >= 1) {
+  if (accessProfile.plan === "free" && (count || 0) >= 1) {
     alert("Free plan allows 1 property only. Upgrade to add more properties.");
     return;
   }
