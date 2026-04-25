@@ -111,8 +111,6 @@ const addProperty = async () => {
   }
 
 
-
-
 const { count, error: countError } = await supabase
   .from("properties")
   .select("*", { count: "exact", head: true })
@@ -759,6 +757,19 @@ return (
 
 
 
+
+
+
+
+
+
+
+
+const isTrialExpired =
+  profile?.trial_ends &&
+  new Date(profile.trial_ends).getTime() < Date.now();
+
+
 if (!user) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex items-center justify-center px-4">
@@ -838,7 +849,6 @@ if (!user) {
         className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
       />
     </div>
-
 
 
 <div>
@@ -982,9 +992,51 @@ return (
   </span>
 </p>
 
-
-
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {isTrialExpired && (
+      <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+        <p className="text-sm font-medium text-amber-800">
+          Your free trial has ended. Upgrade to continue adding properties and managing your portfolio.
+        </p>
+
+        <button className="mt-3 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-medium transition">
+          Upgrade Now
+        </button>
+      </div>
+    )}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <button
       onClick={handleSignOut}
