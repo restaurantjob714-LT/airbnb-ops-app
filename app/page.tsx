@@ -226,17 +226,40 @@ useEffect(() => {
 
   initializeAuth();
 
+
+
+
+
+
+
+
+
   const {
     data: { subscription },
-  } = supabase.auth.onAuthStateChange((event, session) => {
-    setUser(session?.user ?? null);
+  } = supabase.auth.onAuthStateChange(async (event, session) => {
+  setUser(session?.user ?? null);
 
-    if (session?.user) {
-      fetchProfile();
-    } else {
-      setProfile(null);
-    }
-  });
+  if (session?.user) {
+    await fetchProfile();
+    await fetchProperties();
+    await fetchBookings();
+  } else {
+    setProfile(null);
+    setProperties([]);
+    setBookings([]);
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
 
   return () => subscription.unsubscribe();
 }, []);
@@ -282,21 +305,48 @@ useEffect(() => {
   };
 
   
+
+
+
+
+
+
+
+
+
+
+
 const fetchProperties = async () => {
   const {
     data: { user: currentUser },
   } = await supabase.auth.getUser();
+
   if (!currentUser) {
     setProperties([]);
     return;
   }
-  const { data } = await supabase
+
+  const { data, error } = await supabase
     .from("properties")
     .select("*")
     .eq("user_id", currentUser.id)
     .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log("Fetch properties error:", error);
+    return;
+  }
+
   setProperties(data || []);
 };
+
+
+
+
+
+
+
+
 
 
 const fetchBookings = async () => {
