@@ -236,19 +236,21 @@ useEffect(() => {
 
   const {
     data: { subscription },
-  } = supabase.auth.onAuthStateChange(async (event, session) => {
-  setUser(session?.user ?? null);
+  } = supabase.auth.onAuthStateChange((event, session) => {
+        setUser(session?.user ?? null);
 
-  if (session?.user) {
-    await fetchProfile();
-    await fetchProperties();
-    await fetchBookings();
-  } else {
-    setProfile(null);
-    setProperties([]);
-    setBookings([]);
-  }
-});
+        if (session?.user) {
+         setTimeout(() => {
+          fetchProfile();
+          fetchProperties();
+          fetchBookings();
+        }, 0);
+       } else {
+          setProfile(null);
+          setProperties([]);
+          setBookings([]);
+       }
+  });
 
 
 
