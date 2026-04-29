@@ -765,9 +765,6 @@ return (
 
 
 
-const isTrialExpired =
-  profile?.trial_ends &&
-  new Date(profile.trial_ends).getTime() < Date.now();
 
 
 if (!user) {
@@ -962,6 +959,42 @@ if (!user) {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const isTrialExpired =
+  profile?.trial_ends &&
+  new Date(profile.trial_ends).getTime() < Date.now();
+
+const isPaid =
+  profile?.plan === "paid" || profile?.subscription_status === "active";
+
+const canEdit = isPaid || !isTrialExpired;
+
+
+
+
+
+
+
+
 return (
   <div className="min-h-screen bg-gray-50">
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
@@ -996,24 +1029,10 @@ return (
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     {isTrialExpired && (
-      <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-        <p className="text-sm font-medium text-amber-800">
-          Your free trial has ended. Upgrade to continue adding properties and managing your portfolio.
+      <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-6 text-center">
+        <p className="text-base sm:text-lg font-semibold text-amber-800">
+          Your free trial has ended. Upgrade to continue adding/editting properties and managing your portfolio.
         </p>
 
         <button className="mt-3 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-medium transition">
@@ -1021,21 +1040,6 @@ return (
         </button>
       </div>
     )}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     <button
@@ -1177,14 +1181,42 @@ return (
     </div>
   )}
 
-  <div className="flex flex-col sm:flex-row gap-3">
-    <button
-      className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-xl font-medium shadow-sm transition"
 
-      onClick={editingId ? saveEdit : addProperty}
-    >
-      {editingId ? "Save" : "Add"}
-    </button>
+
+
+
+
+
+
+
+
+
+
+
+
+<button
+  disabled={!canEdit}
+  className={`px-6 py-3 rounded-xl font-medium shadow-sm transition ${
+    canEdit
+      ? "bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white"
+      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+  }`}
+  onClick={editingId ? saveEdit : addProperty}
+>
+  {editingId ? "Save" : "Add"}
+</button>
+
+
+
+
+
+
+
+
+
+
+
+
 
       {isLimitReached && (
        <p className="text-sm text-red-600 mt-2">
@@ -1233,16 +1265,29 @@ return (
 
                 </div>
 
-                  <div className="flex flex-col sm:flex-row gap-2">
+
+
+
+
+                <div className="flex flex-col sm:flex-row gap-2">
                   <button
-                                     
-                  
-className="bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800 px-4 py-2 rounded-xl font-medium transition"  
-                   
-                    onClick={() => startEditing(p)}
+                    disabled={!canEdit}
+                    className={`px-4 py-2 rounded-xl font-medium transition ${
+                      canEdit
+                        ? "bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800"
+                        : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    }`}
+                    onClick={() => {
+                      if (!canEdit) return;
+                      startEditing(p);
+                    }}
                   >
-                    Edit
-                  </button>
+                   Edit
+                 </button>
+               </div>
+
+
+
 
                   <button
                     
@@ -1261,7 +1306,7 @@ className="bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800 px
                       )
                     }
                   >
-                    {expandedProperties[p.id] ? "Hide Details" : "Add / Show Details"}
+                    {expandedProperties[p.id] ? "Hide Details" : "Show Details"}
                   </button>
                 </div>
               </div>
@@ -1344,6 +1389,11 @@ className="bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800 px
                   }`}
                 >
                   <p className="font-semibold mb-2">Add Booking</p>
+                    {!canEdit && (
+                      <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mb-3">
+                      View-only mode. Your trial has ended. Upgrade to add or edit bookings.
+                      </p>
+                    )}
 
                   <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2">
                     <input
@@ -1410,19 +1460,41 @@ className="bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800 px
                   </div>
 
                   <div className="mt-2 flex flex-col sm:flex-row gap-2">
-                    <button
-                      className="bg-blue-600 text-white px-3 py-2 w-full sm:w-auto"
-                      onClick={() => {
-                        const input = bookingInputs[p.id];
-                        if (!input) {
-                          alert("Please fill booking info");
-                          return;
-                        }
-                        addBooking(p.id, input);
-                      }}
-                    >
-                      {bookingInputs[p.id]?.id ? "Update Booking" : "Add Booking"}
-                    </button>
+
+
+
+
+
+
+
+<button
+  disabled={!canEdit}
+  className={`px-3 py-2 w-full sm:w-auto rounded-xl font-medium transition ${
+    canEdit
+      ? "bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white"
+      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+  }`}
+  onClick={() => {
+    if (!canEdit) return;
+
+    const input = bookingInputs[p.id];
+    if (!input) {
+      alert("Please fill booking info");
+      return;
+    }
+
+    addBooking(p.id, input);
+  }}
+>
+  {bookingInputs[p.id]?.id ? "Update Booking" : "Add Booking"}
+</button>
+                    
+
+
+
+
+
+
 
                     {bookingInputs[p.id]?.id && (
                       <button
@@ -1460,13 +1532,33 @@ className="bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800 px
                               Expense: ${b.expense || 0}
                             </div>
 
-                            <div className="mt-2 flex gap-2">
+                            
+
+
+
+
+                           <div className="mt-2 flex gap-2">
                               <button
-                                className="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded"
-                                onClick={() => editBooking(b)}
-                              >
-                                Edit
-                              </button>
+                                disabled={!canEdit}
+                                className={`px-3 py-1.5 rounded-xl font-medium transition ${
+                                   canEdit
+                                    ? "bg-green-100 hover:bg-green-200 active:scale-[0.99] text- green-800"
+                                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                               }`}
+                               onClick={() => {
+                                 if (!canEdit) return;
+                                 editBooking(b);
+                               }}
+                           >
+                               Edit
+                               </button>
+
+
+
+
+
+
+
 
                               <button
                                 className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded"
