@@ -226,12 +226,6 @@ useEffect(() => {
 
 
 
-
-
-
-
-
-
   const {
     data: { subscription },
   } = supabase.auth.onAuthStateChange((event, session) => {
@@ -249,13 +243,6 @@ useEffect(() => {
           setBookings([]);
        }
   });
-
-
-
-
-
-
-
 
 
 
@@ -306,16 +293,6 @@ useEffect(() => {
 
   
 
-
-
-
-
-
-
-
-
-
-
 const fetchProperties = async () => {
   const {
     data: { user: currentUser },
@@ -339,13 +316,6 @@ const fetchProperties = async () => {
 
   setProperties(data || []);
 };
-
-
-
-
-
-
-
 
 
 
@@ -756,17 +726,6 @@ return (
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
 if (!user) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex items-center justify-center px-4">
@@ -960,25 +919,6 @@ if (!user) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const isTrialExpired =
   profile?.trial_ends &&
   new Date(profile.trial_ends).getTime() < Date.now();
@@ -987,11 +927,6 @@ const isPaid =
   profile?.plan === "paid" || profile?.subscription_status === "active";
 
 const canEdit = isPaid || !isTrialExpired;
-
-
-
-
-
 
 
 
@@ -1182,18 +1117,6 @@ return (
   )}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 <button
   disabled={!canEdit}
   className={`px-6 py-3 rounded-xl font-medium shadow-sm transition ${
@@ -1205,15 +1128,6 @@ return (
 >
   {editingId ? "Save" : "Add"}
 </button>
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1245,408 +1159,401 @@ return (
 
 
 
-    {properties.length > 0 && (
-      <div className="space-y-8">
 
-        <div>
-          <h2 className="text-xl font-bold mb-4">Airbnb Properties</h2>
 
-          {airbnbProperties.map((p) => (
+
+
+
+
+
+
+
+    
+{properties.length > 0 && (
+  <div className="space-y-8">
+    <div>
+      <h2 className="text-xl font-bold mb-4">Airbnb Properties</h2>
+
+      {airbnbProperties.map((p) => (
+        <div
+          key={p.id}
+          className="border border-gray-200 p-5 mb-5 rounded-2xl shadow-sm bg-white hover:shadow-md transition"
+        >
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
+            <div>
+              <p className="text-xl font-bold text-gray-900">{p.name}</p>
+              <p className="text-gray-600">{p.address}</p>
+              <p className="text-sm text-gray-500 mt-1">Type: {p.type}</p>
+              <p className="text-sm text-indigo-600 font-medium mt-1">
+                Mode: Airbnb (Daily)
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-2">
+              <button
+                disabled={!canEdit}
+                className={`px-4 py-2 rounded-xl font-medium transition ${
+                  canEdit
+                    ? "bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+                onClick={() => {
+                  if (!canEdit) return;
+                  startEditing(p);
+                }}
+              >
+                Edit
+              </button>
+
+              <button
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-medium transition"
+                onClick={() => deleteProperty(p.id)}
+              >
+                Delete
+              </button>
+
+              <button
+                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-medium transition"
+                onClick={() =>
+                  setExpandedProperties((prev) =>
+                    prev[p.id] ? {} : { [p.id]: true }
+                  )
+                }
+              >
+                {expandedProperties[p.id] ? "Hide Details" : "Show Details"}
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+            <div className="border rounded-2xl p-4">
+              <p className="text-sm text-gray-500">Revenue</p>
+              <p className="text-lg font-semibold text-gray-900">
+                ${getAirbnbRevenue(p.id)}
+              </p>
+            </div>
+
             <div
-              key={p.id}
-              className="border border-gray-200 p-5 mb-5 rounded-2xl shadow-sm bg-white hover:shadow-md transition"
+              className="border rounded-2xl p-4 cursor-pointer hover:bg-gray-50 transition"
+              onClick={() =>
+                setShowExpenseDetails((prev) => ({
+                  ...prev,
+                  [p.id]: !prev[p.id],
+                }))
+              }
             >
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
-                <div>
-                  <p className="text-xl font-bold text-gray-900">{p.name}</p>
-                  <p className="text-gray-600">{p.address}</p>
-                  <p className="text-sm text-gray-500 mt-1">Type: {p.type}</p>
-                  <p className="text-sm text-indigo-600 font-medium mt-1">Mode: Airbnb (Daily)</p>
+              <p className="text-sm text-gray-500">Expense</p>
+              <p className="text-lg font-semibold text-gray-900">
+                ${getAirbnbExpense(p.id)}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                {showExpenseDetails[p.id] ? "Hide details" : "Tap to view details"}
+              </p>
+            </div>
 
-                </div>
+            <div className="border rounded-2xl p-4">
+              <p className="text-sm text-gray-500">Profit</p>
+              <p className="text-lg font-semibold text-gray-900">
+                ${getAirbnbRevenue(p.id) - getAirbnbExpense(p.id)}
+              </p>
+            </div>
+          </div>
 
+          {showExpenseDetails[p.id] && (
+            <div className="mb-4 border border-gray-200 rounded-2xl p-4 bg-gray-50">
+              <p className="font-semibold text-gray-900 mb-3">Expense Details</p>
 
+              <div className="space-y-2 text-sm text-gray-700">
+                {bookings.filter(
+                  (b) => b.property_id === p.id && Number(b.expense || 0) > 0
+                ).length > 0 ? (
+                  bookings
+                    .filter(
+                      (b) =>
+                        b.property_id === p.id && Number(b.expense || 0) > 0
+                    )
+                    .map((b) => (
+                      <div
+                        key={b.id}
+                        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-gray-200 pb-2"
+                      >
+                        <p>
+                          {b.start_date} → {b.end_date}
+                        </p>
+                        <p className="font-medium text-gray-900">
+                          ${b.expense || 0}
+                        </p>
+                      </div>
+                    ))
+                ) : (
+                  <p className="text-gray-500">No expense details available.</p>
+                )}
+              </div>
+            </div>
+          )}
 
+          {expandedProperties[p.id] && (
+            <div
+              ref={(el) => {
+                bookingFormRefs.current[p.id] = el;
+              }}
+              className={`border-t pt-4 ${
+                bookingInputs[p.id]?.id
+                  ? "border-yellow-400 bg-yellow-50 rounded p-3"
+                  : ""
+              }`}
+            >
+              <p className="font-semibold mb-2">Add Booking</p>
 
+              {!canEdit && (
+                <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mb-3">
+                  View-only mode. Your trial has ended. You can still view or delete your data, but adding and editing require an upgrade.
+                </p>
+              )}
 
-                <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2">
+                <input
+                  type="date"
+                  className="border p-2 w-full sm:w-auto"
+                  value={bookingInputs[p.id]?.start || ""}
+                  onChange={(e) =>
+                    setBookingInputs((prev) => ({
+                      ...prev,
+                      [p.id]: {
+                        ...prev[p.id],
+                        start: e.target.value,
+                      },
+                    }))
+                  }
+                />
+
+                <input
+                  type="date"
+                  className="border p-2 w-full sm:w-auto"
+                  value={bookingInputs[p.id]?.end || ""}
+                  onChange={(e) =>
+                    setBookingInputs((prev) => ({
+                      ...prev,
+                      [p.id]: {
+                        ...prev[p.id],
+                        end: e.target.value,
+                      },
+                    }))
+                  }
+                />
+
+                <input
+                  type="number"
+                  placeholder="Total Price"
+                  className="border p-2 w-full sm:w-auto"
+                  value={bookingInputs[p.id]?.price || ""}
+                  onChange={(e) =>
+                    setBookingInputs((prev) => ({
+                      ...prev,
+                      [p.id]: {
+                        ...prev[p.id],
+                        price: e.target.value,
+                      },
+                    }))
+                  }
+                />
+
+                <input
+                  type="number"
+                  placeholder="Expense"
+                  className="border p-2 w-full sm:w-auto"
+                  value={bookingInputs[p.id]?.expense || ""}
+                  onChange={(e) =>
+                    setBookingInputs((prev) => ({
+                      ...prev,
+                      [p.id]: {
+                        ...prev[p.id],
+                        expense: e.target.value,
+                      },
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="mt-2 flex flex-col sm:flex-row gap-2">
+                <button
+                  disabled={!canEdit}
+                  className={`px-3 py-2 w-full sm:w-auto rounded-xl font-medium transition ${
+                    canEdit
+                      ? "bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white"
+                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
+                  onClick={() => {
+                    if (!canEdit) return;
+
+                    const input = bookingInputs[p.id];
+                    if (!input) {
+                      alert("Please fill booking info");
+                      return;
+                    }
+
+                    addBooking(p.id, input);
+                  }}
+                >
+                  {bookingInputs[p.id]?.id ? "Update Booking" : "Add Booking"}
+                </button>
+
+                {bookingInputs[p.id]?.id && (
                   <button
-                    disabled={!canEdit}
-                    className={`px-4 py-2 rounded-xl font-medium transition ${
-                      canEdit
-                        ? "bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800"
-                        : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    }`}
-                    onClick={() => {
-                      if (!canEdit) return;
-                      startEditing(p);
-                    }}
-                  >
-                   Edit
-                 </button>
-               
-
-                  <button
-                    
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-medium transition"
-                    onClick={() => deleteProperty(p.id)}
-                  >
-                    Delete
-                  </button>
-
-                  <button
-                    
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-medium transition"
+                    className="bg-gray-300 hover:bg-gray-400 text-black px-3 py-2 w-full sm:w-auto rounded-xl font-medium transition"
                     onClick={() =>
-                      setExpandedProperties((prev) =>
-                        prev[p.id] ? {} : { [p.id]: true }
-                      )
+                      setBookingInputs((prev) => ({
+                        ...prev,
+                        [p.id]: {
+                          start: "",
+                          end: "",
+                          price: "",
+                          expense: "",
+                        },
+                      }))
                     }
                   >
-                    {expandedProperties[p.id] ? "Hide Details" : "Show Details"}
+                    Cancel
                   </button>
-                </div>
-              // </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-                <div className="border rounded p-3">
-                  <p className="text-sm text-gray-500">Revenue</p>
-                  <p className="text-lg font-semibold">
-                    ${getAirbnbRevenue(p.id)}
-                  </p>
-                </div>
-
-                
-
-{showExpenseDetails[p.id] && (
-  <div className="mb-4 border border-gray-200 rounded-2xl p-4 bg-gray-50">
-    <p className="font-semibold text-gray-900 mb-3">Expense Details</p>
-
-    <div className="space-y-2 text-sm text-gray-700">
-      {bookings.filter((b) => b.property_id === p.id && Number(b.expense || 0) > 0).length > 0 ? (
-        bookings
-          .filter((b) => b.property_id === p.id && Number(b.expense || 0) > 0)
-          .map((b) => (
-            <div
-              key={b.id}
-              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-gray-200 pb-2"
-            >
-              <p>
-                {b.start_date} → {b.end_date}
-              </p>
-              <p className="font-medium text-gray-900">
-                ${b.expense || 0}
-              </p>
-            </div>
-          ))
-      ) : (
-        <p className="text-gray-500">No expense details available.</p>
-      )}
-    </div>
-  </div>
-)}
-
-
-<div
-  className="border rounded-2xl p-4 cursor-pointer hover:bg-gray-50 transition"
-  onClick={() =>
-    setShowExpenseDetails((prev) => ({
-      ...prev,
-      [p.id]: !prev[p.id],
-    }))
-  }
->
-  <p className="text-sm text-gray-500">Expense</p>
-  <p className="text-lg font-semibold text-gray-900">
-    ${getAirbnbExpense(p.id)}
-  </p>
-  <p className="text-xs text-gray-400 mt-1">
-    {showExpenseDetails[p.id] ? "Hide details" : "Tap to view details"}
-  </p>
-</div>
-
-
-                <div className="border rounded p-3">
-                  <p className="text-sm text-gray-500">Profit</p>
-                  <p className="text-lg font-semibold">
-                    ${getAirbnbRevenue(p.id) - getAirbnbExpense(p.id)}
-                  </p>
-                </div>
+                )}
               </div>
 
-              {expandedProperties[p.id] && (
-                <div
-                  ref={(el) => {
-                    bookingFormRefs.current[p.id] = el;
-                  }}
-                  className={`border-t pt-4 ${
-                    bookingInputs[p.id]?.id
-                      ? "border-yellow-400 bg-yellow-50 rounded p-3"
-                      : ""
-                  }`}
-                >
-                  <p className="font-semibold mb-2">Add Booking</p>
-                    {!canEdit && (
-                      <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mb-3">
-                      View-only mode. Your trial has ended. Upgrade to add or edit bookings.
-                      </p>
-                    )}
+              <div className="mt-4">
+                <p className="font-semibold mb-2">Bookings</p>
 
-                  <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2">
-                    <input
-                      type="date"
-                      className="border p-2 w-full sm:w-auto"
-                      value={bookingInputs[p.id]?.start || ""}
-                      onChange={(e) =>
-                        setBookingInputs((prev) => ({
-                          ...prev,
-                          [p.id]: {
-                            ...prev[p.id],
-                            start: e.target.value,
-                          },
-                        }))
-                      }
-                    />
-
-                    <input
-                      type="date"
-                      className="border p-2 w-full sm:w-auto"
-                      value={bookingInputs[p.id]?.end || ""}
-                      onChange={(e) =>
-                        setBookingInputs((prev) => ({
-                          ...prev,
-                          [p.id]: {
-                            ...prev[p.id],
-                            end: e.target.value,
-                          },
-                        }))
-                      }
-                    />
-
-                    <input
-                      type="number"
-                      placeholder="Total Price"
-                      className="border p-2 w-full sm:w-auto"
-                      value={bookingInputs[p.id]?.price || ""}
-                      onChange={(e) =>
-                        setBookingInputs((prev) => ({
-                          ...prev,
-                          [p.id]: {
-                            ...prev[p.id],
-                            price: e.target.value,
-                          },
-                        }))
-                      }
-                    />
-
-                    <input
-                      type="number"
-                      placeholder="Expense"
-                      className="border p-2 w-full sm:w-auto"
-                      value={bookingInputs[p.id]?.expense || ""}
-                      onChange={(e) =>
-                        setBookingInputs((prev) => ({
-                          ...prev,
-                          [p.id]: {
-                            ...prev[p.id],
-                            expense: e.target.value,
-                          },
-                        }))
-                      }
-                    />
-                  </div>
-
-
-
-
-
-
-
-
-<div className="mt-2 flex flex-col sm:flex-row gap-2">
-<button
-  disabled={!canEdit}
-  className={`px-3 py-2 w-full sm:w-auto rounded-xl font-medium transition ${
-    canEdit
-      ? "bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white"
-      : "bg-gray-300 text-gray-500 cursor-not-allowed"
-  }`}
-  onClick={() => {
-    if (!canEdit) return;
-
-    const input = bookingInputs[p.id];
-    if (!input) {
-      alert("Please fill booking info");
-      return;
-    }
-
-    addBooking(p.id, input);
-  }}
->
-  {bookingInputs[p.id]?.id ? "Update Booking" : "Add Booking"}
-</button>
-                    
-
-
-
-                   {bookingInputs[p.id]?.id && (
-                      <button
-                        className="bg-gray-300 hover:bg-gray-400 text-black px-3 py-2 w-full sm:w-auto"
-                        onClick={() =>
-                          setBookingInputs((prev) => ({
-                            ...prev,
-                            [p.id]: {
-                              start: "",
-                              end: "",
-                              price: "",
-                              expense: "",
-                            },
-                          }))
-                        }
+                <div className="space-y-2">
+                  {bookings
+                    .filter((b) => b.property_id === p.id)
+                    .map((b) => (
+                      <div
+                        key={b.id}
+                        className="text-sm border rounded p-3 bg-gray-50"
                       >
-                        Cancel
-                      </button>
-                    )}
-                  </div>
+                        <div>
+                          {b.start_date} → {b.end_date} | Revenue: ${b.price} |
+                          Expense: ${b.expense || 0}
+                        </div>
 
-                  <div className="mt-4">
-                    <p className="font-semibold mb-2">Bookings</p>
-
-                    <div className="space-y-2">
-                      {bookings
-                        .filter((b) => b.property_id === p.id)
-                        .map((b) => (
-                          <div
-                            key={b.id}
-                            className="text-sm border rounded p-3 bg-gray-50"
+                        <div className="mt-2 flex gap-2">
+                          <button
+                            disabled={!canEdit}
+                            className={`px-3 py-1.5 rounded-xl font-medium transition ${
+                              canEdit
+                                ? "bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800"
+                                : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                            }`}
+                            onClick={() => {
+                              if (!canEdit) return;
+                              editBooking(b);
+                            }}
                           >
-                            <div>
-                              {b.start_date} → {b.end_date} | Revenue: ${b.price} |
-                              Expense: ${b.expense || 0}
-                            </div>
+                            Edit
+                          </button>
 
-                            
-
-
-
-
-                           <div className="mt-2 flex gap-2">
-                              <button
-                                disabled={!canEdit}
-                                className={`px-3 py-1.5 rounded-xl font-medium transition ${
-                                   canEdit
-                                    ? "bg-green-100 hover:bg-green-200 active:scale-[0.99] text- green-800"
-                                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                               }`}
-                               onClick={() => {
-                                 if (!canEdit) return;
-                                 editBooking(b);
-                               }}
-                           >
-                               Edit
-                               </button>
-
-
-
-
-
-
-
-
-                              <button
-                                className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded"
-                                onClick={() => deleteBooking(b.id)}
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-
-                  <div className="mt-4">
-                    <p className="font-semibold mb-2">Monthly Summary</p>
-
-                    <div className="space-y-2">
-                      {Object.entries(getMonthlySummary(p.id)).map(
-                        ([month, data]) => (
-                          <div
-                            key={month}
-                            className="text-sm border p-2 mb-1 rounded bg-gray-50"
+                          <button
+                            className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-xl font-medium transition"
+                            onClick={() => deleteBooking(b.id)}
                           >
-                            <p><strong>{month}</strong></p>
-                            <p>Revenue: ${data.revenue}</p>
-                            <p>Expense: ${data.expense}</p>
-                            <p>Profit: ${data.revenue - data.expense}</p>
-                          </div>
-                        )
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div>
-          <h2 className="text-xl font-bold mb-4">Long-Term Properties</h2>
-
-          {longTermProperties.map((p) => (
-            <div
-              key={p.id}
-              
-              className="border border-gray-200 p-5 mb-5 rounded-2xl shadow-sm bg-white hover:shadow-md transition"
-            >
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
-                <div>
-                  
-                <p className="text-xl font-bold text-gray-900">{p.name}</p>
-                <p className="text-gray-600">{p.address}</p>
-                <p className="text-sm text-gray-500 mt-1">Type: {p.type}</p>
-                <p className="text-sm text-indigo-600 font-medium mt-1">Mode: Monthly Rent</p>
-
-                </div>
-
-                <div className="flex gap-2">
-                  <button
-                    
-                    className="bg-green-200 hover:bg-green-300 text-white-900 px-4 py-2 rounded-xl font-medium transition"
-                    onClick={() => startEditing(p)}
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    className="bg-red-600 text-white px-3 py-2 rounded"
-                    onClick={() => deleteProperty(p.id)}
-                  >
-                    Delete
-                  </button>
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="border rounded p-3">
-                  <p className="text-sm text-gray-500">Revenue</p>
-                  <p className="text-lg font-semibold">
-                    ${p.monthly_rent || 0}
-                  </p>
-                </div>
+              <div className="mt-4">
+                <p className="font-semibold mb-2">Monthly Summary</p>
 
-                <div className="border rounded p-3">
-                  <p className="text-sm text-gray-500">Expense</p>
-                  <p className="text-lg font-semibold">
-                    ${p.monthly_expense || 0}
-                  </p>
+                <div className="space-y-2">
+                  {Object.entries(getMonthlySummary(p.id)).map(
+                    ([month, data]) => (
+                      <div
+                        key={month}
+                        className="text-sm border p-2 mb-1 rounded bg-gray-50"
+                      >
+                        <p>
+                          <strong>{month}</strong>
+                        </p>
+                        <p>Revenue: ${data.revenue}</p>
+                        <p>Expense: ${data.expense}</p>
+                        <p>Profit: ${data.revenue - data.expense}</p>
+                      </div>
+                    )
+                  )}
                 </div>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
 
-                <div className="border rounded p-3">
-                  <p className="text-sm text-gray-500">Profit</p>
-                  <p className="text-lg font-semibold">
-                    ${(p.monthly_rent || 0) - (p.monthly_expense || 0)}
-                  </p>
+    <div>
+      <h2 className="text-xl font-bold mb-4">Long-Term Properties</h2>
+
+      {longTermProperties.map((p) => (
+        <div
+          key={p.id}
+          className="border border-gray-200 p-5 mb-5 rounded-2xl shadow-sm bg-white hover:shadow-md transition"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+            <div>
+              <p className="text-xl font-bold text-gray-900">{p.name}</p>
+              <p className="text-gray-600">{p.address}</p>
+              <p className="text-sm text-gray-500 mt-1">Type: {p.type}</p>
+              <p className="text-sm text-indigo-600 font-medium mt-1">
+                Mode: Monthly Rent
+              </p>
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                disabled={!canEdit}
+                className={`px-4 py-2 rounded-xl font-medium transition ${
+                  canEdit
+                    ? "bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+                onClick={() => {
+                  if (!canEdit) return;
+                  startEditing(p);
+                }}
+              >
+                Edit
+              </button>
+
+              <button
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-medium transition"
+                onClick={() => deleteProperty(p.id)}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="border rounded-2xl p-4">
+              <p className="text-sm text-gray-500">Revenue</p>
+              <p className="text-lg font-semibold text-gray-900">
+                ${p.monthly_rent || 0}
+              </p>
+            </div>
+
+            <div className="border rounded-2xl p-4">
+              <p className="text-sm text-gray-500">Expense</p>
+              <p className="text-lg font-semibold text-gray-900">
+                ${p.monthly_expense || 0}
+              </p>
+            </div>
+
+            <div className="border rounded-2xl p-4">
+              <p className="text-sm text-gray-500">Profit</p>
+              <p className="text-lg font-semibold text-gray-900">
+                ${(p.monthly_rent || 0) - (p.monthly_expense || 0)}
+              </p>
+
+   
                 </div>
               </div>
             </div>
