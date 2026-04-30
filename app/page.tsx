@@ -1286,9 +1286,6 @@ return (
                  </button>
                
 
-
-
-
                   <button
                     
                     className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-medium transition"
@@ -1309,7 +1306,7 @@ return (
                     {expandedProperties[p.id] ? "Hide Details" : "Show Details"}
                   </button>
                 </div>
-              </div>
+              // </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                 <div className="border rounded p-3">
@@ -1459,7 +1456,6 @@ return (
                     />
                   </div>
 
-                  <div className="mt-2 flex flex-col sm:flex-row gap-2">
 
 
 
@@ -1467,6 +1463,7 @@ return (
 
 
 
+<div className="mt-2 flex flex-col sm:flex-row gap-2">
 <button
   disabled={!canEdit}
   className={`px-3 py-2 w-full sm:w-auto rounded-xl font-medium transition ${
@@ -1492,11 +1489,7 @@ return (
 
 
 
-
-
-
-
-                    {bookingInputs[p.id]?.id && (
+                   {bookingInputs[p.id]?.id && (
                       <button
                         className="bg-gray-300 hover:bg-gray-400 text-black px-3 py-2 w-full sm:w-auto"
                         onClick={() =>
