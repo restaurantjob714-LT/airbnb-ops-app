@@ -966,9 +966,10 @@ return (
 
 
 
+
     {isTrialExpired && (
-  <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-6 text-center">
-    <p className="text-base sm:text-lg font-bold text-amber-800">
+  <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center max-w-4xl mx-auto space-y-4">
+    <p className="text-base sm:text-xl font-bold text-amber-800">
       Your free trial has ended. Upgrade to continue adding properties and managing your portfolio.
     </p>
 
@@ -991,12 +992,17 @@ return (
 
 
 
-    <button
-      onClick={handleSignOut}
-      className="text-sm text-gray-1200 hover:text-gray-1200 transition"
-    >
-      Sign out
-    </button>
+<button
+  onClick={handleSignOut}
+  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl font-medium transition"
+>
+  Sign Out
+</button>
+
+
+
+
+
 
   </div>
 </div>
