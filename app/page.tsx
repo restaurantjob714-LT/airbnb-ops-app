@@ -225,13 +225,6 @@ useEffect(() => {
   initializeAuth();
 
 
-
-
-
-
-
-
-
   const {
     data: { subscription },
   } = supabase.auth.onAuthStateChange((event, session) => {
@@ -249,16 +242,6 @@ useEffect(() => {
           setBookings([]);
        }
   });
-
-
-
-
-
-
-
-
-
-
 
 
   return () => subscription.unsubscribe();
@@ -304,17 +287,6 @@ useEffect(() => {
     setUser(data.user);
   };
 
-  
-
-
-
-
-
-
-
-
-
-
 
 const fetchProperties = async () => {
   const {
@@ -339,14 +311,6 @@ const fetchProperties = async () => {
 
   setProperties(data || []);
 };
-
-
-
-
-
-
-
-
 
 
 const fetchBookings = async () => {
@@ -756,15 +720,6 @@ return (
 }
 
 
-
-
-
-
-
-
-
-
-
 const isTrialExpired =
   profile?.trial_ends
     ? new Date(profile.trial_ends).getTime() < Date.now()
@@ -774,13 +729,6 @@ const isPaid =
   profile?.plan === "paid" || profile?.subscription_status === "active";
 
 const canEdit = profile ? isPaid || !isTrialExpired : false;
-
-
-
-
-
-
-
 
 
 
@@ -1010,17 +958,37 @@ return (
 
 
 
-    {isTrialExpired && (
-      <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-        <p className="text-sm font-medium text-amber-800">
-          Your free trial has ended. Upgrade to continue adding properties and managing your portfolio.
-        </p>
 
-        <button className="mt-3 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-medium transition">
-          Upgrade Now
-        </button>
-      </div>
-    )}
+
+
+
+
+
+
+
+    {isTrialExpired && (
+  <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-6 text-center">
+    <p className="text-base sm:text-lg font-bold text-amber-800">
+      Your free trial has ended. Upgrade to continue adding properties and managing your portfolio.
+    </p>
+
+    <button className="mt-5 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-xl font-medium shadow-sm transition">
+      Upgrade Now
+    </button>
+  </div>
+)}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     <button
@@ -1163,16 +1131,6 @@ return (
   )}
 
 
-
-
-
-
-
-
-
-
-
-
 <div className="flex flex-col sm:flex-row gap-3">
  <button
   disabled={!canEdit}
@@ -1188,23 +1146,6 @@ return (
 >
   {editingId ? "Save" : "Add"}
 </button>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
       {isLimitReached && (
@@ -1256,16 +1197,6 @@ return (
 
 
 
-
-
-
-
-
-
-
-
-
-
 <div className="flex flex-col sm:flex-row gap-2">
                   
  <button
@@ -1282,19 +1213,6 @@ return (
 >
   Edit
 </button>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1465,21 +1383,6 @@ return (
 
                   
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div className="mt-2 flex flex-col sm:flex-row gap-2">
   <button
   disabled={!canEdit}
@@ -1502,24 +1405,6 @@ return (
 >
   {bookingInputs[p.id]?.id ? "Update Booking" : "Add Booking"}
 </button>                   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1562,19 +1447,6 @@ return (
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div className="mt-2 flex gap-2">
     <button
        disabled={!canEdit}
@@ -1590,22 +1462,6 @@ return (
    >
      Edit
    </button>                          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1667,20 +1523,6 @@ return (
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div className="flex gap-2">
     <button
       disabled={!canEdit}
@@ -1696,26 +1538,6 @@ return (
 >
     Edit
   </button>                  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
