@@ -90,7 +90,27 @@ const [authNotice, setAuthNotice] = useState("");
   }, 0);
 
 
+
+
+
+
+
+
+
 const addProperty = async () => {
+
+
+  if (!canEdit) {
+    alert("Your trial has ended. Please upgrade to continue adding or editing.");
+    return;
+  }
+
+  
+
+
+
+
+
   if (!name.trim()) {
     alert("Property name is required");
     return;
@@ -255,6 +275,30 @@ useEffect(() => {
 }, [isFirstTimeUser]);
 
 
+
+
+
+
+
+
+useEffect(() => {
+  if (!profile?.trial_ends) return;
+
+  const interval = setInterval(() => {
+    fetchProfile();
+  }, 30000); // checks every 30 seconds
+
+  return () => clearInterval(interval);
+}, [profile?.trial_ends]);
+
+
+
+
+
+
+
+
+
 useEffect(() => {
   if (!user) return;
 
@@ -384,7 +428,31 @@ const fetchProfile = async () => {
     fetchProperties();
   };
 
+
+
+
+
+
+
+
+
   const saveEdit = async () => {
+
+    if (!canEdit) {
+      alert("Your trial has ended. Please upgrade to continue adding or editing.");
+      return;
+    }
+
+ 
+
+
+
+
+
+
+
+
+
     await supabase
       .from("properties")
       .update({
@@ -406,8 +474,33 @@ const fetchProfile = async () => {
     fetchProperties();
   };
 
+
+
+
+
+
+
+
+
  
 const addBooking = async (propertyId: number, input: any) => {
+
+  if (!canEdit) {
+    alert("Your trial has ended. Please upgrade to continue adding or editing.");
+    return;
+  }
+
+  
+
+
+
+
+
+
+
+
+
+
   if (!propertyId) return;
 
   const { start, end, price, expense, id } = input;
@@ -500,7 +593,34 @@ const addBooking = async (propertyId: number, input: any) => {
       .reduce((sum, b) => sum + Number(b.expense || 0), 0);
   };
 
+
+
+
+
+
+
+
+
+
+
+
   const editBooking = (booking: any) => {
+
+    if (!canEdit) {
+      alert("Your trial has ended. Please upgrade to continue adding or editing.");
+      return;
+    }
+
+
+
+
+
+
+
+
+
+
+
     setBookingInputs((prev) => ({
       ...prev,
       [booking.property_id]: {
@@ -958,15 +1078,6 @@ return (
 
 
 
-
-
-
-
-
-
-
-
-
     {isTrialExpired && (
   <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center max-w-4xl mx-auto space-y-4">
     <p className="text-base sm:text-xl font-bold text-amber-800">
@@ -980,27 +1091,12 @@ return (
 )}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 <button
   onClick={handleSignOut}
   className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl font-medium transition"
 >
   Sign Out
 </button>
-
-
-
 
 
 
