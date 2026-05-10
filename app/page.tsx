@@ -275,12 +275,6 @@ useEffect(() => {
 }, [isFirstTimeUser]);
 
 
-
-
-
-
-
-
 useEffect(() => {
   if (!profile?.trial_ends) return;
 
@@ -290,13 +284,6 @@ useEffect(() => {
 
   return () => clearInterval(interval);
 }, [profile?.trial_ends]);
-
-
-
-
-
-
-
 
 
 useEffect(() => {
@@ -429,29 +416,12 @@ const fetchProfile = async () => {
   };
 
 
-
-
-
-
-
-
-
   const saveEdit = async () => {
 
     if (!canEdit) {
       alert("Your trial has ended. Please upgrade to continue adding or editing.");
       return;
     }
-
- 
-
-
-
-
-
-
-
-
 
     await supabase
       .from("properties")
@@ -475,30 +445,12 @@ const fetchProfile = async () => {
   };
 
 
-
-
-
-
-
-
-
- 
 const addBooking = async (propertyId: number, input: any) => {
 
   if (!canEdit) {
     alert("Your trial has ended. Please upgrade to continue adding or editing.");
     return;
   }
-
-  
-
-
-
-
-
-
-
-
 
 
   if (!propertyId) return;
@@ -594,31 +546,12 @@ const addBooking = async (propertyId: number, input: any) => {
   };
 
 
-
-
-
-
-
-
-
-
-
-
   const editBooking = (booking: any) => {
 
     if (!canEdit) {
       alert("Your trial has ended. Please upgrade to continue adding or editing.");
       return;
     }
-
-
-
-
-
-
-
-
-
 
 
     setBookingInputs((prev) => ({
@@ -1050,59 +983,82 @@ return (
       
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5 mb-6">
-  <div className="flex items-center justify-between">
-    
+  {/* Top row: Dashboard + Sign Out */}
+  <div className="flex items-center justify-between gap-4">
     <div>
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
         Dashboard
       </h1>
 
-      
-<p className="text-sm text-gray-500 mt-1">
-  {isFirstTimeUser ? "Welcome," : "Welcome back,"}{" "}
-  <span className="font-semibold text-gray-900">
-  {profileLoading ? (
-  <span className="text-gray-400">Loading...</span>
-  ) : profile?.first_name && profile?.last_name ? (
-  `${profile.first_name} ${profile.last_name}`
-  ) : (
-  user?.email
-  )}
-
-
-  </span>
-</p>
-
+      <p className="text-sm text-gray-500 mt-1">
+        {isFirstTimeUser ? "Welcome," : "Welcome back,"}{" "}
+        <span className="font-semibold text-gray-900">
+          {profileLoading ? (
+            <span className="text-gray-400">Loading...</span>
+          ) : profile?.first_name && profile?.last_name ? (
+            `${profile.first_name} ${profile.last_name}`
+          ) : (
+            user?.email
+          )}
+        </span>
+      </p>
     </div>
 
-
-
-    {isTrialExpired && (
-  <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center max-w-4xl mx-auto space-y-4">
-    <p className="text-base sm:text-xl font-bold text-amber-800">
-      Your free trial has ended. Upgrade to continue adding properties and managing your portfolio.
-    </p>
-
-    <button className="mt-5 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-xl font-medium shadow-sm transition">
-      Upgrade Now
+    <button
+      onClick={handleSignOut}
+      className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-sm font-medium transition"
+    >
+      Sign Out
     </button>
   </div>
-)}
 
+  {/* Trial banner below top row */}
+  {isTrialExpired && (
+    <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center">
+      <p className="text-base sm:text-lg font-bold text-amber-800 leading-relaxed">
+        Your free trial has ended. Upgrade to continue adding properties and managing your portfolio.
+      </p>
 
-<button
-  onClick={handleSignOut}
-  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl font-medium transition"
->
-  Sign Out
-</button>
-
-
-
-  </div>
+      <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-xl font-medium shadow-sm transition">
+        Upgrade Now
+      </button>
+    </div>
+  )}
 </div>
+
+
+</div>
+
      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       {isFirstTimeUser && (
         
