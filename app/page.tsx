@@ -1264,7 +1264,7 @@ return (
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-                <div className="border border-gray-200 rounded-2xl p-4 bg-white shadow-sm"
+                <div className="border border-gray-200 rounded-2xl p-4 bg-white shadow-sm">
 
                   <p className="text-sm text-gray-500">Revenue</p>
                   <p className="text-lg font-semibold">
@@ -1513,7 +1513,7 @@ return (
                                 <p>Revenue: ${b.price}</p>
                                 <p>Expense: ${b.expense || 0}</p>
                               </div>
-                         // </div>
+                           </div>
 
 
 
