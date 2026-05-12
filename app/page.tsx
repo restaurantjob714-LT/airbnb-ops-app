@@ -1239,8 +1239,6 @@ return (
   Edit
 </button>
 
-
-
                   <button
                     
                     className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-medium transition"
@@ -1398,8 +1396,6 @@ return (
     />
   </div>
                   
-
-
                     <input
                       type="number"
                       placeholder="Total Price"
@@ -1433,8 +1429,7 @@ return (
                     />
                   </div>
 
-                  
-
+                 
 <div className="mt-2 flex flex-col sm:flex-row gap-2">
   <button
   disabled={!canEdit}
@@ -1457,6 +1452,41 @@ return (
 >
   {bookingInputs[p.id]?.id ? "Update Booking" : "Add Booking"}
 </button>                   
+
+
+
+
+
+
+
+
+
+
+
+<button
+  className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded-xl w-full sm:w-auto transition"
+  onClick={() =>
+    setBookingInputs((prev) => ({
+      ...prev,
+      [p.id]: {
+        start: "",
+        end: "",
+        price: "",
+        expense: "",
+      },
+    }))
+  }
+>
+  Clear
+</button>
+
+
+
+
+
+
+
+
 
 
 
@@ -1494,16 +1524,6 @@ return (
                           >
 
 
-
-
-
-
-
-
-
-                            
-
-
                            <div className="space-y-1">
                               <p className="font-medium text-gray-900">
                                 {b.start_date} → {b.end_date}
@@ -1514,16 +1534,6 @@ return (
                                 <p>Expense: ${b.expense || 0}</p>
                               </div>
                            </div>
-
-
-
-
-
-
-
-
-
-
 
 
 <div className="mt-2 flex gap-2">
