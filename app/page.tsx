@@ -920,20 +920,46 @@ if (!user) {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
               </label>
-              <input
-                type="password"
-                placeholder="Enter your password"
-                value={authPassword}
 
 
-                onChange={(e) => {
-                   setAuthPassword(e.target.value);
-                   setAuthNotice("");
-                }}
 
 
-                className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
-              />
+
+
+
+
+
+
+              
+
+
+
+
+<input
+  type="password"
+  placeholder="Enter your password"
+  value={authPassword}
+  onChange={(e) => {
+    setAuthPassword(e.target.value);
+    setAuthNotice("");
+  }}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" && !authLoading) {
+      handleAuth();
+    }
+  }}
+  className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+/>
+
+
+
+
+
+
+
+
+
+
             </div>
 
             
@@ -1454,15 +1480,6 @@ return (
 </button>                   
 
 
-
-
-
-
-
-
-
-
-
 <button
   className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded-xl w-full sm:w-auto transition"
   onClick={() =>
@@ -1479,16 +1496,6 @@ return (
 >
   Clear
 </button>
-
-
-
-
-
-
-
-
-
-
 
 
                     {bookingInputs[p.id]?.id && (
