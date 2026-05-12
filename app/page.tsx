@@ -1210,7 +1210,7 @@ return (
           {airbnbProperties.map((p) => (
             <div
               key={p.id}
-              className="border border-gray-200 p-5 mb-5 rounded-2xl shadow-sm bg-white hover:shadow-md transition"
+              className="border-2 border-gray-300 p-5 mb-8 rounded-3xl shadow-md bg-gradient-to-b from-white to-gray-50 hover:shadow-lg transition"
             >
               <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
                 <div>
@@ -1566,8 +1566,8 @@ return (
           {longTermProperties.map((p) => (
             <div
               key={p.id}
+              className="border-2 border-gray-300 p-5 mb-8 rounded-3xl shadow-md bg-gradient-to-b from-white to-gray-50 hover:shadow-lg transition"
               
-              className="border border-gray-200 p-5 mb-5 rounded-2xl shadow-sm bg-white hover:shadow-md transition"
             >
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
                 <div>
