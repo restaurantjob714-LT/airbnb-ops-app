@@ -1360,51 +1360,84 @@ return (
       </p>
     </div>
 
-
-              
-
-
-
-
-
-
-
-
-
-
-
                   <p className="font-semibold mb-2">Add Booking</p>
 
-                  <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2">
-                    <input
-                      type="date"
-                      className="border p-2 w-full sm:w-auto"
-                      value={bookingInputs[p.id]?.start || ""}
-                      onChange={(e) =>
-                        setBookingInputs((prev) => ({
-                          ...prev,
-                          [p.id]: {
-                            ...prev[p.id],
-                            start: e.target.value,
-                          },
-                        }))
-                      }
-                    />
 
-                    <input
-                      type="date"
-                      className="border p-2 w-full sm:w-auto"
-                      value={bookingInputs[p.id]?.end || ""}
-                      onChange={(e) =>
-                        setBookingInputs((prev) => ({
-                          ...prev,
-                          [p.id]: {
-                            ...prev[p.id],
-                            end: e.target.value,
-                          },
-                        }))
-                      }
-                    />
+
+
+
+
+
+
+
+
+
+
+                  
+
+<div className="flex flex-col sm:flex-row gap-2 w-full">
+
+  <div className="flex items-center gap-2 w-full sm:w-auto">
+    <span className="text-sm font-medium text-gray-600 whitespace-nowrap">
+      From
+    </span>
+
+    <input
+      type="date"
+      className="border border-gray-300 rounded-xl px-3 py-2 w-full bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+      value={bookingInputs[p.id]?.start || ""}
+      onChange={(e) =>
+        setBookingInputs((prev) => ({
+          ...prev,
+          [p.id]: {
+            ...prev[p.id],
+            start: e.target.value,
+          },
+        }))
+      }
+    />
+  </div>
+
+  <div className="flex items-center gap-2 w-full sm:w-auto">
+    <span className="text-sm font-medium text-gray-600 whitespace-nowrap">
+      To
+    </span>
+
+    <input
+      type="date"
+      className="border border-gray-300 rounded-xl px-3 py-2 w-full bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
+      value={bookingInputs[p.id]?.end || ""}
+      onChange={(e) =>
+        setBookingInputs((prev) => ({
+          ...prev,
+          [p.id]: {
+            ...prev[p.id],
+            end: e.target.value,
+          },
+        }))
+      }
+    />
+  </div>
+
+</div>                   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                     <input
                       type="number"
