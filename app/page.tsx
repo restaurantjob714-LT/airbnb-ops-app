@@ -982,21 +982,6 @@ return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
       
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5 mb-6">
   {/* Top row: Dashboard + Sign Out */}
   <div className="flex items-center justify-between gap-4">
@@ -1040,21 +1025,6 @@ return (
     </div>
   )}
 </div>
-
-
-     
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1360,17 +1330,49 @@ return (
                 </div>
               </div>
 
-              {expandedProperties[p.id] && (
-                <div
-                  ref={(el) => {
-                    bookingFormRefs.current[p.id] = el;
-                  }}
-                  className={`border-t pt-4 ${
-                    bookingInputs[p.id]?.id
-                      ? "border-yellow-400 bg-yellow-50 rounded p-3"
-                      : ""
-                  }`}
-                >
+
+
+
+
+
+
+
+
+
+
+{expandedProperties[p.id] && (
+  <div
+    ref={(el) => {
+      bookingFormRefs.current[p.id] = el;
+    }}
+    className={`mt-5 border-t border-gray-200 pt-5 rounded-2xl p-4 ${
+      bookingInputs[p.id]?.id
+        ? "border-yellow-400 bg-yellow-50"
+        : "bg-gray-50"
+    }`}
+  >
+    <div className="mb-4 rounded-xl bg-white border border-gray-200 px-4 py-3">
+      <p className="text-sm font-semibold text-gray-900">
+        Details for {p.name}
+      </p>
+      <p className="text-xs text-gray-500 mt-1">
+        Bookings, expenses, and monthly performance for this property.
+      </p>
+    </div>
+
+
+              
+
+
+
+
+
+
+
+
+
+
+
                   <p className="font-semibold mb-2">Add Booking</p>
 
                   <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2">
