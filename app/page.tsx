@@ -1513,7 +1513,7 @@ return (
                                 <p>Revenue: ${b.price}</p>
                                 <p>Expense: ${b.expense || 0}</p>
                               </div>
-                          </div>
+                         // </div>
 
 
 
