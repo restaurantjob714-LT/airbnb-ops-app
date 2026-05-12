@@ -1222,8 +1222,7 @@ return (
                 </div>
 
 
-
-<div className="flex flex-col sm:flex-row gap-2">
+<div className="grid grid-cols-2 sm:flex sm:flex-row gap-2">
                   
  <button
    disabled={!canEdit}
@@ -1252,20 +1251,21 @@ return (
 
                   <button
                     
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-medium transition"
+                    className="col-span-2 sm:col-span-1 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-medium transition"
                     onClick={() =>
                       setExpandedProperties((prev) =>
                         prev[p.id] ? {} : { [p.id]: true }
                       )
                     }
                   >
-                    {expandedProperties[p.id] ? "Hide Details" : "Add / Show Details"}
+                    {expandedProperties[p.id] ? "Hide Details" : "View Details"}
                   </button>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-                <div className="border rounded p-3">
+                <div className="border border-gray-200 rounded-2xl p-4 bg-white shadow-sm"
+
                   <p className="text-sm text-gray-500">Revenue</p>
                   <p className="text-lg font-semibold">
                     ${getAirbnbRevenue(p.id)}
@@ -1304,7 +1304,8 @@ return (
 
 
 <div
-  className="border rounded-2xl p-4 cursor-pointer hover:bg-gray-50 transition"
+  
+  className="border border-gray-200 rounded-2xl p-4 bg-white shadow-sm cursor-pointer hover:bg-gray-50 transition"
   onClick={() =>
     setShowExpenseDetails((prev) => ({
       ...prev,
@@ -1320,24 +1321,14 @@ return (
     {showExpenseDetails[p.id] ? "Hide details" : "Tap to view details"}
   </p>
 </div>
-
-
-                <div className="border rounded p-3">
+                
+                <div className="border border-gray-200 rounded-2xl p-4 bg-white shadow-sm">
                   <p className="text-sm text-gray-500">Profit</p>
                   <p className="text-lg font-semibold">
                     ${getAirbnbRevenue(p.id) - getAirbnbExpense(p.id)}
                   </p>
                 </div>
               </div>
-
-
-
-
-
-
-
-
-
 
 
 {expandedProperties[p.id] && (
@@ -1499,12 +1490,39 @@ return (
                         .map((b) => (
                           <div
                             key={b.id}
-                            className="text-sm border rounded p-3 bg-gray-50"
+                            className="text-sm border border-gray-200 rounded-2xl p-4 bg-white shadow-sm"
                           >
-                            <div>
-                              {b.start_date} → {b.end_date} | Revenue: ${b.price} |
-                              Expense: ${b.expense || 0}
-                            </div>
+
+
+
+
+
+
+
+
+
+                            
+
+
+                           <div className="space-y-1">
+                              <p className="font-medium text-gray-900">
+                                {b.start_date} → {b.end_date}
+                              </p>
+
+                              <div className="flex flex-col sm:flex-row sm:gap-4 text-gray-600">
+                                <p>Revenue: ${b.price}</p>
+                                <p>Expense: ${b.expense || 0}</p>
+                              </div>
+                          </div>
+
+
+
+
+
+
+
+
+
 
 
 
