@@ -1360,25 +1360,13 @@ return (
       </p>
     </div>
 
-                  <p className="font-semibold mb-2">Add Booking</p>
+       <p className="font-semibold mb-2">Add Booking</p>
 
-
-
-
-
-
-
-
-
-
-
-
-                  
 
 <div className="flex flex-col sm:flex-row gap-2 w-full">
 
   <div className="flex items-center gap-2 w-full sm:w-auto">
-    <span className="text-sm font-medium text-gray-600 whitespace-nowrap">
+    <span className="w-16 text-sm font-medium text-gray-600 whitespace-nowrap">
       From
     </span>
 
@@ -1399,7 +1387,7 @@ return (
   </div>
 
   <div className="flex items-center gap-2 w-full sm:w-auto">
-    <span className="text-sm font-medium text-gray-600 whitespace-nowrap">
+    <span className="w-16 text-sm font-medium text-gray-600 whitespace-nowrap">
       To
     </span>
 
@@ -1419,23 +1407,6 @@ return (
     />
   </div>
                   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                     <input
