@@ -837,6 +837,28 @@ if (!user) {
           
 
 
+
+
+
+
+
+{authMode === "signup" && (
+  <div className="mb-4 rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm text-indigo-800">
+    <p className="font-semibold">Start with a 30-day free trial</p>
+    <p className="mt-1 text-indigo-700">
+      No payment required today. Upgrade later to continue after your trial.
+    </p>
+  </div>
+)}
+
+
+
+
+
+
+
+
+
 {authMode === "signup" && (
   <>
     <div>
