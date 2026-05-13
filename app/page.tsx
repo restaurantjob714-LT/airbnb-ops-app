@@ -669,9 +669,7 @@ const { data, error } = await supabase.auth.signUp({
   password: authPassword,
   options: {
 
-
-    emailRedirectTo: "https://airbnb-ops-app.vercel.app/?from=confirm-signup",
-
+    emailRedirectTo: "https://rentledgerpro.com/?from=confirm-signup",
 
     data: {
       first_name: firstName.trim(),
@@ -842,15 +840,29 @@ if (!user) {
 
 
 
+
+
+
+
 {authMode === "signup" && (
   <div className="mb-4 rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-4 text-center text-sm text-indigo-800">
+    
     <p className="font-semibold text-base">
       Start with a 30-day free trial
     </p>
 
     <p className="mt-1 text-indigo-700">
-      No payment required today. Upgrade later to continue after your trial.
+      No payment required today.
     </p>
+
+    <p className="mt-2 font-medium text-gray-700">
+      Then $15/month or $150/year.
+    </p>
+
+    <p className="text-xs text-gray-500 mt-1">
+      Cancel anytime.
+    </p>
+
   </div>
 )}
 
@@ -944,19 +956,6 @@ if (!user) {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
               </label>
-
-
-
-
-
-
-
-
-
-
-              
-
-
 
 
 <input
