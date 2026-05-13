@@ -763,7 +763,7 @@ const handleForgotPassword = async () => {
 
 if (checkingAuthRedirect) {
 return (
-  <div className="min-h-screen flex items-center justify-center bg-gray-100">
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-white to-indigo-50">
     <div className="text-gray-600 text-sm">Loading...</div>
   </div>
 );
@@ -784,20 +784,20 @@ const canEdit = profile ? isPaid || !isTrialExpired : false;
 
 if (!user) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#eef2ff,_transparent_35%),linear-gradient(135deg,#f8fafc,#ffffff,#eef2ff)] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         <div 
 
 
-              className="bg-white rounded-2xl shadow-1g border border-gray-100 p-6 sm:p-8">
+              className="bg-white/90 backdrop-blur rounded-3xl shadow-2xl border border-white/70 p-6 sm:p-8 ring-1 ring-slate-100">
 
           
 <div className="mb-8 text-center">
   <h1 className="text-3xl font-semibold text-gray-900 tracking-tight">
-    Rental Property Management
+    Staymetic
   </h1>
   <p className="text-gray-500 text-sm mt-2 max-w-xs mx-auto">
-    Manage your properties, bookings, and profits in one place
+    Track bookings, expenses, and profit in one simple dashboard
   </p>
 
   {authNotice && (
@@ -808,12 +808,12 @@ if (!user) {
 </div>
 
 
-<div className="flex bg-gray-100 rounded-xl p-1 mb-6">
+<div className="flex bg-slate-100 rounded-2xl p-1 mb-6 shadow-inner">
   <button
     className={`w-full py-2.5 rounded-lg text-sm font-medium transition ${
       authMode === "signin"
-        ? "bg-indigo-600 text-white"
-      : "text-gray-700 hover:bg-gray-200"
+        ? "bg-indigo-600 text-white shadow-sm"
+      : "text-gray-700 hover:bg-white"
     }`}
     onClick={() => setAuthMode("signin")}
   >
@@ -823,8 +823,8 @@ if (!user) {
   <button
     className={`w-full py-2.5 rounded-lg text-sm font-medium transition ${
       authMode === "signup"
-        ? "bg-indigo-600 text-white"
-      : "text-gray-700 hover:bg-gray-200"
+        ? "bg-indigo-600 text-white shadow-sm"
+      : "text-gray-700 hover:bg-white"
     }`}
     onClick={() => setAuthMode("signup")}
   >
@@ -834,7 +834,7 @@ if (!user) {
           
 
 {authMode === "signup" && (
-  <div className="mb-4 rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-4 text-center text-sm text-indigo-800">
+  <div className="mb-5 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white px-4 py-5 text-center text-sm text-indigo-800 shadow-sm">
     
     <p className="font-semibold text-base">
       Start with a 30-day free trial
@@ -867,7 +867,7 @@ if (!user) {
         placeholder="First name"
         value={firstName}
         onChange={(e) => setFirstName(e.target.value)}
-        className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
+        className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
       />
     </div>
 
@@ -880,7 +880,7 @@ if (!user) {
         placeholder="Last name"
         value={lastName}
         onChange={(e) => setLastName(e.target.value)}
-        className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
+        className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
       />
     </div>
 
@@ -898,7 +898,7 @@ if (!user) {
       setPhoneNumber(e.target.value);
       setPhoneError("");
     }}
-    className={`w-full rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition ${
+    className={`w-full rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
       phoneError ? "border border-red-500" : "border border-gray-300"
     }`}
   />
@@ -974,7 +974,7 @@ if (!user) {
               disabled={authLoading}
 
 
-             className="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white py-3 rounded-xl font-medium shadow-sm transition"
+             className="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white py-3 rounded-2xl font-semibold shadow-lg shadow-indigo-200 transition"
               
             >
               {authLoading
@@ -1010,11 +1010,11 @@ if (!user) {
 
 
 return (
-  <div className="min-h-screen bg-gray-50">
+  <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#eef2ff,_transparent_32%),linear-gradient(135deg,#f8fafc,#ffffff,#f1f5f9)]">
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
       
 
-<div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5 mb-6">
+<div className="bg-white/90 backdrop-blur border border-white/70 rounded-3xl shadow-xl p-5 mb-6 ring-1 ring-slate-100">
   {/* Top row: Dashboard + Sign Out */}
   <div className="flex items-center justify-between gap-4">
     <div>
@@ -1038,7 +1038,7 @@ return (
 
     <button
       onClick={handleSignOut}
-      className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-sm font-medium transition"
+      className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-2xl text-sm font-semibold transition shadow-sm"
     >
       Sign Out
     </button>
@@ -1046,12 +1046,12 @@ return (
 
   {/* Trial banner below top row */}
   {isTrialExpired && (
-    <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center">
+    <div className="mt-5 rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-5 text-center shadow-sm">
       <p className="text-base sm:text-lg font-bold text-amber-800 leading-relaxed">
         Your free trial has ended. Upgrade to continue adding properties and managing your portfolio.
       </p>
 
-      <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-xl font-medium shadow-sm transition">
+      <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-2xl font-semibold shadow-lg shadow-indigo-200 transition">
         Upgrade Now
       </button>
     </div>
@@ -1062,17 +1062,17 @@ return (
 
       {isFirstTimeUser && (
         
-        <div className="border border-indigo-100 bg-indigo-50 rounded-2xl p-6 sm:p-7 mb-8">
+        <div className="border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white rounded-3xl p-6 sm:p-7 mb-8 shadow-lg">
           <h2 className="text-xl sm:text-2xl font-semibold text-indigo-900 mb-2">
 
-            Welcome to Rental Property Management
+            Welcome to Staymetic
           </h2>
           <p className="text-blue-800 mb-5">
             Let’s get your account set up. Start by adding your first property below.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white rounded-2xl p-5 border border-blue-100 shadow-sm">
+            <div className="bg-white rounded-2xl p-5 border border-indigo-100 shadow-sm hover:shadow-md transition">
               <p className="text-lg font-semibold text-gray-900 mb-2">
                 1. Add a property
               </p>
@@ -1081,7 +1081,7 @@ return (
               </p>
             </div>
 
-            <div className="bg-white rounded-2xl p-5 border border-blue-100 shadow-sm">
+            <div className="bg-white rounded-2xl p-5 border border-indigo-100 shadow-sm hover:shadow-md transition">
               <p className="text-lg font-semibold text-gray-900 mb-2">
                 2. Add bookings or rent
               </p>
@@ -1090,7 +1090,7 @@ return (
               </p>
             </div>
 
-            <div className="bg-white rounded-2xl p-5 border border-blue-100 shadow-sm">
+            <div className="bg-white rounded-2xl p-5 border border-indigo-100 shadow-sm hover:shadow-md transition">
               <p className="text-lg font-semibold text-gray-900 mb-2">
                 3. Monitor profit
               </p>
@@ -1103,7 +1103,7 @@ return (
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
+        <div className="bg-white/90 border border-white/70 rounded-3xl shadow-lg p-5 ring-1 ring-slate-100">
           <p className="text-sm font-medium text-gray-500 mb-2">Total Profit</p>
           <p
             className={`text-3xl font-bold ${
@@ -1114,14 +1114,14 @@ return (
           </p>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
+        <div className="bg-white/90 border border-white/70 rounded-3xl shadow-lg p-5 ring-1 ring-slate-100">
           <p className="text-sm font-medium text-gray-500 mb-2">
             Total Monthly Revenue
           </p>
           <p className="text-3xl font-bold text-gray-900">${totalRevenue}</p>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
+        <div className="bg-white/90 border border-white/70 rounded-3xl shadow-lg p-5 ring-1 ring-slate-100">
           <p className="text-sm font-medium text-gray-500 mb-2">Total Expense</p>
           <p className="text-3xl font-bold text-gray-900">${totalExpense}</p>
         </div>
@@ -1129,7 +1129,7 @@ return (
 
       <div
         ref={formRef}
-        className={`bg-white border border-gray-200 rounded-2xl shadow-sm p-5 sm:p-6 mb-6 ${
+        className={`bg-white/90 backdrop-blur border border-white/70 rounded-3xl shadow-xl p-5 sm:p-6 mb-6 ring-1 ring-slate-100 ${
           editingId ? "border-2 border-yellow-400 bg-yellow-50" : ""
         }`}
       >
@@ -1141,21 +1141,21 @@ return (
 <div className="space-y-4">
   <div className="flex flex-col sm:flex-row gap-3">
     <input
-      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
+      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
       placeholder="Property Name"
       value={name}
       onChange={(e) => setName(e.target.value)}
     />
 
     <input
-      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
+      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
       placeholder="Address"
       value={address}
       onChange={(e) => setAddress(e.target.value)}
     />
 
     <select
-      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
+      className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
       value={type}
       onChange={(e) => setType(e.target.value)}
     >
@@ -1173,14 +1173,14 @@ return (
   {type === "long_term" && (
     <div className="flex flex-col sm:flex-row gap-3">
       <input
-        className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
+        className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
         placeholder="Monthly Rent ($)"
         value={rent}
         onChange={(e) => setRent(e.target.value)}
       />
 
       <input
-        className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indio-500 transition"
+        className="w-full sm:w-auto border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
         placeholder="Monthly Expense ($)"
         value={expense}
         onChange={(e) => setExpense(e.target.value)}
@@ -1242,7 +1242,7 @@ return (
           {airbnbProperties.map((p) => (
             <div
               key={p.id}
-              className="border-2 border-gray-500 p-5 mb-8 rounded-3xl shadow-md bg-gradient-to-b from-white to-gray-50 hover:shadow-lg transition"
+              className="border border-slate-200 p-5 mb-8 rounded-3xl shadow-xl bg-gradient-to-b from-white to-slate-50 hover:shadow-2xl transition ring-1 ring-slate-100"
             >
               <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
                 <div>
@@ -1273,7 +1273,7 @@ return (
 
                   <button
                     
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-medium transition"
+                    className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl font-medium transition shadow-sm"
                     onClick={() => deleteProperty(p.id)}
                   >
                     Delete
@@ -1281,7 +1281,7 @@ return (
 
                   <button
                     
-                    className="col-span-2 sm:col-span-1 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-medium transition"
+                    className="col-span-2 sm:col-span-1 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-4 py-2 rounded-xl font-medium transition shadow-sm"
                     onClick={() =>
                       setExpandedProperties((prev) =>
                         prev[p.id] ? {} : { [p.id]: true }
@@ -1294,7 +1294,7 @@ return (
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-                <div className="border border-gray-200 rounded-2xl p-4 bg-white shadow-sm">
+                <div className="border border-slate-200 rounded-2xl p-4 bg-white shadow-sm">
 
                   <p className="text-sm text-gray-500">Revenue</p>
                   <p className="text-lg font-semibold">
@@ -1335,7 +1335,7 @@ return (
 
 <div
   
-  className="border border-gray-200 rounded-2xl p-4 bg-white shadow-sm cursor-pointer hover:bg-gray-50 transition"
+  className="border border-slate-200 rounded-2xl p-4 bg-white shadow-sm cursor-pointer hover:bg-gray-50 transition"
   onClick={() =>
     setShowExpenseDetails((prev) => ({
       ...prev,
@@ -1352,7 +1352,7 @@ return (
   </p>
 </div>
                 
-                <div className="border border-gray-200 rounded-2xl p-4 bg-white shadow-sm">
+                <div className="border border-slate-200 rounded-2xl p-4 bg-white shadow-sm">
                   <p className="text-sm text-gray-500">Profit</p>
                   <p className="text-lg font-semibold">
                     ${getAirbnbRevenue(p.id) - getAirbnbExpense(p.id)}
@@ -1366,13 +1366,13 @@ return (
     ref={(el) => {
       bookingFormRefs.current[p.id] = el;
     }}
-    className={`mt-5 border-t border-gray-200 pt-5 rounded-2xl p-4 ${
+    className={`mt-5 border-t border-slate-200 pt-5 rounded-3xl p-4 shadow-inner ${
       bookingInputs[p.id]?.id
         ? "border-yellow-400 bg-yellow-50"
         : "bg-gray-50"
     }`}
   >
-    <div className="mb-4 rounded-xl bg-white border border-gray-200 px-4 py-3">
+    <div className="mb-4 rounded-2xl bg-white border border-slate-200 px-4 py-3 shadow-sm">
       <p className="text-sm font-semibold text-gray-900">
         Details for {p.name}
       </p>
@@ -1431,7 +1431,7 @@ return (
                     <input
                       type="number"
                       placeholder="Total Price"
-                      className="border p-2 w-full sm:w-auto"
+                      className="border border-slate-300 rounded-xl px-3 py-2 w-full sm:w-auto bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
                       value={bookingInputs[p.id]?.price || ""}
                       onChange={(e) =>
                         setBookingInputs((prev) => ({
@@ -1447,7 +1447,7 @@ return (
                     <input
                       type="number"
                       placeholder="Expense"
-                      className="border p-2 w-full sm:w-auto"
+                      className="border border-slate-300 rounded-xl px-3 py-2 w-full sm:w-auto bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
                       value={bookingInputs[p.id]?.expense || ""}
                       onChange={(e) =>
                         setBookingInputs((prev) => ({
@@ -1533,7 +1533,7 @@ return (
                         .map((b) => (
                           <div
                             key={b.id}
-                            className="text-sm border border-gray-200 rounded-2xl p-4 bg-white shadow-sm"
+                            className="text-sm border border-slate-200 rounded-2xl p-4 bg-white shadow-sm"
                           >
 
 
@@ -1568,7 +1568,7 @@ return (
 
 
                               <button
-                                className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded"
+                                className="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-xl font-medium transition"
                                 onClick={() => deleteBooking(b.id)}
                               >
                                 Delete
@@ -1587,7 +1587,7 @@ return (
                         ([month, data]) => (
                           <div
                             key={month}
-                            className="text-sm border p-2 mb-1 rounded bg-gray-50"
+                            className="text-sm border border-slate-200 p-3 mb-2 rounded-2xl bg-white shadow-sm"
                           >
                             <p><strong>{month}</strong></p>
                             <p>Revenue: ${data.revenue}</p>
@@ -1610,7 +1610,7 @@ return (
           {longTermProperties.map((p) => (
             <div
               key={p.id}
-              className="border-2 border-gray-500 p-5 mb-8 rounded-3xl shadow-md bg-gradient-to-b from-white to-gray-50 hover:shadow-lg transition"
+              className="border border-slate-200 p-5 mb-8 rounded-3xl shadow-xl bg-gradient-to-b from-white to-slate-50 hover:shadow-2xl transition ring-1 ring-slate-100"
               
             >
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
@@ -1644,7 +1644,7 @@ return (
 
 
                   <button
-                    className="bg-red-600 text-white px-3 py-2 rounded"
+                    className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl font-medium transition shadow-sm"
                     onClick={() => deleteProperty(p.id)}
                   >
                     Delete
@@ -1653,21 +1653,21 @@ return (
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="border rounded p-3">
+                <div className="border border-slate-200 rounded-2xl p-4 bg-white shadow-sm">
                   <p className="text-sm text-gray-500">Revenue</p>
                   <p className="text-lg font-semibold">
                     ${p.monthly_rent || 0}
                   </p>
                 </div>
 
-                <div className="border rounded p-3">
+                <div className="border border-slate-200 rounded-2xl p-4 bg-white shadow-sm">
                   <p className="text-sm text-gray-500">Expense</p>
                   <p className="text-lg font-semibold">
                     ${p.monthly_expense || 0}
                   </p>
                 </div>
 
-                <div className="border rounded p-3">
+                <div className="border border-slate-200 rounded-2xl p-4 bg-white shadow-sm">
                   <p className="text-sm text-gray-500">Profit</p>
                   <p className="text-lg font-semibold">
                     ${(p.monthly_rent || 0) - (p.monthly_expense || 0)}
