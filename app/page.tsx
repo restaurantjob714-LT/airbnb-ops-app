@@ -834,16 +834,6 @@ if (!user) {
 </div>
           
 
-
-
-
-
-
-
-
-
-
-
 {authMode === "signup" && (
   <div className="mb-4 rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-4 text-center text-sm text-indigo-800">
     
@@ -859,20 +849,12 @@ if (!user) {
       Then $15/month or $150/year.
     </p>
 
-    
-
-<p className="text-[11px] tracking-wide text-gray-500 mt-1">
+<p className="text-sm text-gray-500 mt-2">
   Cancel anytime.
 </p>
 
   </div>
 )}
-
-
-
-
-
-
 
 
 {authMode === "signup" && (
