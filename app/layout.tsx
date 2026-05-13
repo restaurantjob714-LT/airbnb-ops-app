@@ -14,16 +14,16 @@ const geistMono = Geist_Mono({
 
 
 export const metadata = {
-  title: "RentLedger Pro",
+  title: "Staymetic",
   description:
     "Simple Airbnb and rental property management dashboard for tracking revenue, expenses, bookings, and profit.",
 
   openGraph: {
-    title: "RentLedger Pro",
+    title: "Staymetic",
     description:
       "Track Airbnb bookings, revenue, expenses, and monthly profit in one simple dashboard.",
-    url: "https://rentledgerpro.com",
-    siteName: "RentLedger Pro",
+    url: "https://staymetic.com",
+    siteName: "Staymetic",
     type: "website",
   },
 };

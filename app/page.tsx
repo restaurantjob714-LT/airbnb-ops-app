@@ -669,8 +669,7 @@ const { data, error } = await supabase.auth.signUp({
   password: authPassword,
   options: {
 
-    emailRedirectTo: "https://rentledgerpro.com/?from=confirm-signup",
-
+    emailRedirectTo: "https://staymetic.com/?from=confirm-signup",
     data: {
       first_name: firstName.trim(),
       last_name: lastName.trim(),
