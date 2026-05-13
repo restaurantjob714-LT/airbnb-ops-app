@@ -855,13 +855,15 @@ if (!user) {
       No payment required today.
     </p>
 
-    <p className="mt-2 font-medium text-gray-700">
+    <p className="mt-2 font-semibold text-indigo-700">
       Then $15/month or $150/year.
     </p>
 
-    <p className="text-xs text-gray-500 mt-1">
-      Cancel anytime.
-    </p>
+    
+
+<p className="text-[11px] tracking-wide text-gray-500 mt-1">
+  Cancel anytime.
+</p>
 
   </div>
 )}
