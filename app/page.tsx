@@ -835,7 +835,7 @@ if (!user) {
 
 {authMode === "signup" && (
   <div className="mb-5 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white px-4 py-5 text-center text-sm text-indigo-800 shadow-sm">
-    
+
     <p className="font-semibold text-base">
       Start with a 30-day free trial
     </p>
@@ -844,17 +844,29 @@ if (!user) {
       No payment required today.
     </p>
 
-    <p className="mt-2 font-semibold text-indigo-700">
-      Then $15/month or $150/year.
-    </p>
+    <div className="mt-4 grid grid-cols-1 gap-2 text-left">
+      <div className="rounded-xl border border-indigo-100 bg-white px-3 py-2">
+        <p className="text-sm font-semibold text-gray-900">Free</p>
+        <p className="text-xs text-gray-500">1 property forever</p>
+      </div>
 
-<p className="text-sm text-gray-500 mt-2">
-  Cancel anytime.
-</p>
+      <div className="rounded-xl border border-indigo-100 bg-white px-3 py-2">
+        <p className="text-sm font-semibold text-indigo-700">Pro</p>
+        <p className="text-xs text-gray-600">$8.99/mo or $79/year</p>
+      </div>
+
+      <div className="rounded-xl border border-indigo-100 bg-white px-3 py-2">
+        <p className="text-sm font-semibold text-indigo-700">Business</p>
+        <p className="text-xs text-gray-600">$14.99/mo or $149/year</p>
+      </div>
+    </div>
+
+    <p className="text-sm text-gray-500 mt-3">
+      Cancel anytime.
+    </p>
 
   </div>
 )}
-
 
 {authMode === "signup" && (
   <>
@@ -1048,10 +1060,26 @@ return (
   {isTrialExpired && (
     <div className="mt-5 rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-5 text-center shadow-sm">
       <p className="text-base sm:text-lg font-bold text-amber-800 leading-relaxed">
-        Your free trial has ended. Upgrade to continue adding properties and managing your portfolio.
+        Your free trial has ended. Choose a plan to continue adding and editing properties.
       </p>
 
-      <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-2xl font-semibold shadow-lg shadow-indigo-200 transition">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+        <div className="rounded-2xl border border-indigo-100 bg-white p-4 shadow-sm">
+          <p className="text-sm font-semibold text-indigo-700">Pro</p>
+          <p className="text-2xl font-bold text-gray-900 mt-1">$8.99/mo</p>
+          <p className="text-xs text-gray-500 mt-1">or $79/year</p>
+          <p className="text-xs text-gray-600 mt-2">For hosts managing up to 10 properties.</p>
+        </div>
+
+        <div className="rounded-2xl border border-indigo-100 bg-white p-4 shadow-sm">
+          <p className="text-sm font-semibold text-indigo-700">Business</p>
+          <p className="text-2xl font-bold text-gray-900 mt-1">$14.99/mo</p>
+          <p className="text-xs text-gray-500 mt-1">or $149/year</p>
+          <p className="text-xs text-gray-600 mt-2">For growing operators with more properties.</p>
+        </div>
+      </div>
+
+      <button className="mt-5 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-2xl font-semibold shadow-lg shadow-indigo-200 transition">
         Upgrade Now
       </button>
     </div>
