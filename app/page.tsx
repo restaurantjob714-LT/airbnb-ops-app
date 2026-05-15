@@ -793,9 +793,12 @@ if (!user) {
 
           
 <div className="mb-8 text-center">
-  <h1 className="text-5xl font-black tracking-tight bg-gradient-to-r from-indigo-700 to-violet-500 bg-clip-text text-transparent">
-    Staymetic
-  </h1>
+
+<h1 className="font-serif text-5xl sm:text-6xl font-semibold tracking-tight text-gray-950">
+  Staymetic
+</h1>
+
+
   <p className="text-[17px] text-gray-600 leading-7 mt-3 max-w-sm mx-auto">
     Track bookings, expenses, and profit in one simple dashboard
   </p>
