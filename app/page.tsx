@@ -793,10 +793,10 @@ if (!user) {
 
           
 <div className="mb-8 text-center">
-  <h1 className="text-3xl font-semibold text-gray-900 tracking-tight">
+  <h1 className="text-5xl font-black tracking-tight bg-gradient-to-r from-indigo-700 to-violet-500 bg-clip-text text-transparent">
     Staymetic
   </h1>
-  <p className="text-gray-500 text-sm mt-2 max-w-xs mx-auto">
+  <p className="text-[17px] text-gray-600 leading-7 mt-3 max-w-sm mx-auto">
     Track bookings, expenses, and profit in one simple dashboard
   </p>
 
@@ -836,32 +836,32 @@ if (!user) {
 {authMode === "signup" && (
   <div className="mb-5 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white px-4 py-5 text-center text-sm text-indigo-800 shadow-sm">
 
-    <p className="font-semibold text-base">
+    <p className="font-bold text-xl">
       Start with a 30-day free trial
     </p>
 
-    <p className="mt-1 text-indigo-700">
+    <p className="mt-2 text-[17px] text-indigo-700">
       No payment required today.
     </p>
 
     <div className="mt-4 grid grid-cols-1 gap-2 text-left">
       <div className="rounded-xl border border-indigo-100 bg-white px-3 py-2">
-        <p className="text-sm font-semibold text-gray-900">Free</p>
-        <p className="text-xs text-gray-500">1 property forever</p>
+        <p className="text-base font-semibold text-gray-900">Free</p>
+        <p className="text-base text-gray-500">1 property forever</p>
       </div>
 
       <div className="rounded-xl border border-indigo-100 bg-white px-3 py-2">
-        <p className="text-sm font-semibold text-indigo-700">Pro</p>
-        <p className="text-xs text-gray-600">$8.99/mo or $79/year</p>
+        <p className="text-base font-semibold text-indigo-700">Pro</p>
+        <p className="text-base text-gray-600">$8.99/mo or $79/year</p>
       </div>
 
       <div className="rounded-xl border border-indigo-100 bg-white px-3 py-2">
-        <p className="text-sm font-semibold text-indigo-700">Business</p>
-        <p className="text-xs text-gray-600">$14.99/mo or $149/year</p>
+        <p className="text-base font-semibold text-indigo-700">Business</p>
+        <p className="text-base text-gray-600">$14.99/mo or $149/year</p>
       </div>
     </div>
 
-    <p className="text-sm text-gray-500 mt-3">
+    <p className="text-base font-medium text-gray-500 mt-4">
       Cancel anytime.
     </p>
 
@@ -871,9 +871,6 @@ if (!user) {
 {authMode === "signup" && (
   <>
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        First Name
-      </label>
       <input
         type="text"
         placeholder="First name"
@@ -884,9 +881,6 @@ if (!user) {
     </div>
 
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        Last Name
-      </label>
       <input
         type="text"
         placeholder="Last name"
@@ -898,10 +892,6 @@ if (!user) {
 
 
 <div>
-  <label className="block text-sm font-medium text-gray-700 mb-1">
-    Phone Number
-  </label>
-
   <input
     type="text"
     placeholder="Phone number"
@@ -927,9 +917,6 @@ if (!user) {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email
-              </label>
               <input
                 type="email"
                 placeholder="Email address"
