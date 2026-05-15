@@ -794,7 +794,7 @@ if (!user) {
           
 <div className="mb-8 text-center">
 
-<h1 className="font-serif text-5xl sm:text-6xl font-semibold tracking-tight text-gray-950">
+<h1 className="font-serif text-5xl font-black tracking-tight bg-gradient-to-r from-indigo-700 to-violet-500 bg-clip-text text-transparent">
   Staymetic
 </h1>
 
