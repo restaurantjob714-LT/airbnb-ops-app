@@ -36,6 +36,8 @@ const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
 const [authLoading, setAuthLoading] = useState(false);
 
 const [authNotice, setAuthNotice] = useState("");
+const [error, setError] = useState("");
+
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -612,7 +614,7 @@ const addBooking = async (propertyId: number, input: any) => {
  
 const handleAuth = async () => {
   if (!authEmail.trim() || !authPassword.trim()) {
-    alert("Please enter email and password");
+    setError("Please enter email and password");
     return;
   }
 
@@ -629,9 +631,9 @@ const handleAuth = async () => {
 
 if (error) {
   if (error.message.toLowerCase().includes("email not confirmed")) {
-    alert("Please confirm your email before signing in. Check your inbox and click the verification link.");
+    setError("Please confirm your email before signing in. Check your inbox and click the verification link.");
   } else {
-    alert("Invalid login credentials");
+    setError("Invalid email or password");
   }
 
   //Clear input fields
@@ -650,7 +652,7 @@ if (error) {
 
 if (authMode === "signup") {
   if (!firstName.trim() || !lastName.trim() || !phoneNumber.trim()) {
-    alert("Please fill in first name, last name, and phone number");
+    setError("Please fill in all required fields");
     setAuthLoading(false);
     return;
   }
@@ -707,7 +709,7 @@ if (error) {
 
 
 if (!data?.user?.identities || data.user.identities.length === 0) {
-  alert("This email is already registered. Please sign in instead.");
+  setError("This email is already registered. Please sign in instead.");
 
   setPhoneError("");
   setAuthPassword("");
@@ -931,7 +933,7 @@ if (!user) {
 
           
 <div className="mb-8 text-center">
-  <h1 className="text-5xl font-black tracking-tight bg-gradient-to-r from-indigo-700 to-violet-500 bg-clip-text text-transparent">
+  <h1 className="font-serif text-5xl font-black tracking-tight bg-gradient-to-r from-indigo-700 to-violet-500 bg-clip-text text-transparent">
     Staymetic
   </h1>
   <p className="text-[17px] text-gray-600 leading-7 mt-3 max-w-sm mx-auto">
@@ -953,7 +955,22 @@ if (!user) {
         ? "bg-indigo-600 text-white shadow-sm"
       : "text-gray-700 hover:bg-white"
     }`}
-    onClick={() => setAuthMode("signin")}
+
+
+
+
+
+
+   // onClick={() => setAuthMode("signin")}
+
+    onClick={() => {
+      setAuthMode("signin");
+      setError("");
+    }}
+
+
+
+
   >
     Sign In
   </button>
@@ -1101,6 +1118,7 @@ if (!user) {
                 onChange={(e) => {
                   setAuthEmail(e.target.value);
                   setAuthNotice("");
+                  setError("");
                 }}
 
 
@@ -1121,6 +1139,7 @@ if (!user) {
   onChange={(e) => {
     setAuthPassword(e.target.value);
     setAuthNotice("");
+    setError("");
   }}
   onKeyDown={(e) => {
     if (e.key === "Enter" && !authLoading) {
@@ -1130,17 +1149,13 @@ if (!user) {
   className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
 />
 
-
-
-
-
-
-
-
-
-
             </div>
 
+           {error && (
+              <p className="text-red-500 text-sm text-center mb-4">
+              {error}
+              </p>
+            )}
             
             <button
               onClick={handleAuth}
