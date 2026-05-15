@@ -613,10 +613,18 @@ const addBooking = async (propertyId: number, input: any) => {
 
  
 const handleAuth = async () => {
+  
   if (!authEmail.trim() || !authPassword.trim()) {
-    setError("Please enter email and password");
-    return;
-  }
+    setError(
+      authMode === "signup"
+        ? "Please enter email and password to create your account"
+        : "Please enter email and password"
+  );
+  return;
+}
+
+
+
 
   setAuthLoading(true);
 
@@ -961,8 +969,6 @@ if (!user) {
 
 
 
-   // onClick={() => setAuthMode("signin")}
-
     onClick={() => {
       setAuthMode("signin");
       setError("");
@@ -981,7 +987,22 @@ if (!user) {
         ? "bg-indigo-600 text-white shadow-sm"
       : "text-gray-700 hover:bg-white"
     }`}
-    onClick={() => setAuthMode("signup")}
+
+
+
+
+
+ 
+
+    onClick={() => {
+      setAuthMode("signup");
+      setError("");
+    }}
+
+
+
+
+
   >
     Sign Up
   </button>
