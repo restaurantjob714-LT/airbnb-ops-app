@@ -20,6 +20,7 @@ export default function Home() {
 
   const [bookingInputs, setBookingInputs] = useState<Record<string, any>>({});
   const [expandedProperties, setExpandedProperties] = useState<Record<string, boolean>>({});
+const [freePlanNoticeDismissed, setFreePlanNoticeDismissed] = useState(false);
 
 
 const [checkingAuthRedirect, setCheckingAuthRedirect] = useState(true);
@@ -99,17 +100,11 @@ const [authNotice, setAuthNotice] = useState("");
 
 const addProperty = async () => {
 
-
-  if (!canEdit) {
-    alert("Your trial has ended. Please upgrade to continue adding or editing.");
+  if (!canAddProperty) {
+    setIsLimitReached(true);
+    alert(upgradeRequiredMessage);
     return;
   }
-
-  
-
-
-
-
 
   if (!name.trim()) {
     alert("Property name is required");
@@ -155,19 +150,33 @@ if (accessProfileError || !accessProfile) {
 
 
 const now = new Date();
-
-const isTrialExpired = accessProfile.trial_ends
+const accessPlan = String(accessProfile.plan || "free").toLowerCase();
+const accessTrialExpired = accessProfile.trial_ends
   ? new Date(accessProfile.trial_ends) < now
   : false;
+const accessTrialActive = !accessTrialExpired;
+const accessSubscriptionActive = accessProfile.subscription_status === "active";
 
+let accessPropertyLimit = 1;
 
-const isPaid =
-  accessProfile.plan === "paid" ||
-  accessProfile.subscription_status === "active";
+if (accessTrialActive) {
+  accessPropertyLimit = Number.POSITIVE_INFINITY;
+} else if (accessSubscriptionActive && accessPlan === "pro") {
+  accessPropertyLimit = 10;
+} else if (
+  accessSubscriptionActive &&
+  (accessPlan === "business" || accessPlan === "paid")
+) {
+  accessPropertyLimit = Number.POSITIVE_INFINITY;
+}
 
-
-if (isTrialExpired && !isPaid && (count ?? 0) >= 1) {
+if ((count ?? 0) >= accessPropertyLimit) {
   setIsLimitReached(true);
+  alert(
+    accessPropertyLimit === 1
+      ? "Your Free Plan allows 1 property. Upgrade to Pro or Business to add more."
+      : "Your current plan property limit has been reached. Upgrade to add more properties."
+  );
   return;
 }
 
@@ -418,8 +427,8 @@ const fetchProfile = async () => {
 
   const saveEdit = async () => {
 
-    if (!canEdit) {
-      alert("Your trial has ended. Please upgrade to continue adding or editing.");
+    if (!editingId || !canManageProperty(editingId)) {
+      alert(upgradeRequiredMessage);
       return;
     }
 
@@ -447,11 +456,10 @@ const fetchProfile = async () => {
 
 const addBooking = async (propertyId: number, input: any) => {
 
-  if (!canEdit) {
-    alert("Your trial has ended. Please upgrade to continue adding or editing.");
+  if (!canManageProperty(propertyId)) {
+    alert(upgradeRequiredMessage);
     return;
   }
-
 
   if (!propertyId) return;
 
@@ -548,11 +556,10 @@ const addBooking = async (propertyId: number, input: any) => {
 
   const editBooking = (booking: any) => {
 
-    if (!canEdit) {
-      alert("Your trial has ended. Please upgrade to continue adding or editing.");
+    if (!canManageProperty(booking.property_id)) {
+      alert(upgradeRequiredMessage);
       return;
     }
-
 
     setBookingInputs((prev) => ({
       ...prev,
@@ -770,15 +777,70 @@ return (
 }
 
 
-const isTrialExpired =
-  profile?.trial_ends
-    ? new Date(profile.trial_ends).getTime() < Date.now()
-    : false;
+const trialEndsAt = profile?.trial_ends
+  ? new Date(profile.trial_ends).getTime()
+  : null;
 
-const isPaid =
-  profile?.plan === "paid" || profile?.subscription_status === "active";
+const isTrialExpired = trialEndsAt !== null ? trialEndsAt < Date.now() : false;
+const isTrialActive = trialEndsAt !== null ? trialEndsAt >= Date.now() : false;
+const normalizedPlan = String(profile?.plan || "free").toLowerCase();
+const isSubscriptionActive = profile?.subscription_status === "active";
 
-const canEdit = profile ? isPaid || !isTrialExpired : false;
+const effectivePlan = isSubscriptionActive
+  ? normalizedPlan || "pro"
+  : isTrialActive
+  ? "trial"
+  : "free";
+
+const planPropertyLimit =
+  effectivePlan === "trial" || effectivePlan === "business" || effectivePlan === "paid"
+    ? Number.POSITIVE_INFINITY
+    : effectivePlan === "pro"
+    ? 10
+    : 1;
+
+const propertyAccessOrder = [...properties].sort((a, b) => {
+  const aTime = new Date(a.created_at || 0).getTime();
+  const bTime = new Date(b.created_at || 0).getTime();
+  return aTime - bTime;
+});
+
+const editablePropertyIds = new Set(
+  propertyAccessOrder.slice(0, planPropertyLimit).map((property) => property.id)
+);
+
+const canManageProperty = (propertyId: number) =>
+  planPropertyLimit === Number.POSITIVE_INFINITY || editablePropertyIds.has(propertyId);
+
+const canAddProperty =
+  planPropertyLimit === Number.POSITIVE_INFINITY || properties.length < planPropertyLimit;
+
+const propertyFormCanSubmit = editingId ? canManageProperty(editingId) : canAddProperty;
+
+const planLimitLabel =
+  planPropertyLimit === Number.POSITIVE_INFINITY
+    ? "unlimited properties"
+    : `${planPropertyLimit} ${planPropertyLimit === 1 ? "property" : "properties"}`;
+
+const upgradeRequiredMessage =
+  planPropertyLimit === 1
+    ? "Your Free Plan includes 1 property forever. Upgrade to Pro or Business to manage more properties."
+    : `Your current plan includes ${planLimitLabel}. Upgrade to manage more properties.`;
+
+const trialDaysLeft =
+  trialEndsAt !== null
+    ? Math.ceil((trialEndsAt - Date.now()) / (1000 * 60 * 60 * 24))
+    : null;
+
+const showTrialEndingSoon =
+  !isSubscriptionActive &&
+  !isTrialExpired &&
+  trialDaysLeft !== null &&
+  trialDaysLeft <= 5 &&
+  trialDaysLeft >= 0;
+
+const showFreePlanNotice =
+  isTrialExpired && !isSubscriptionActive && !freePlanNoticeDismissed;
 
 
 
@@ -869,7 +931,7 @@ if (!user) {
 
           
 <div className="mb-8 text-center">
-  <h1 className="font-serif text-5xl font-black tracking-tight bg-gradient-to-r from-indigo-700 to-violet-500 bg-clip-text text-transparent">
+  <h1 className="text-5xl font-black tracking-tight bg-gradient-to-r from-indigo-700 to-violet-500 bg-clip-text text-transparent">
     Staymetic
   </h1>
   <p className="text-[17px] text-gray-600 leading-7 mt-3 max-w-sm mx-auto">
@@ -1164,11 +1226,28 @@ return (
     </button>
   </div>
 
-  {/* Trial banner below top row */}
-  {isTrialExpired && (
+  {/* Trial and plan banners */}
+  {showTrialEndingSoon && (
+    <div className="mt-5 rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white p-5 text-center shadow-sm">
+      <p className="text-base sm:text-lg font-bold text-indigo-900 leading-relaxed">
+        Your 30-day trial ends in {trialDaysLeft} {trialDaysLeft === 1 ? "day" : "days"}.
+      </p>
+      <p className="mt-2 text-sm text-slate-600">
+        Upgrade to Pro or Business to keep managing all properties, or continue free with 1 property forever.
+      </p>
+      <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-2xl font-semibold shadow-lg shadow-indigo-200 transition">
+        View Upgrade Options
+      </button>
+    </div>
+  )}
+
+  {showFreePlanNotice && (
     <div className="mt-5 rounded-3xl border border-amber-200 bg-gradient-to-br from-amber-50 to-white p-5 text-center shadow-sm">
       <p className="text-base sm:text-lg font-bold text-amber-800 leading-relaxed">
-        Your free trial has ended. Choose a plan to continue adding and editing properties.
+        Your trial has ended. Your account is now on the Free Plan.
+      </p>
+      <p className="mt-2 text-sm text-slate-600">
+        You can continue managing 1 property for free. Extra properties stay view-only until you upgrade.
       </p>
 
       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
@@ -1195,9 +1274,18 @@ return (
         </div>
       </div>
 
-      <button className="mt-5 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-2xl font-semibold shadow-lg shadow-indigo-200 transition">
-        Upgrade Now
-      </button>
+      <div className="mt-5 flex flex-col sm:flex-row gap-3 justify-center">
+        <button className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-2xl font-semibold shadow-lg shadow-indigo-200 transition">
+          Upgrade Now
+        </button>
+        <button
+          type="button"
+          onClick={() => setFreePlanNoticeDismissed(true)}
+          className="bg-white hover:bg-slate-50 text-slate-700 px-6 py-3 rounded-2xl font-semibold border border-slate-200 shadow-sm transition"
+        >
+          Continue Free
+        </button>
+      </div>
     </div>
   )}
 </div>
@@ -1335,14 +1423,18 @@ return (
 
 <div className="flex flex-col sm:flex-row gap-3">
  <button
-  disabled={!canEdit}
+  disabled={!propertyFormCanSubmit}
   className={`px-6 py-3 rounded-xl font-medium shadow-sm transition ${
-    canEdit
+    propertyFormCanSubmit
       ? "bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white"
       : "bg-gray-300 text-gray-500 cursor-not-allowed"
   }`}
   onClick={() => {
-    if (!canEdit) return;
+    if (!propertyFormCanSubmit) {
+      setIsLimitReached(true);
+      alert(upgradeRequiredMessage);
+      return;
+    }
     editingId ? saveEdit() : addProperty();
   }}
 >
@@ -1352,7 +1444,7 @@ return (
 
       {isLimitReached && (
        <p className="text-sm text-red-600 mt-2">
-       Free plan allows 1 property. Upgrade to add more.
+       Your current plan allows 1 property. Upgrade to Pro or Business to add more.
        </p>
       )}
 
@@ -1394,6 +1486,11 @@ return (
                   <p className="text-gray-600">{p.address}</p>
                   <p className="text-sm text-gray-500 mt-1">Type: {p.type}</p>
                   <p className="text-sm text-indigo-600 font-medium mt-1">Mode: Airbnb (Daily)</p>
+                  {!canManageProperty(p.id) && (
+                    <p className="mt-3 inline-flex rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 border border-amber-200">
+                      View-only on Free Plan. Upgrade to manage this property.
+                    </p>
+                  )}
 
                 </div>
 
@@ -1401,14 +1498,14 @@ return (
 <div className="grid grid-cols-2 sm:flex sm:flex-row gap-2">
                   
  <button
-   disabled={!canEdit}
+   disabled={!canManageProperty(p.id)}
    className={`px-4 py-2 rounded-xl font-medium transition ${
-    canEdit
+    canManageProperty(p.id)
       ? "bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800"
       : "bg-gray-200 text-gray-400 cursor-not-allowed"
     }`}
     onClick={() => {
-      if (!canEdit) return;
+      if (!canManageProperty(p.id)) return;
       startEditing(p);
     }}
 >
@@ -1608,14 +1705,14 @@ return (
                  
 <div className="mt-2 flex flex-col sm:flex-row gap-2">
   <button
-  disabled={!canEdit}
+  disabled={!canManageProperty(p.id)}
   className={`px-3 py-2 w-full sm:w-auto rounded-xl font-medium transition ${
-    canEdit
+    canManageProperty(p.id)
       ? "bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white"
       : "bg-gray-300 text-gray-500 cursor-not-allowed"
   }`}
   onClick={() => {
-    if (!canEdit) return;
+    if (!canManageProperty(p.id)) return;
 
     const input = bookingInputs[p.id];
     if (!input) {
@@ -1695,14 +1792,14 @@ return (
 
 <div className="mt-2 flex gap-2">
     <button
-       disabled={!canEdit}
+       disabled={!canManageProperty(b.property_id)}
        className={`px-3 py-1.5 rounded-xl font-medium transition ${
-         canEdit
+         canManageProperty(b.property_id)
            ? "bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800"
            : "bg-gray-200 text-gray-400 cursor-not-allowed"
      }`}
      onClick={() => {
-       if (!canEdit) return;
+       if (!canManageProperty(b.property_id)) return;
        editBooking(b);
      }}
    >
@@ -1764,6 +1861,11 @@ return (
                 <p className="text-gray-600">{p.address}</p>
                 <p className="text-sm text-gray-500 mt-1">Type: {p.type}</p>
                 <p className="text-sm text-indigo-600 font-medium mt-1">Mode: Monthly Rent</p>
+                  {!canManageProperty(p.id) && (
+                    <p className="mt-3 inline-flex rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700 border border-amber-200">
+                      View-only on Free Plan. Upgrade to manage this property.
+                    </p>
+                  )}
 
                 </div>
 
@@ -1771,14 +1873,14 @@ return (
 
 <div className="flex gap-2">
     <button
-      disabled={!canEdit}
+      disabled={!canManageProperty(p.id)}
       className={`px-4 py-2 rounded-xl font-medium transition ${
-        canEdit
+        canManageProperty(p.id)
           ? "bg-green-100 hover:bg-green-200 active:scale-[0.99] text-green-800"
           : "bg-gray-200 text-gray-400 cursor-not-allowed"
     }`}
     onClick={() => {
-      if (!canEdit) return;
+      if (!canManageProperty(p.id)) return;
       startEditing(p);
     }}
 >
