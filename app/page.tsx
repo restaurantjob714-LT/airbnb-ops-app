@@ -784,21 +784,94 @@ const canEdit = profile ? isPaid || !isTrialExpired : false;
 
 if (!user) {
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#eef2ff,_transparent_35%),linear-gradient(135deg,#f8fafc,#ffffff,#eef2ff)] flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#eef2ff,_transparent_35%),linear-gradient(135deg,#f8fafc,#ffffff,#eef2ff)] flex items-center justify-center px-4 py-8 lg:px-8">
+      <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-12 items-center">
+
+        <div className="hidden lg:block">
+          <div className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/70 backdrop-blur p-8 shadow-2xl ring-1 ring-slate-100">
+            <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-indigo-200/60 blur-3xl" />
+            <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-violet-200/50 blur-3xl" />
+
+            <div className="relative">
+              <div className="inline-flex items-center rounded-full border border-indigo-100 bg-white/80 px-4 py-2 text-sm font-semibold text-indigo-700 shadow-sm">
+                Built for Airbnb hosts and small rental owners
+              </div>
+
+              <h2 className="mt-8 text-5xl font-black tracking-tight text-slate-950 leading-tight">
+                Know your rental profit without fighting spreadsheets.
+              </h2>
+
+              <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
+                Staymetic gives property owners a simple way to track bookings, expenses, revenue, and monthly profit from one clean dashboard.
+              </p>
+
+              <div className="mt-8 grid grid-cols-2 gap-4">
+                <div className="rounded-3xl bg-white/90 p-5 shadow-sm border border-white">
+                  <p className="text-sm font-medium text-slate-500">Monthly Revenue</p>
+                  <p className="mt-2 text-3xl font-black text-slate-950">$8,420</p>
+                  <p className="mt-1 text-sm text-green-600 font-semibold">+18% this month</p>
+                </div>
+
+                <div className="rounded-3xl bg-white/90 p-5 shadow-sm border border-white">
+                  <p className="text-sm font-medium text-slate-500">Net Profit</p>
+                  <p className="mt-2 text-3xl font-black text-indigo-700">$5,610</p>
+                  <p className="mt-1 text-sm text-slate-500">After expenses</p>
+                </div>
+              </div>
+
+              <div className="mt-6 rounded-3xl bg-slate-950 p-5 text-white shadow-xl">
+                <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-4">
+                  <div>
+                    <p className="text-sm text-slate-300">Property</p>
+                    <p className="text-lg font-bold">Ocean View Stay</p>
+                  </div>
+                  <span className="rounded-full bg-indigo-500 px-3 py-1 text-xs font-bold">Airbnb</span>
+                </div>
+
+                <div className="mt-4 grid grid-cols-3 gap-3 text-center">
+                  <div className="rounded-2xl bg-white/10 p-3">
+                    <p className="text-xs text-slate-300">Revenue</p>
+                    <p className="mt-1 font-bold">$2,550</p>
+                  </div>
+                  <div className="rounded-2xl bg-white/10 p-3">
+                    <p className="text-xs text-slate-300">Expense</p>
+                    <p className="mt-1 font-bold">$450</p>
+                  </div>
+                  <div className="rounded-2xl bg-white/10 p-3">
+                    <p className="text-xs text-slate-300">Profit</p>
+                    <p className="mt-1 font-bold text-green-300">$2,100</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 grid grid-cols-1 gap-3 text-sm text-slate-700">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-white font-bold">✓</span>
+                  Track Airbnb and long-term rentals in one place
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-white font-bold">✓</span>
+                  View revenue, expenses, and profit by property
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-white font-bold">✓</span>
+                  Mobile-friendly dashboard with simple pricing
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div 
 
 
-              className="bg-white/90 backdrop-blur rounded-3xl shadow-2xl border border-white/70 p-6 sm:p-8 ring-1 ring-slate-100">
+              className="w-full max-w-md mx-auto bg-white/90 backdrop-blur rounded-3xl shadow-2xl border border-white/70 p-6 sm:p-8 ring-1 ring-slate-100">
 
           
 <div className="mb-8 text-center">
-
-<h1 className="font-serif text-5xl font-black tracking-tight bg-gradient-to-r from-indigo-700 to-violet-500 bg-clip-text text-transparent">
-  Staymetic
-</h1>
-
-
+  <h1 className="text-5xl font-black tracking-tight bg-gradient-to-r from-indigo-700 to-violet-500 bg-clip-text text-transparent">
+    Staymetic
+  </h1>
   <p className="text-[17px] text-gray-600 leading-7 mt-3 max-w-sm mx-auto">
     Track bookings, expenses, and profit in one simple dashboard
   </p>
@@ -847,20 +920,56 @@ if (!user) {
       No payment required today.
     </p>
 
-    <div className="mt-4 grid grid-cols-1 gap-2 text-left">
-      <div className="rounded-xl border border-indigo-100 bg-white px-3 py-2">
-        <p className="text-base font-semibold text-gray-900">Free</p>
-        <p className="text-base text-gray-500">1 property forever</p>
+    <div className="mt-4 grid grid-cols-1 gap-3 text-left">
+      <div className="rounded-2xl border border-indigo-100 bg-white px-4 py-3 shadow-sm">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-base font-bold text-gray-900">Free</p>
+            <p className="text-sm text-gray-500 mt-0.5">1 property forever</p>
+          </div>
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+            $0
+          </span>
+        </div>
+        <ul className="mt-3 space-y-1.5 text-sm text-gray-600">
+          <li>✓ Unlimited bookings</li>
+          <li>✓ Expense and profit tracking</li>
+          <li>✓ Monthly summaries</li>
+        </ul>
       </div>
 
-      <div className="rounded-xl border border-indigo-100 bg-white px-3 py-2">
-        <p className="text-base font-semibold text-indigo-700">Pro</p>
-        <p className="text-base text-gray-600">$8.99/mo or $79/year</p>
+      <div className="rounded-2xl border border-indigo-200 bg-white px-4 py-3 shadow-sm ring-1 ring-indigo-50">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-base font-bold text-indigo-700">Pro</p>
+            <p className="text-sm text-gray-600 mt-0.5">$8.99/mo or $79/year</p>
+          </div>
+          <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+            Popular
+          </span>
+        </div>
+        <ul className="mt-3 space-y-1.5 text-sm text-gray-600">
+          <li>✓ Up to 10 properties</li>
+          <li>✓ Everything in Free</li>
+          <li>✓ Priority support</li>
+        </ul>
       </div>
 
-      <div className="rounded-xl border border-indigo-100 bg-white px-3 py-2">
-        <p className="text-base font-semibold text-indigo-700">Business</p>
-        <p className="text-base text-gray-600">$14.99/mo or $149/year</p>
+      <div className="rounded-2xl border border-indigo-100 bg-white px-4 py-3 shadow-sm">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-base font-bold text-indigo-700">Business</p>
+            <p className="text-sm text-gray-600 mt-0.5">$14.99/mo or $149/year</p>
+          </div>
+          <span className="rounded-full bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-700">
+            Unlimited
+          </span>
+        </div>
+        <ul className="mt-3 space-y-1.5 text-sm text-gray-600">
+          <li>✓ Unlimited properties</li>
+          <li>✓ Everything in Pro</li>
+          <li>✓ Advanced tools as released</li>
+        </ul>
       </div>
     </div>
 
@@ -1003,6 +1112,15 @@ if (!user) {
               <br />
               Your data stays private to your account.
             </p>
+            <p className="mt-3 text-xs text-gray-400 text-center">
+              Need help? Contact Tech Support at{" "}
+              <a
+                href="mailto:support@staymetic.com"
+                className="font-medium text-indigo-600 hover:text-indigo-700 hover:underline"
+              >
+                support@staymetic.com
+              </a>
+            </p>
           </div>
         </div>
       </div>
@@ -1058,14 +1176,22 @@ return (
           <p className="text-sm font-semibold text-indigo-700">Pro</p>
           <p className="text-2xl font-bold text-gray-900 mt-1">$8.99/mo</p>
           <p className="text-xs text-gray-500 mt-1">or $79/year</p>
-          <p className="text-xs text-gray-600 mt-2">For hosts managing up to 10 properties.</p>
+          <ul className="mt-3 space-y-1.5 text-xs text-gray-600">
+            <li>✓ Up to 10 properties</li>
+            <li>✓ Everything in Free</li>
+            <li>✓ Priority support</li>
+          </ul>
         </div>
 
         <div className="rounded-2xl border border-indigo-100 bg-white p-4 shadow-sm">
           <p className="text-sm font-semibold text-indigo-700">Business</p>
           <p className="text-2xl font-bold text-gray-900 mt-1">$14.99/mo</p>
           <p className="text-xs text-gray-500 mt-1">or $149/year</p>
-          <p className="text-xs text-gray-600 mt-2">For growing operators with more properties.</p>
+          <ul className="mt-3 space-y-1.5 text-xs text-gray-600">
+            <li>✓ Unlimited properties</li>
+            <li>✓ Everything in Pro</li>
+            <li>✓ Advanced tools as released</li>
+          </ul>
         </div>
       </div>
 
@@ -1698,6 +1824,16 @@ return (
       </div>
 
     )}
+
+      <div className="mt-8 text-center text-xs text-gray-400">
+        Tech Support:{" "}
+        <a
+          href="mailto:support@staymetic.com"
+          className="font-medium text-indigo-600 hover:text-indigo-700 hover:underline"
+        >
+          support@staymetic.com
+        </a>
+      </div>
 
     </div>
  </div>
