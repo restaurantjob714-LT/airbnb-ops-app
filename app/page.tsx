@@ -34,10 +34,9 @@ const [authEmail, setAuthEmail] = useState("");
 const [authPassword, setAuthPassword] = useState("");
 const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
 const [authLoading, setAuthLoading] = useState(false);
+const [checkoutLoading, setCheckoutLoading] = useState("");
 
 const [authNotice, setAuthNotice] = useState("");
-const [error, setError] = useState("");
-
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -611,17 +610,56 @@ const addBooking = async (propertyId: number, input: any) => {
     return summary;
   };
 
- 
+
+const startCheckout = async (priceKey: string) => {
+  if (!user) {
+    alert("Please sign in before upgrading.");
+    return;
+  }
+
+  try {
+    setCheckoutLoading(priceKey);
+
+    const { data: sessionData } = await supabase.auth.getSession();
+    const accessToken = sessionData.session?.access_token;
+
+    if (!accessToken) {
+      alert("Please sign in again before upgrading.");
+      setCheckoutLoading("");
+      return;
+    }
+
+    const response = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ priceKey }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data?.url) {
+      throw new Error(data?.error || "Could not start checkout");
+    }
+
+    window.location.href = data.url;
+  } catch (err: any) {
+    console.log("Checkout error:", err);
+    alert(err?.message || "Could not start checkout. Please try again.");
+    setCheckoutLoading("");
+  }
+};
+
+const planButtonClass =
+  "rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none";
+
 const handleAuth = async () => {
-  
   if (!authEmail.trim() || !authPassword.trim()) {
-    setError(
-      authMode === "signup"
-        ? "Please fill in all required fields to create your account"
-        : "Please enter email and password"
-  );
-  return;
-}
+    alert("Please enter email and password");
+    return;
+  }
 
   setAuthLoading(true);
 
@@ -636,9 +674,9 @@ const handleAuth = async () => {
 
 if (error) {
   if (error.message.toLowerCase().includes("email not confirmed")) {
-    setError("Please confirm your email before signing in. Check your inbox and click the verification link.");
+    alert("Please confirm your email before signing in. Check your inbox and click the verification link.");
   } else {
-    setError("Invalid email or password");
+    alert("Invalid login credentials");
   }
 
   //Clear input fields
@@ -657,7 +695,7 @@ if (error) {
 
 if (authMode === "signup") {
   if (!firstName.trim() || !lastName.trim() || !phoneNumber.trim()) {
-    setError("Please fill in all required fields");
+    alert("Please fill in first name, last name, and phone number");
     setAuthLoading(false);
     return;
   }
@@ -714,7 +752,7 @@ if (error) {
 
 
 if (!data?.user?.identities || data.user.identities.length === 0) {
-  setError("This email is already registered. Please sign in instead.");
+  alert("This email is already registered. Please sign in instead.");
 
   setPhoneError("");
   setAuthPassword("");
@@ -938,7 +976,7 @@ if (!user) {
 
           
 <div className="mb-8 text-center">
-  <h1 className="font-serif text-5xl font-black tracking-tight bg-gradient-to-r from-indigo-700 to-violet-500 bg-clip-text text-transparent">
+  <h1 className="text-5xl font-black tracking-tight bg-gradient-to-r from-indigo-700 to-violet-500 bg-clip-text text-transparent">
     Staymetic
   </h1>
   <p className="text-[17px] text-gray-600 leading-7 mt-3 max-w-sm mx-auto">
@@ -960,20 +998,7 @@ if (!user) {
         ? "bg-indigo-600 text-white shadow-sm"
       : "text-gray-700 hover:bg-white"
     }`}
-
-
-
-
-
-
-    onClick={() => {
-      setAuthMode("signin");
-      setError("");
-    }}
-
-
-
-
+    onClick={() => setAuthMode("signin")}
   >
     Sign In
   </button>
@@ -984,22 +1009,7 @@ if (!user) {
         ? "bg-indigo-600 text-white shadow-sm"
       : "text-gray-700 hover:bg-white"
     }`}
-
-
-
-
-
- 
-
-    onClick={() => {
-      setAuthMode("signup");
-      setError("");
-    }}
-
-
-
-
-
+    onClick={() => setAuthMode("signup")}
   >
     Sign Up
   </button>
@@ -1136,7 +1146,6 @@ if (!user) {
                 onChange={(e) => {
                   setAuthEmail(e.target.value);
                   setAuthNotice("");
-                  setError("");
                 }}
 
 
@@ -1157,7 +1166,6 @@ if (!user) {
   onChange={(e) => {
     setAuthPassword(e.target.value);
     setAuthNotice("");
-    setError("");
   }}
   onKeyDown={(e) => {
     if (e.key === "Enter" && !authLoading) {
@@ -1167,13 +1175,17 @@ if (!user) {
   className="w-full border border-gray-300 rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
 />
 
+
+
+
+
+
+
+
+
+
             </div>
 
-           {error && (
-              <p className="text-red-500 text-sm text-center mb-4">
-              {error}
-              </p>
-            )}
             
             <button
               onClick={handleAuth}
@@ -1268,9 +1280,40 @@ return (
       <p className="mt-2 text-sm text-slate-600">
         Upgrade to Pro or Business to keep managing all properties, or continue free with 1 property forever.
       </p>
-      <button className="mt-4 bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-2xl font-semibold shadow-lg shadow-indigo-200 transition">
-        View Upgrade Options
-      </button>
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button
+          type="button"
+          disabled={checkoutLoading !== ""}
+          onClick={() => startCheckout("pro_monthly")}
+          className={planButtonClass}
+        >
+          {checkoutLoading === "pro_monthly" ? "Loading..." : "Pro Monthly - $8.99/mo"}
+        </button>
+        <button
+          type="button"
+          disabled={checkoutLoading !== ""}
+          onClick={() => startCheckout("pro_yearly")}
+          className={planButtonClass}
+        >
+          {checkoutLoading === "pro_yearly" ? "Loading..." : "Pro Yearly - $79/yr"}
+        </button>
+        <button
+          type="button"
+          disabled={checkoutLoading !== ""}
+          onClick={() => startCheckout("business_monthly")}
+          className={planButtonClass}
+        >
+          {checkoutLoading === "business_monthly" ? "Loading..." : "Business Monthly - $14.99/mo"}
+        </button>
+        <button
+          type="button"
+          disabled={checkoutLoading !== ""}
+          onClick={() => startCheckout("business_yearly")}
+          className={planButtonClass}
+        >
+          {checkoutLoading === "business_yearly" ? "Loading..." : "Business Yearly - $149/yr"}
+        </button>
+      </div>
     </div>
   )}
 
@@ -1308,9 +1351,40 @@ return (
       </div>
 
       <div className="mt-5 flex flex-col sm:flex-row gap-3 justify-center">
-        <button className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white px-6 py-3 rounded-2xl font-semibold shadow-lg shadow-indigo-200 transition">
-          Upgrade Now
-        </button>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button
+            type="button"
+            disabled={checkoutLoading !== ""}
+            onClick={() => startCheckout("pro_monthly")}
+            className={planButtonClass}
+          >
+            {checkoutLoading === "pro_monthly" ? "Loading..." : "Pro Monthly - $8.99/mo"}
+          </button>
+          <button
+            type="button"
+            disabled={checkoutLoading !== ""}
+            onClick={() => startCheckout("pro_yearly")}
+            className={planButtonClass}
+          >
+            {checkoutLoading === "pro_yearly" ? "Loading..." : "Pro Yearly - $79/yr"}
+          </button>
+          <button
+            type="button"
+            disabled={checkoutLoading !== ""}
+            onClick={() => startCheckout("business_monthly")}
+            className={planButtonClass}
+          >
+            {checkoutLoading === "business_monthly" ? "Loading..." : "Business Monthly - $14.99/mo"}
+          </button>
+          <button
+            type="button"
+            disabled={checkoutLoading !== ""}
+            onClick={() => startCheckout("business_yearly")}
+            className={planButtonClass}
+          >
+            {checkoutLoading === "business_yearly" ? "Loading..." : "Business Yearly - $149/yr"}
+          </button>
+        </div>
         <button
           type="button"
           onClick={() => setFreePlanNoticeDismissed(true)}
