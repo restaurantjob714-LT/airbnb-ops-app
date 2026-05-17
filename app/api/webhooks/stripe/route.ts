@@ -48,7 +48,7 @@ async function updateProfileFromSubscription(subscription: Stripe.Subscription) 
     stripe_subscription_id: subscription.id,
   };
 
-  const periodEnd = subscription.current_period_end;
+  const periodEnd = (subscription as any).current_period_end;
   if (periodEnd) {
     updatePayload.subscription_current_period_end = new Date(periodEnd * 1000).toISOString();
   }
