@@ -134,17 +134,6 @@ export async function POST(request: Request) {
         },
       ],
 
-
-
-
-
-      automatic_tax: {
-          enabled: true,
-      },
-
-
-
-
       success_url: `${siteUrl}/?checkout=success`,
       cancel_url: `${siteUrl}/?checkout=cancelled`,
       client_reference_id: user.id,
