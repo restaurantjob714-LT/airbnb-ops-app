@@ -658,7 +658,7 @@ const handleAuth = async () => {
  if (!authEmail.trim() || !authPassword.trim()) {
   setError(
     authMode === "signup"
-      ? "Please enter email and password to create your account"
+      ? "Please fill in the required fields to create your account"
       : "Please enter email and password"
   );
   return;
