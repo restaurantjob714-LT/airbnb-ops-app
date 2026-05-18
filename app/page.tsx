@@ -21,6 +21,7 @@ export default function Home() {
   const [bookingInputs, setBookingInputs] = useState<Record<string, any>>({});
   const [expandedProperties, setExpandedProperties] = useState<Record<string, boolean>>({});
 const [freePlanNoticeDismissed, setFreePlanNoticeDismissed] = useState(false);
+const [showUpgradePlans, setShowUpgradePlans] = useState(false);
 
 
 const [checkingAuthRedirect, setCheckingAuthRedirect] = useState(true);
@@ -304,11 +305,36 @@ useEffect(() => {
   const resetTimer = () => {
     clearTimeout(timeout);
 
-    timeout = setTimeout(async () => {
-      alert("You have been signed out due to 15 minutes of inactivity.");
-      await handleSignOut();
-    }, 15 * 60 * 1000); // 15 minutes
-  };
+  
+
+
+
+
+
+timeout = setTimeout(async () => {
+  await supabase.auth.signOut();
+
+  setUser(null);
+  setProfile(null);
+  setProperties([]);
+  setBookings([]);
+
+  setAuthEmail("");
+  setAuthPassword("");
+  setFirstName("");
+  setLastName("");
+  setPhoneNumber("");
+  setPhoneError("");
+  setAuthMode("signin");
+
+  setError("You have been signed out due to 15 minutes of inactivity.");
+}, 15 * 60 * 1000);
+
+};
+
+
+
+
 
   const events = ["mousemove", "keydown", "click", "scroll", "touchstart"];
 
@@ -1263,12 +1289,27 @@ return (
       </p>
     </div>
 
-    <button
-      onClick={handleSignOut}
-      className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-2xl text-sm font-semibold transition shadow-sm"
-    >
-      Sign Out
-    </button>
+    <div className="flex flex-col sm:flex-row gap-2 items-end sm:items-center">
+      {!isSubscriptionActive && (
+        <button
+          type="button"
+          onClick={() => {
+            setShowUpgradePlans(true);
+            setFreePlanNoticeDismissed(true);
+          }}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-2xl text-sm font-semibold transition shadow-sm"
+        >
+          Upgrade / Plans
+        </button>
+      )}
+
+      <button
+        onClick={handleSignOut}
+        className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-2xl text-sm font-semibold transition shadow-sm"
+      >
+        Sign Out
+      </button>
+    </div>
   </div>
 
   {/* Trial and plan banners */}
@@ -1387,10 +1428,112 @@ return (
         </div>
         <button
           type="button"
-          onClick={() => setFreePlanNoticeDismissed(true)}
+          onClick={() => {
+            setFreePlanNoticeDismissed(true);
+            setShowUpgradePlans(false);
+          }}
           className="bg-white hover:bg-slate-50 text-slate-700 px-6 py-3 rounded-2xl font-semibold border border-slate-200 shadow-sm transition"
         >
           Continue Free
+        </button>
+      </div>
+    </div>
+  )}
+
+  {isTrialExpired && !isSubscriptionActive && freePlanNoticeDismissed && !showUpgradePlans && (
+    <div className="mt-5 rounded-3xl border border-slate-200 bg-white p-5 text-center shadow-sm">
+      <p className="text-sm font-semibold text-slate-800">
+        You are continuing on the Free Plan with 1 editable property.
+      </p>
+      <p className="mt-1 text-xs text-slate-500">
+        Upgrade anytime to unlock more properties.
+      </p>
+      <button
+        type="button"
+        onClick={() => setShowUpgradePlans(true)}
+        className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-2xl text-sm font-semibold transition shadow-sm"
+      >
+        View Upgrade Plans
+      </button>
+    </div>
+  )}
+
+  {showUpgradePlans && !isSubscriptionActive && (
+    <div className="mt-5 rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white p-5 text-center shadow-sm">
+      <div className="flex items-start justify-between gap-3">
+        <div className="text-left">
+          <p className="text-base sm:text-lg font-bold text-indigo-900 leading-relaxed">
+            Choose your Staymetic plan
+          </p>
+          <p className="mt-2 text-sm text-slate-600">
+            Upgrade to Pro or Business to manage more properties anytime.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowUpgradePlans(false)}
+          className="rounded-full bg-white px-3 py-1 text-sm font-semibold text-slate-500 border border-slate-200 hover:bg-slate-50"
+        >
+          Hide
+        </button>
+      </div>
+
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+        <div className="rounded-2xl border border-indigo-100 bg-white p-4 shadow-sm">
+          <p className="text-sm font-semibold text-indigo-700">Pro</p>
+          <p className="text-2xl font-bold text-gray-900 mt-1">$8.99/mo</p>
+          <p className="text-xs text-gray-500 mt-1">or $79/year</p>
+          <ul className="mt-3 space-y-1.5 text-xs text-gray-600">
+            <li>✓ Up to 10 properties</li>
+            <li>✓ Everything in Free</li>
+            <li>✓ Priority support</li>
+          </ul>
+        </div>
+
+        <div className="rounded-2xl border border-indigo-100 bg-white p-4 shadow-sm">
+          <p className="text-sm font-semibold text-indigo-700">Business</p>
+          <p className="text-2xl font-bold text-gray-900 mt-1">$14.99/mo</p>
+          <p className="text-xs text-gray-500 mt-1">or $149/year</p>
+          <ul className="mt-3 space-y-1.5 text-xs text-gray-600">
+            <li>✓ Unlimited properties</li>
+            <li>✓ Everything in Pro</li>
+            <li>✓ Advanced tools as released</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button
+          type="button"
+          disabled={checkoutLoading !== ""}
+          onClick={() => startCheckout("pro_monthly")}
+          className={planButtonClass}
+        >
+          {checkoutLoading === "pro_monthly" ? "Loading..." : "Pro Monthly - $8.99/mo"}
+        </button>
+        <button
+          type="button"
+          disabled={checkoutLoading !== ""}
+          onClick={() => startCheckout("pro_yearly")}
+          className={planButtonClass}
+        >
+          {checkoutLoading === "pro_yearly" ? "Loading..." : "Pro Yearly - $79/yr"}
+        </button>
+        <button
+          type="button"
+          disabled={checkoutLoading !== ""}
+          onClick={() => startCheckout("business_monthly")}
+          className={planButtonClass}
+        >
+          {checkoutLoading === "business_monthly" ? "Loading..." : "Business Monthly - $14.99/mo"}
+        </button>
+        <button
+          type="button"
+          disabled={checkoutLoading !== ""}
+          onClick={() => startCheckout("business_yearly")}
+          className={planButtonClass}
+        >
+          {checkoutLoading === "business_yearly" ? "Loading..." : "Business Yearly - $149/yr"}
         </button>
       </div>
     </div>
