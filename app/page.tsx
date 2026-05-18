@@ -656,7 +656,7 @@ const planButtonClass =
 
 const handleAuth = async () => {
   if (!authEmail.trim() || !authPassword.trim()) {
-    alert("Please enter email and password");
+    setError("Please enter email and password");
     return;
   }
 
