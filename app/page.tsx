@@ -302,7 +302,7 @@ useEffect(() => {
 
   
 timeout = setTimeout(async () => {
-      alert("You have been signed out due to 15 minutes of inactivity.");
+      setError("You have been signed out due to 15 minutes of inactivity.");
       await handleSignOut();
     }, 15 * 60 * 1000); // 15 minutes
 
@@ -655,9 +655,13 @@ const planButtonClass =
   "rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none";
 
 const handleAuth = async () => {
-  if (!authEmail.trim() || !authPassword.trim()) {
-    setError("Please enter email and password");
-    return;
+ if (!authEmail.trim() || !authPassword.trim()) {
+  setError(
+    authMode === "signup"
+      ? "Please enter email and password to create your account"
+      : "Please enter email and password"
+  );
+  return;
   }
 
   setAuthLoading(true);
@@ -675,7 +679,7 @@ if (error) {
   if (error.message.toLowerCase().includes("email not confirmed")) {
     alert("Please confirm your email before signing in. Check your inbox and click the verification link.");
   } else {
-    alert("Invalid login credentials");
+    setError("Invalid email or password");
   }
 
   //Clear input fields
@@ -694,7 +698,7 @@ if (error) {
 
 if (authMode === "signup") {
   if (!firstName.trim() || !lastName.trim() || !phoneNumber.trim()) {
-    alert("Please fill in first name, last name, and phone number");
+    setError("Please fill in all required fields");
     setAuthLoading(false);
     return;
   }
@@ -751,7 +755,7 @@ if (error) {
 
 
 if (!data?.user?.identities || data.user.identities.length === 0) {
-  alert("This email is already registered. Please sign in instead.");
+  setError("This email is already registered. Please sign in instead.");
 
   setPhoneError("");
   setAuthPassword("");
@@ -997,7 +1001,10 @@ if (!user) {
         ? "bg-indigo-600 text-white shadow-sm"
       : "text-gray-700 hover:bg-white"
     }`}
-    onClick={() => setAuthMode("signin")}
+    onClick={() => {
+     setAuthMode("signin");
+     setError("");
+  }}
   >
     Sign In
   </button>
@@ -1008,7 +1015,10 @@ if (!user) {
         ? "bg-indigo-600 text-white shadow-sm"
       : "text-gray-700 hover:bg-white"
     }`}
-    onClick={() => setAuthMode("signup")}
+    onClick={() => {
+      setAuthMode("signup");
+      setError("");
+    }}
   >
     Sign Up
   </button>
@@ -1117,6 +1127,7 @@ if (!user) {
     onChange={(e) => {
       setPhoneNumber(e.target.value);
       setPhoneError("");
+      setError("");
     }}
     className={`w-full rounded-xl px-4 py-3 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition ${
       phoneError ? "border border-red-500" : "border border-gray-300"
@@ -1145,6 +1156,7 @@ if (!user) {
                 onChange={(e) => {
                   setAuthEmail(e.target.value);
                   setAuthNotice("");
+                  setError("");
                 }}
 
 
@@ -1165,6 +1177,7 @@ if (!user) {
   onChange={(e) => {
     setAuthPassword(e.target.value);
     setAuthNotice("");
+    setError("");
   }}
   onKeyDown={(e) => {
     if (e.key === "Enter" && !authLoading) {
