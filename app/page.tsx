@@ -38,6 +38,7 @@ const [authLoading, setAuthLoading] = useState(false);
 const [checkoutLoading, setCheckoutLoading] = useState("");
 
 const [authNotice, setAuthNotice] = useState("");
+const [error, setError] = useState("");
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -91,12 +92,6 @@ const [authNotice, setAuthNotice] = useState("");
 
     return sum + (Number(p.monthly_expense) || 0);
   }, 0);
-
-
-
-
-
-
 
 
 
@@ -306,34 +301,12 @@ useEffect(() => {
     clearTimeout(timeout);
 
   
-
-
-
-
-
 timeout = setTimeout(async () => {
-  await supabase.auth.signOut();
-
-  setUser(null);
-  setProfile(null);
-  setProperties([]);
-  setBookings([]);
-
-  setAuthEmail("");
-  setAuthPassword("");
-  setFirstName("");
-  setLastName("");
-  setPhoneNumber("");
-  setPhoneError("");
-  setAuthMode("signin");
-
-  setError("You have been signed out due to 15 minutes of inactivity.");
-}, 15 * 60 * 1000);
+      alert("You have been signed out due to 15 minutes of inactivity.");
+      await handleSignOut();
+    }, 15 * 60 * 1000); // 15 minutes
 
 };
-
-
-
 
 
   const events = ["mousemove", "keydown", "click", "scroll", "touchstart"];
@@ -1213,6 +1186,12 @@ if (!user) {
             </div>
 
             
+           {error && (
+             <p className="text-red-500 text-sm text-center mb-4">
+               {error}
+             </p>
+           )}
+
             <button
               onClick={handleAuth}
               disabled={authLoading}
