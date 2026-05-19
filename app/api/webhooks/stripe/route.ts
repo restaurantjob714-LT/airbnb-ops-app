@@ -45,7 +45,7 @@ async function updateProfileFromSubscription(subscription: Stripe.Subscription) 
     plan,
     subscription_status: status,
     stripe_customer_id: customerId,
-    stripe_subscription_id: subscription.id,
+    
   };
 
   const periodEnd = (subscription as any).current_period_end;
