@@ -306,6 +306,27 @@ useEffect(() => {
 
 
 
+
+
+useEffect(() => {
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange((event) => {
+    if (event === "PASSWORD_RECOVERY") {
+      setIsRecoveryMode(true);
+    }
+  });
+
+  return () => subscription.unsubscribe();
+}, []);
+
+
+
+
+
+
+
+
 useEffect(() => {
   const searchParams = new URLSearchParams(window.location.search);
   const checkoutSuccess = searchParams.get("checkout") === "success";
@@ -991,7 +1012,12 @@ const showFreePlanNotice =
 
 
 
-if (!user) {
+
+
+
+
+
+
 
 if (isRecoveryMode) {
   return (
@@ -1048,6 +1074,13 @@ if (isRecoveryMode) {
 
 
 
+
+
+
+
+
+
+if (!user) {
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#eef2ff,_transparent_35%),linear-gradient(135deg,#f8fafc,#ffffff,#eef2ff)] flex items-center justify-center px-4 py-8 lg:px-8">
