@@ -20,11 +20,15 @@ export default function Home() {
 
   const [bookingInputs, setBookingInputs] = useState<Record<string, any>>({});
   const [expandedProperties, setExpandedProperties] = useState<Record<string, boolean>>({});
-const [freePlanNoticeDismissed, setFreePlanNoticeDismissed] = useState(false);
-const [showUpgradePlans, setShowUpgradePlans] = useState(false);
+  const [freePlanNoticeDismissed, setFreePlanNoticeDismissed] = useState(false);
+  const [showUpgradePlans, setShowUpgradePlans] = useState(false);
 
 
 const [checkingAuthRedirect, setCheckingAuthRedirect] = useState(true);
+
+const [isRecoveryMode, setIsRecoveryMode] = useState(false);
+const [newPassword, setNewPassword] = useState("");
+const [confirmPassword, setConfirmPassword] = useState("");
 
 const [firstName, setFirstName] = useState("");
 const [lastName, setLastName] = useState("");
@@ -212,6 +216,28 @@ setIsLimitReached(false);
   setType("airbnb");
   fetchProperties();
 };
+
+
+
+
+
+
+
+useEffect(() => {
+  const hash = window.location.hash;
+
+  if (
+    hash.includes("type=recovery") ||
+    window.location.search.includes("type=recovery")
+  ) {
+    setIsRecoveryMode(true);
+  }
+}, []);
+
+
+
+
+
 
 
 useEffect(() => {
@@ -679,6 +705,51 @@ const startCheckout = async (priceKey: string) => {
 const planButtonClass =
   "rounded-2xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-200 transition hover:bg-indigo-700 active:scale-[0.99] disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 disabled:shadow-none";
 
+
+
+
+
+
+
+
+
+const handlePasswordReset = async () => {
+  if (!newPassword || !confirmPassword) {
+    setError("Please enter your new password");
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password: newPassword,
+  });
+
+  if (error) {
+    setError(error.message);
+    return;
+  }
+
+  setError("");
+  setAuthNotice("Password updated successfully");
+
+  setIsRecoveryMode(false);
+
+  window.history.replaceState({}, document.title, window.location.pathname);
+};
+
+
+
+
+
+
+
+
+
+
 const handleAuth = async () => {
  if (!authEmail.trim() || !authPassword.trim()) {
   setError(
@@ -917,7 +988,67 @@ const showFreePlanNotice =
 
 
 
+
+
+
 if (!user) {
+
+if (isRecoveryMode) {
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4 bg-slate-50">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-6 border border-slate-200">
+        <h1 className="text-2xl font-bold text-center text-gray-900 mb-6">
+          Reset Password
+        </h1>
+
+        <div className="space-y-4">
+          <input
+            type="password"
+            placeholder="New Password"
+            value={newPassword}
+            onChange={(e) => {
+              setNewPassword(e.target.value);
+              setError("");
+            }}
+            className="w-full rounded-2xl border border-slate-300 px-4 py-3"
+          />
+
+          <input
+            type="password"
+            placeholder="Confirm New Password"
+            value={confirmPassword}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              setError("");
+            }}
+            className="w-full rounded-2xl border border-slate-300 px-4 py-3"
+          />
+
+          {error && (
+            <p className="text-red-500 text-sm text-center">
+              {error}
+            </p>
+          )}
+
+          <button
+            onClick={handlePasswordReset}
+            className="w-full rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white py-3 font-semibold"
+          >
+            Update Password
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
+
+
+
+
+
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#eef2ff,_transparent_35%),linear-gradient(135deg,#f8fafc,#ffffff,#eef2ff)] flex items-center justify-center px-4 py-8 lg:px-8">
       <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-12 items-center">
@@ -1115,7 +1246,7 @@ if (!user) {
     </div>
 
     <p className="text-base font-medium text-gray-500 mt-4">
-      Cancel anytime — access remains until billing period ends.
+         Cancel auto-renewal anytime.
     </p>
 
   </div>
@@ -1315,11 +1446,6 @@ return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
 
 
-
-
-
-      
-
 <div className="bg-white/90 backdrop-blur border border-white/70 rounded-3xl shadow-xl p-5 mb-6 ring-1 ring-slate-100">
   {/* Top row: Dashboard + Sign Out */}
   <div className="flex items-center justify-between gap-4">
@@ -1340,6 +1466,31 @@ return (
           )}
         </span>
       </p>
+
+
+
+
+
+{profile?.plan && (
+  <div className="mt-3 inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">
+    {profile.plan === "business"
+      ? "BUSINESS PLAN"
+      : profile.plan === "pro"
+      ? "PRO PLAN"
+      : "FREE PLAN"}
+
+    {profile?.subscription_status === "active" && (
+      <span className="ml-1">• Active</span>
+    )}
+  </div>
+)}
+
+
+
+
+
+
+
     </div>
 
     <div className="flex flex-col sm:flex-row gap-2 items-end sm:items-center">
