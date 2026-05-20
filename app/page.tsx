@@ -1230,7 +1230,7 @@ if (!user) {
 
 
     <p className="mt-2 text-[17px] text-indigo-700">
-         Pro Plan Version
+         Pro Plan
     </p>
 
 
