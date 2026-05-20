@@ -957,12 +957,19 @@ const effectivePlan = isSubscriptionActive
   ? "trial"
   : "free";
 
+
+
 const planPropertyLimit =
-  effectivePlan === "trial" || effectivePlan === "business" || effectivePlan === "paid"
+  effectivePlan === "business" || effectivePlan === "paid"
     ? Number.POSITIVE_INFINITY
+    : effectivePlan === "trial"
+    ? 10
     : effectivePlan === "pro"
     ? 10
     : 1;
+
+
+
 
 const propertyAccessOrder = [...properties].sort((a, b) => {
   const aTime = new Date(a.created_at || 0).getTime();
