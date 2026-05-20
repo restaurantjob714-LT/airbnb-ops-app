@@ -38,6 +38,8 @@ const [authLoading, setAuthLoading] = useState(false);
 const [checkoutLoading, setCheckoutLoading] = useState("");
 
 const [authNotice, setAuthNotice] = useState("");
+const [paymentSuccess, setPaymentSuccess] = useState(false);
+
 const [error, setError] = useState("");
 
   const [name, setName] = useState("");
@@ -272,6 +274,29 @@ useEffect(() => {
 
   return () => subscription.unsubscribe();
 }, []);
+
+
+
+
+
+
+useEffect(() => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const checkoutSuccess = searchParams.get("checkout") === "success";
+
+  if (checkoutSuccess) {
+    setPaymentSuccess(true);
+    fetchProfile();
+
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+}, []);
+
+
+
+
+
+
 
 
 useEffect(() => {
@@ -1090,7 +1115,7 @@ if (!user) {
     </div>
 
     <p className="text-base font-medium text-gray-500 mt-4">
-      Cancel anytime.
+      Cancel anytime — access remains until billing period ends.
     </p>
 
   </div>
@@ -1254,9 +1279,45 @@ if (!user) {
 }
 
 
+
+
+
+
 return (
   <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#eef2ff,_transparent_32%),linear-gradient(135deg,#f8fafc,#ffffff,#f1f5f9)]">
+
+
+    {paymentSuccess && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+        <div className="w-full max-w-md rounded-3xl bg-white p-6 text-center shadow-2xl border border-green-100">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-2xl">
+            🎉
+          </div>
+
+          <h2 className="text-2xl font-bold text-gray-900">
+            Payment successful
+          </h2>
+
+          <p className="mt-3 text-gray-600">
+            Your Staymetic subscription is now active.
+          </p>
+
+          <button
+            onClick={() => setPaymentSuccess(false)}
+            className="mt-6 w-full rounded-2xl bg-indigo-600 px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+          >
+            Start Managing Properties
+          </button>
+        </div>
+      </div>
+    )}
+
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+
+
+
+
+
       
 
 <div className="bg-white/90 backdrop-blur border border-white/70 rounded-3xl shadow-xl p-5 mb-6 ring-1 ring-slate-100">
