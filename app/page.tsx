@@ -1225,11 +1225,17 @@ if (!user) {
   <div className="mb-5 rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white px-4 py-5 text-center text-sm text-indigo-800 shadow-sm">
 
     <p className="font-bold text-xl">
-      Start with a 30-day free trial
+         Start with a 30-day free trial
     </p>
 
+
     <p className="mt-2 text-[17px] text-indigo-700">
-      No payment required today.
+         Pro Plan Version
+    </p>
+
+
+    <p className="mt-2 text-[17px] text-indigo-700">
+         No payment required today.
     </p>
 
     <div className="mt-4 grid grid-cols-1 gap-3 text-left">
