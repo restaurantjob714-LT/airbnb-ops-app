@@ -2428,15 +2428,15 @@ return (
     )}
 
 
- // <div className="mt-8 text-center text-xs text-gray-400">
- //  Tech Support:{" "}
-//   <a
-//     href="mailto:support@staymetic.com"
-//   className="font-medium text-indigo-600 hover:text-indigo-700 hover:underline"
-// >
-//  support@staymetic.com
-// </a>
-// </div>
+  <div className="mt-8 text-center text-xs text-gray-400">
+   Tech Support:{" "}
+   <a
+    href="mailto:support@staymetic.com"
+    className="font-medium text-indigo-600 hover:text-indigo-700 hover:underline"
+   >
+  support@staymetic.com
+  </a>
+ </div>
 
 
     </div>
