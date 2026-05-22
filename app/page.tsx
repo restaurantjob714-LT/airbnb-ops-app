@@ -1108,12 +1108,16 @@ if (!user) {
                    Simple Airbnb bookkeeping without messy spreadsheets.
               </h2>
 
-           <div className="inline-flex items-center rounded-full border border-indigo-100 bg-white/80 px-4 py-2 text-sm font-semibold text-indigo-700 shadow-sm">
-                 Early Access: First 10 hosts get Staymetic Pro free for 1 year
-           </div>
+           
+
+            <div className="mt-6 inline-flex items-center rounded-full border border-indigo-100 bg- indigo-50 px-5 py-2 text-sm font-semibold text-indigo-700 shadow-sm">
+                   🎉 Early Access: First 10 hosts get Staymetic Pro free for 1 year.
+            </div>
+
 
               <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
-                Staymetic gives property owners a simple way to track bookings, expenses, revenue, and monthly profit from one clean dashboard.
+                Know exactly what your Airbnb properties earn after expenses — without complicated             spreadsheets or bloated PMS software.
+                   
               </p>
 
               <div className="mt-8 grid grid-cols-2 gap-4">
