@@ -1104,8 +1104,13 @@ if (!user) {
               </div>
 
               <h2 className="mt-8 text-5xl font-black tracking-tight text-slate-950 leading-tight">
-                Know your rental profit without fighting spreadsheets.
+                // Know your rental profit without fighting spreadsheets.
+                   Simple Airbnb bookkeeping without messy spreadsheets.
               </h2>
+
+           <div className="inline-flex items-center rounded-full border border-indigo-100 bg-white/80 px-4 py-2 text-sm font-semibold text-indigo-700 shadow-sm">
+                🎉 Early Access: First 10 hosts get Staymetic Pro free for 1 year
+           </div>
 
               <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
                 Staymetic gives property owners a simple way to track bookings, expenses, revenue, and monthly profit from one clean dashboard.
