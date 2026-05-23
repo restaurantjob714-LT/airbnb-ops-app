@@ -24,6 +24,7 @@ export default function Home() {
   const [showUpgradePlans, setShowUpgradePlans] = useState(false);
   const [selectedTaxYear, setSelectedTaxYear] = useState(new Date().getFullYear() - 1);
   const [showTaxReport, setShowTaxReport] = useState(false);
+  const [showReportsModal, setShowReportsModal] = useState(false);
   const [taxReportNotice, setTaxReportNotice] = useState("");
 
 
@@ -1642,6 +1643,155 @@ return (
       </div>
     )}
 
+    {showReportsModal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6">
+        <div className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-3xl bg-white p-4 shadow-2xl border border-slate-200">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-600">
+                Reports
+              </p>
+              <h2 className="mt-1 text-xl font-bold text-gray-900">
+                Tax Documents
+              </h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowReportsModal(false)}
+              className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm hover:bg-slate-50"
+            >
+              Close
+            </button>
+          </div>
+
+          <div className="bg-white/90 backdrop-blur border border-white/70 rounded-3xl shadow-xl p-5 sm:p-6 mb-6 ring-1 ring-slate-100">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-600">
+              Tax Documents
+            </p>
+            <h2 className="mt-2 text-xl font-bold text-gray-900">
+              Annual Property Summary
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">
+              View a simple year-end summary of revenue, expenses, and profit by property.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3">
+            <select
+              value={selectedTaxYear}
+              onChange={(e) => {
+                setSelectedTaxYear(Number(e.target.value));
+                setShowTaxReport(false);
+                setTaxReportNotice("");
+              }}
+              className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              {taxYearOptions.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+
+            <button
+              type="button"
+              onClick={handleViewTaxReport}
+              className="rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:scale-[0.99]"
+            >
+              View Tax Document
+            </button>
+          </div>
+        </div>
+
+        {taxReportNotice && (
+          <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800">
+            {taxReportNotice}
+          </div>
+        )}
+
+        {showTaxReport && (
+          <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-slate-500">
+                  {selectedTaxYear} Annual Summary
+                </p>
+                <p className="mt-1 text-2xl font-bold text-slate-950">
+                  Net Profit: ${annualReportTotals.profit}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={exportAnnualTaxCsv}
+                className="rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-indigo-700 border border-indigo-100 shadow-sm transition hover:bg-indigo-50"
+              >
+                Export CSV
+              </button>
+            </div>
+
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm">
+                <p className="text-sm text-slate-500">Revenue</p>
+                <p className="mt-1 text-xl font-bold text-slate-950">${annualReportTotals.revenue}</p>
+              </div>
+              <div className="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm">
+                <p className="text-sm text-slate-500">Expenses</p>
+                <p className="mt-1 text-xl font-bold text-slate-950">${annualReportTotals.expense}</p>
+              </div>
+              <div className="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm">
+                <p className="text-sm text-slate-500">Profit</p>
+                <p className={`mt-1 text-xl font-bold ${annualReportTotals.profit >= 0 ? "text-green-600" : "text-red-600"}`}>
+                  ${annualReportTotals.profit}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 space-y-3">
+              {annualPropertySummaries.map((item) => (
+                <div
+                  key={item.id}
+                  className="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                    <div>
+                      <p className="font-bold text-slate-950">{item.name}</p>
+                      <p className="text-sm text-slate-500">{item.address}</p>
+                      <p className="mt-1 text-xs font-semibold text-indigo-700">{item.type}</p>
+                    </div>
+                    <div className="text-left sm:text-right">
+                      <p className={`text-lg font-bold ${item.profit >= 0 ? "text-green-600" : "text-red-600"}`}>
+                        ${item.profit}
+                      </p>
+                      <p className="text-xs text-slate-500">Profit</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
+                    <p className="rounded-xl bg-slate-50 px-3 py-2">Revenue: <span className="font-semibold">${item.revenue}</span></p>
+                    <p className="rounded-xl bg-slate-50 px-3 py-2">Expenses: <span className="font-semibold">${item.expense}</span></p>
+                    <p className="rounded-xl bg-slate-50 px-3 py-2">Bookings: <span className="font-semibold">{item.bookingCount}</span></p>
+                  </div>
+
+                  <p className="mt-3 text-xs text-slate-400">
+                    {item.note}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-4 text-xs text-slate-500">
+              This summary is for organization only and is not tax advice. Please review with your tax professional.
+            </p>
+          </div>
+        )}
+      </div>
+        </div>
+      </div>
+    )}
+
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
 
 
@@ -1693,6 +1843,18 @@ return (
     </div>
 
     <div className="flex flex-col sm:flex-row gap-2 items-end sm:items-center">
+      <button
+        type="button"
+        onClick={() => {
+          setShowReportsModal(true);
+          setShowTaxReport(false);
+          setTaxReportNotice("");
+        }}
+        className="bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-2xl text-sm font-semibold transition shadow-sm border border-slate-200"
+      >
+        Reports
+      </button>
+
       {!isSubscriptionActive && (
         <button
           type="button"
@@ -2010,131 +2172,6 @@ return (
           <p className="text-sm font-medium text-gray-500 mb-2">Total Expense</p>
           <p className="text-3xl font-bold text-gray-900">${totalExpense}</p>
         </div>
-      </div>
-
-      <div className="bg-white/90 backdrop-blur border border-white/70 rounded-3xl shadow-xl p-5 sm:p-6 mb-6 ring-1 ring-slate-100">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-600">
-              Tax Documents
-            </p>
-            <h2 className="mt-2 text-xl font-bold text-gray-900">
-              Annual Property Summary
-            </h2>
-            <p className="mt-2 text-sm text-slate-600">
-              View a simple year-end summary of revenue, expenses, and profit by property.
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-3">
-            <select
-              value={selectedTaxYear}
-              onChange={(e) => {
-                setSelectedTaxYear(Number(e.target.value));
-                setShowTaxReport(false);
-                setTaxReportNotice("");
-              }}
-              className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              {taxYearOptions.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-
-            <button
-              type="button"
-              onClick={handleViewTaxReport}
-              className="rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:scale-[0.99]"
-            >
-              View Tax Document
-            </button>
-          </div>
-        </div>
-
-        {taxReportNotice && (
-          <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800">
-            {taxReportNotice}
-          </div>
-        )}
-
-        {showTaxReport && (
-          <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <div>
-                <p className="text-sm font-semibold text-slate-500">
-                  {selectedTaxYear} Annual Summary
-                </p>
-                <p className="mt-1 text-2xl font-bold text-slate-950">
-                  Net Profit: ${annualReportTotals.profit}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={exportAnnualTaxCsv}
-                className="rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-indigo-700 border border-indigo-100 shadow-sm transition hover:bg-indigo-50"
-              >
-                Export CSV
-              </button>
-            </div>
-
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm">
-                <p className="text-sm text-slate-500">Revenue</p>
-                <p className="mt-1 text-xl font-bold text-slate-950">${annualReportTotals.revenue}</p>
-              </div>
-              <div className="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm">
-                <p className="text-sm text-slate-500">Expenses</p>
-                <p className="mt-1 text-xl font-bold text-slate-950">${annualReportTotals.expense}</p>
-              </div>
-              <div className="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm">
-                <p className="text-sm text-slate-500">Profit</p>
-                <p className={`mt-1 text-xl font-bold ${annualReportTotals.profit >= 0 ? "text-green-600" : "text-red-600"}`}>
-                  ${annualReportTotals.profit}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-5 space-y-3">
-              {annualPropertySummaries.map((item) => (
-                <div
-                  key={item.id}
-                  className="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
-                    <div>
-                      <p className="font-bold text-slate-950">{item.name}</p>
-                      <p className="text-sm text-slate-500">{item.address}</p>
-                      <p className="mt-1 text-xs font-semibold text-indigo-700">{item.type}</p>
-                    </div>
-                    <div className="text-left sm:text-right">
-                      <p className={`text-lg font-bold ${item.profit >= 0 ? "text-green-600" : "text-red-600"}`}>
-                        ${item.profit}
-                      </p>
-                      <p className="text-xs text-slate-500">Profit</p>
-                    </div>
-                  </div>
-
-                  <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
-                    <p className="rounded-xl bg-slate-50 px-3 py-2">Revenue: <span className="font-semibold">${item.revenue}</span></p>
-                    <p className="rounded-xl bg-slate-50 px-3 py-2">Expenses: <span className="font-semibold">${item.expense}</span></p>
-                    <p className="rounded-xl bg-slate-50 px-3 py-2">Bookings: <span className="font-semibold">{item.bookingCount}</span></p>
-                  </div>
-
-                  <p className="mt-3 text-xs text-slate-400">
-                    {item.note}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <p className="mt-4 text-xs text-slate-500">
-              This summary is for organization only and is not tax advice. Please review with your tax professional.
-            </p>
-          </div>
-        )}
       </div>
 
       <div
