@@ -1843,18 +1843,6 @@ return (
     </div>
 
     <div className="flex flex-col sm:flex-row gap-2 items-end sm:items-center">
-      <button
-        type="button"
-        onClick={() => {
-          setShowReportsModal(true);
-          setShowTaxReport(false);
-          setTaxReportNotice("");
-        }}
-        className="bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-2xl text-sm font-semibold transition shadow-sm border border-slate-200"
-      >
-        Reports
-      </button>
-
       {!isSubscriptionActive && (
         <button
           type="button"
@@ -1867,6 +1855,18 @@ return (
           Upgrade / Plans
         </button>
       )}
+
+      <button
+        type="button"
+        onClick={() => {
+          setShowReportsModal(true);
+          setShowTaxReport(false);
+          setTaxReportNotice("");
+        }}
+        className="bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-2xl text-sm font-semibold transition shadow-sm border border-slate-200"
+      >
+        Reports
+      </button>
 
       <button
         onClick={handleSignOut}
