@@ -447,9 +447,8 @@ const fetchBookings = async () => {
 };
 
 
-
 const fetchProfile = async () => {
-  setProfileLoading(true);
+  if (!profile) setProfileLoading(true);
   const {
     data: { user: currentUser },
   } = await supabase.auth.getUser();
@@ -1261,7 +1260,7 @@ if (!user) {
 
 
               <p className="mt-5 max-w-xl text-lg leading-8 text-slate-600">
-                Know exactly what your Airbnb properties earn after expenses — without complicated             spreadsheets or bloated PMS software.
+                Know exactly what your Airbnb properties earn after expenses without complicated             spreadsheets or bloated PMS software.
                    
               </p>
 
