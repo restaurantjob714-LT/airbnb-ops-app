@@ -22,6 +22,9 @@ export default function Home() {
   const [expandedProperties, setExpandedProperties] = useState<Record<string, boolean>>({});
   const [freePlanNoticeDismissed, setFreePlanNoticeDismissed] = useState(false);
   const [showUpgradePlans, setShowUpgradePlans] = useState(false);
+  const [selectedTaxYear, setSelectedTaxYear] = useState(new Date().getFullYear() - 1);
+  const [showTaxReport, setShowTaxReport] = useState(false);
+  const [taxReportNotice, setTaxReportNotice] = useState("");
 
 
 const [checkingAuthRedirect, setCheckingAuthRedirect] = useState(true);
@@ -45,9 +48,6 @@ const [authNotice, setAuthNotice] = useState("");
 const [paymentSuccess, setPaymentSuccess] = useState(false);
 
 const [error, setError] = useState("");
-
-const EARLY_ACCESS_USER_LIMIT = 10;
-const EARLY_ACCESS_DAYS = 365;
 
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
@@ -447,54 +447,6 @@ const fetchBookings = async () => {
 
 
 
-const grantEarlyAccessIfEligible = async (profileData: any, currentUser: any) => {
-  if (!profileData || !currentUser) return profileData;
-
-  const currentPlan = String(profileData.plan || "free").toLowerCase();
-  const currentStatus = String(profileData.subscription_status || "").toLowerCase();
-
-  if (
-    currentStatus === "active" ||
-    currentStatus === "promo_active" ||
-    currentPlan === "pro" ||
-    currentPlan === "business" ||
-    currentPlan === "paid"
-  ) {
-    return profileData;
-  }
-
-  const { count, error: countError } = await supabase
-    .from("profiles")
-    .select("id", { count: "exact", head: true });
-
-  if (countError || count === null || count > EARLY_ACCESS_USER_LIMIT) {
-    return profileData;
-  }
-
-  const promoEnds = new Date(
-    Date.now() + EARLY_ACCESS_DAYS * 24 * 60 * 60 * 1000
-  ).toISOString();
-
-  const { data: updatedProfile, error: updateError } = await supabase
-    .from("profiles")
-    .update({
-      plan: "pro",
-      subscription_status: "promo_active",
-      trial_ends: promoEnds,
-    })
-    .eq("id", currentUser.id)
-    .select("*")
-    .single();
-
-  if (updateError || !updatedProfile) {
-    console.log("Early access promo error:", updateError);
-    return profileData;
-  }
-
-  return updatedProfile;
-};
-
-
 const fetchProfile = async () => {
   setProfileLoading(true);
   const {
@@ -520,9 +472,7 @@ const fetchProfile = async () => {
     return;
   }
 
-  const finalProfile = await grantEarlyAccessIfEligible(data, currentUser);
-
-  setProfile(finalProfile);
+  setProfile(data);
   setProfileLoading(false);
 };
  
@@ -1002,9 +952,7 @@ const trialEndsAt = profile?.trial_ends
 const isTrialExpired = trialEndsAt !== null ? trialEndsAt < Date.now() : false;
 const isTrialActive = trialEndsAt !== null ? trialEndsAt >= Date.now() : false;
 const normalizedPlan = String(profile?.plan || "free").toLowerCase();
-const isSubscriptionActive =
-  profile?.subscription_status === "active" ||
-  (profile?.subscription_status === "promo_active" && isTrialActive);
+const isSubscriptionActive = profile?.subscription_status === "active";
 
 const effectivePlan = isSubscriptionActive
   ? normalizedPlan || "pro"
@@ -1068,6 +1016,146 @@ const showTrialEndingSoon =
 
 const showFreePlanNotice =
   isTrialExpired && !isSubscriptionActive && !freePlanNoticeDismissed;
+
+
+const currentTaxYear = new Date().getFullYear();
+const taxReportAvailable = selectedTaxYear < currentTaxYear;
+
+const taxYearOptions = Array.from(
+  new Set([
+    currentTaxYear,
+    currentTaxYear - 1,
+    currentTaxYear - 2,
+    currentTaxYear - 3,
+    ...bookings
+      .map((booking) =>
+        booking.start_date ? new Date(booking.start_date).getFullYear() : null
+      )
+      .filter((year): year is number => Boolean(year)),
+  ])
+).sort((a, b) => b - a);
+
+const annualPropertySummaries = properties.map((property) => {
+  if (property.is_airbnb) {
+    const propertyBookings = bookings.filter((booking) => {
+      if (booking.property_id !== property.id || !booking.start_date) return false;
+      return new Date(booking.start_date).getFullYear() === selectedTaxYear;
+    });
+
+    const revenue = propertyBookings.reduce(
+      (sum, booking) => sum + Number(booking.price || 0),
+      0
+    );
+
+    const expense = propertyBookings.reduce(
+      (sum, booking) => sum + Number(booking.expense || 0),
+      0
+    );
+
+    return {
+      id: property.id,
+      name: property.name,
+      address: property.address,
+      type: "Airbnb",
+      revenue,
+      expense,
+      profit: revenue - expense,
+      bookingCount: propertyBookings.length,
+      note: "Based on bookings entered for the selected year.",
+    };
+  }
+
+  const revenue = Number(property.monthly_rent || 0) * 12;
+  const expense = Number(property.monthly_expense || 0) * 12;
+
+  return {
+    id: property.id,
+    name: property.name,
+    address: property.address,
+    type: "Long Term",
+    revenue,
+    expense,
+    profit: revenue - expense,
+    bookingCount: 0,
+    note: "Annualized from monthly rent and monthly expense.",
+  };
+});
+
+const annualReportTotals = annualPropertySummaries.reduce(
+  (totals, item) => ({
+    revenue: totals.revenue + item.revenue,
+    expense: totals.expense + item.expense,
+    profit: totals.profit + item.profit,
+  }),
+  { revenue: 0, expense: 0, profit: 0 }
+);
+
+const handleViewTaxReport = () => {
+  if (!taxReportAvailable) {
+    setShowTaxReport(false);
+    setTaxReportNotice(
+      `Tax documents for ${selectedTaxYear} are not available yet. Annual tax summaries become available in January of the following year.`
+    );
+    return;
+  }
+
+  setTaxReportNotice("");
+  setShowTaxReport(true);
+};
+
+const exportAnnualTaxCsv = () => {
+  const header = [
+    "Year",
+    "Property",
+    "Address",
+    "Type",
+    "Revenue",
+    "Expense",
+    "Profit",
+    "Booking Count",
+    "Note",
+  ];
+
+  const rows = annualPropertySummaries.map((item) => [
+    selectedTaxYear,
+    item.name,
+    item.address || "",
+    item.type,
+    item.revenue,
+    item.expense,
+    item.profit,
+    item.bookingCount,
+    item.note,
+  ]);
+
+  rows.push([
+    selectedTaxYear,
+    "TOTAL",
+    "",
+    "",
+    annualReportTotals.revenue,
+    annualReportTotals.expense,
+    annualReportTotals.profit,
+    "",
+    "",
+  ]);
+
+  const csv = [header, ...rows]
+    .map((row) =>
+      row
+        .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
+        .join(",")
+    )
+    .join("\n");
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `staymetic-annual-tax-summary-${selectedTaxYear}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
+};
 
 
 
@@ -1593,10 +1681,6 @@ return (
     {profile?.subscription_status === "active" && (
       <span className="ml-1">• Active</span>
     )}
-
-    {profile?.subscription_status === "promo_active" && isTrialActive && (
-      <span className="ml-1">• Early Access</span>
-    )}
   </div>
 )}
 
@@ -1926,6 +2010,131 @@ return (
           <p className="text-sm font-medium text-gray-500 mb-2">Total Expense</p>
           <p className="text-3xl font-bold text-gray-900">${totalExpense}</p>
         </div>
+      </div>
+
+      <div className="bg-white/90 backdrop-blur border border-white/70 rounded-3xl shadow-xl p-5 sm:p-6 mb-6 ring-1 ring-slate-100">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-600">
+              Tax Documents
+            </p>
+            <h2 className="mt-2 text-xl font-bold text-gray-900">
+              Annual Property Summary
+            </h2>
+            <p className="mt-2 text-sm text-slate-600">
+              View a simple year-end summary of revenue, expenses, and profit by property.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3">
+            <select
+              value={selectedTaxYear}
+              onChange={(e) => {
+                setSelectedTaxYear(Number(e.target.value));
+                setShowTaxReport(false);
+                setTaxReportNotice("");
+              }}
+              className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              {taxYearOptions.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+
+            <button
+              type="button"
+              onClick={handleViewTaxReport}
+              className="rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 active:scale-[0.99]"
+            >
+              View Tax Document
+            </button>
+          </div>
+        </div>
+
+        {taxReportNotice && (
+          <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800">
+            {taxReportNotice}
+          </div>
+        )}
+
+        {showTaxReport && (
+          <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4 sm:p-5">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-slate-500">
+                  {selectedTaxYear} Annual Summary
+                </p>
+                <p className="mt-1 text-2xl font-bold text-slate-950">
+                  Net Profit: ${annualReportTotals.profit}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={exportAnnualTaxCsv}
+                className="rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-indigo-700 border border-indigo-100 shadow-sm transition hover:bg-indigo-50"
+              >
+                Export CSV
+              </button>
+            </div>
+
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm">
+                <p className="text-sm text-slate-500">Revenue</p>
+                <p className="mt-1 text-xl font-bold text-slate-950">${annualReportTotals.revenue}</p>
+              </div>
+              <div className="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm">
+                <p className="text-sm text-slate-500">Expenses</p>
+                <p className="mt-1 text-xl font-bold text-slate-950">${annualReportTotals.expense}</p>
+              </div>
+              <div className="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm">
+                <p className="text-sm text-slate-500">Profit</p>
+                <p className={`mt-1 text-xl font-bold ${annualReportTotals.profit >= 0 ? "text-green-600" : "text-red-600"}`}>
+                  ${annualReportTotals.profit}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 space-y-3">
+              {annualPropertySummaries.map((item) => (
+                <div
+                  key={item.id}
+                  className="rounded-2xl bg-white p-4 border border-slate-200 shadow-sm"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                    <div>
+                      <p className="font-bold text-slate-950">{item.name}</p>
+                      <p className="text-sm text-slate-500">{item.address}</p>
+                      <p className="mt-1 text-xs font-semibold text-indigo-700">{item.type}</p>
+                    </div>
+                    <div className="text-left sm:text-right">
+                      <p className={`text-lg font-bold ${item.profit >= 0 ? "text-green-600" : "text-red-600"}`}>
+                        ${item.profit}
+                      </p>
+                      <p className="text-xs text-slate-500">Profit</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
+                    <p className="rounded-xl bg-slate-50 px-3 py-2">Revenue: <span className="font-semibold">${item.revenue}</span></p>
+                    <p className="rounded-xl bg-slate-50 px-3 py-2">Expenses: <span className="font-semibold">${item.expense}</span></p>
+                    <p className="rounded-xl bg-slate-50 px-3 py-2">Bookings: <span className="font-semibold">{item.bookingCount}</span></p>
+                  </div>
+
+                  <p className="mt-3 text-xs text-slate-400">
+                    {item.note}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-4 text-xs text-slate-500">
+              This summary is for organization only and is not tax advice. Please review with your tax professional.
+            </p>
+          </div>
+        )}
       </div>
 
       <div
