@@ -1643,7 +1643,6 @@ return (
       </div>
     )}
 
-
     {showReportsModal && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6">
         <div className="max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-3xl bg-white p-4 shadow-2xl border border-slate-200">
@@ -1835,32 +1834,13 @@ return (
   </div>
 )}
 
-  </div>
 
 
 
 
 
 
-
-
-
-{!isSubscriptionActive && (
-        <button
-          type="button"
-          onClick={() => {
-            setShowUpgradePlans(true);
-            setFreePlanNoticeDismissed(true);
-          }}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-2xl text-sm font-semibold transition shadow-sm"
-        >
-          Upgrade / Plans
-        </button>
-      )}
-
-
-
-
+    </div>
 
     <div className="flex flex-col sm:flex-row gap-2 items-end sm:items-center">
       <button
@@ -1875,16 +1855,18 @@ return (
         Reports
       </button>
 
-
-
-
-
-
-
-
-
-
-    
+      {!isSubscriptionActive && (
+        <button
+          type="button"
+          onClick={() => {
+            setShowUpgradePlans(true);
+            setFreePlanNoticeDismissed(true);
+          }}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-2xl text-sm font-semibold transition shadow-sm"
+        >
+          Upgrade / Plans
+        </button>
+      )}
 
       <button
         onClick={handleSignOut}
