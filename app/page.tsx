@@ -46,6 +46,9 @@ const [paymentSuccess, setPaymentSuccess] = useState(false);
 
 const [error, setError] = useState("");
 
+const EARLY_ACCESS_USER_LIMIT = 10;
+const EARLY_ACCESS_DAYS = 365;
+
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [type, setType] = useState("airbnb");
@@ -444,6 +447,54 @@ const fetchBookings = async () => {
 
 
 
+const grantEarlyAccessIfEligible = async (profileData: any, currentUser: any) => {
+  if (!profileData || !currentUser) return profileData;
+
+  const currentPlan = String(profileData.plan || "free").toLowerCase();
+  const currentStatus = String(profileData.subscription_status || "").toLowerCase();
+
+  if (
+    currentStatus === "active" ||
+    currentStatus === "promo_active" ||
+    currentPlan === "pro" ||
+    currentPlan === "business" ||
+    currentPlan === "paid"
+  ) {
+    return profileData;
+  }
+
+  const { count, error: countError } = await supabase
+    .from("profiles")
+    .select("id", { count: "exact", head: true });
+
+  if (countError || count === null || count > EARLY_ACCESS_USER_LIMIT) {
+    return profileData;
+  }
+
+  const promoEnds = new Date(
+    Date.now() + EARLY_ACCESS_DAYS * 24 * 60 * 60 * 1000
+  ).toISOString();
+
+  const { data: updatedProfile, error: updateError } = await supabase
+    .from("profiles")
+    .update({
+      plan: "pro",
+      subscription_status: "promo_active",
+      trial_ends: promoEnds,
+    })
+    .eq("id", currentUser.id)
+    .select("*")
+    .single();
+
+  if (updateError || !updatedProfile) {
+    console.log("Early access promo error:", updateError);
+    return profileData;
+  }
+
+  return updatedProfile;
+};
+
+
 const fetchProfile = async () => {
   setProfileLoading(true);
   const {
@@ -469,7 +520,9 @@ const fetchProfile = async () => {
     return;
   }
 
-  setProfile(data);
+  const finalProfile = await grantEarlyAccessIfEligible(data, currentUser);
+
+  setProfile(finalProfile);
   setProfileLoading(false);
 };
  
@@ -949,7 +1002,9 @@ const trialEndsAt = profile?.trial_ends
 const isTrialExpired = trialEndsAt !== null ? trialEndsAt < Date.now() : false;
 const isTrialActive = trialEndsAt !== null ? trialEndsAt >= Date.now() : false;
 const normalizedPlan = String(profile?.plan || "free").toLowerCase();
-const isSubscriptionActive = profile?.subscription_status === "active";
+const isSubscriptionActive =
+  profile?.subscription_status === "active" ||
+  (profile?.subscription_status === "promo_active" && isTrialActive);
 
 const effectivePlan = isSubscriptionActive
   ? normalizedPlan || "pro"
@@ -1537,6 +1592,10 @@ return (
 
     {profile?.subscription_status === "active" && (
       <span className="ml-1">• Active</span>
+    )}
+
+    {profile?.subscription_status === "promo_active" && isTrialActive && (
+      <span className="ml-1">• Early Access</span>
     )}
   </div>
 )}
